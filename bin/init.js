@@ -1,5 +1,9 @@
 #!/usr/bin/env node
 
+// to scaffold the project!
+
+
+
 const mysql = require("mysql");
 
 const DB_HOST = process.env.DB_HOST || 'localhost';

@@ -23,8 +23,8 @@ db.connection.connect(err => {
 
 
 const PID = process.pid;
-const PORT = process.env.PORT || process.argv[2] || 8080;
-const SECRET = process.env.SECRET || "force";
+const PORT = process.env.PORT || process.argv[2] || 8080; // we'll use this in production
+const SECRET = process.env.SECRET || "force"; // we'll use this in production
 
 app.listen(PORT)
 console.log(`server is running on http://127.0.0.1:${PORT}/`)
