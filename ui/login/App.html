@@ -1,0 +1,56 @@
+<svelte:head>
+    <title>{title}</title>
+</svelte:head>
+<svelte:document on:load="init()"></svelte:document>
+<div class="container">
+    <div class="row"></div>
+    <div class="row">
+        <div class="card white z-depth-3 col s10 offset-s1 m6 offset-m3">
+            <div class="card-image">
+                <img src="/public/img/cds.svg" alt="logo">
+            </div>
+            <div class="card-content">
+                <div class="row">
+                    <form class="col s12">
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input placeholder="Email" id="email" type="email" class="validate">
+                                <label for="email">Email</label>
+                                <span class="helper-text" data-empty="E-mail is required" data-error="E-mail must be valid"></span>
+                            </div>
+                            <div class="input-field col s12">
+                                <input id="password" type="password" class="validate">
+                                <label for="password">Password</label>
+                                <span class="helper-text" data-empty="Password is required"></span>                                
+                            </div>
+                        </div>
+                        <button class="btn waves-effect waves-light yellow black-text" on:click="init()">Login</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+export default {
+    oncreate() {
+        document.onload = function() {
+            console.log(1)
+            M.AutoInit()
+            M.updateTextFields()
+            console.log(M)
+        }
+    },
+    methods: {
+        init() {
+            console.log(2)
+            M.AutoInit()
+            M.updateTextFields()
+            console.log(M)
+        },
+        login() {this.init()}
+    }
+}
+
+</script>
