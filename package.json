@@ -1,10 +1,11 @@
 {
   "name": "newcds",
   "scripts": {
-    "query": "bin/query.js",
+    "query": "node bin/query.js",
     "test": "nodemon bin/main.js 8080",
-    "start": "bin/main.js",
-    "init": "chmod +x bin/* && bin/init.js",
+    "start": "node bin/main.js",
+    "initch": "chmod +x bin/* && bin/init.js",
+    "init": "node bin/init.js",
     "build": "rollup -c",
     "autobuild": "rollup -c -w",
     "dev": "run-p start autobuild"

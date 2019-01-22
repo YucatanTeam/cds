@@ -40,6 +40,8 @@ function exit() {
 }
 
 // DEBUG not tested
+
+/*
 process.on('SIGTERM', () => {
     var done = false;
     db.connection.close().then(() => {
@@ -49,3 +51,4 @@ process.on('SIGTERM', () => {
         done = done ? process.exit(0) : true;
     });
 });
+*/
