@@ -38,6 +38,8 @@ function exit() {
         process.exit(0);
     }, 1000);
 }
+
+// DEBUG not tested
 process.on('SIGTERM', () => {
     var done = false;
     db.connection.close().then(() => {
