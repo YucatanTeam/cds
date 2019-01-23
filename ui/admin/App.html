@@ -1,16 +1,9 @@
-<svelte:document onload="M.AutoInit();"></svelte:document>
 <svelte:head>
 	<title>{title}</title>
 </svelte:head>
 
 <h1>Hello {name}!</h1>
-<button on:click="set({title: 'boo'})">booer</button>
-
-<style>
-	h1 {
-		color: purple;
-	}
-</style>
+<button class="btn btn-large waves-effect waves-light yellow " on:click="set({title: 'boo'})">booer</button>
 
 <script>
 	export default {
