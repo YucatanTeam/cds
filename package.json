@@ -17,7 +17,8 @@
     "express": "^4.16.4",
     "mysql": "^2.16.0",
     "passport": "^0.4.0",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "svelte-app-router": "^0.1.0"
   },
   "devDependencies": {
     "nodemon": "^1.18.9",
