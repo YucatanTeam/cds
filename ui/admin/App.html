@@ -1,45 +1,50 @@
 <svelte:head>
 	<title>{title}</title>
 </svelte:head>
-
-
-<h1>Hello {name}!</h1>
-
-<!-- sidenav links -->
-<button class="btn btn-large waves-effect waves-light yellow " on:click="loadWidget('SecurityPolicy')">seurity policy</button>
-<button class="btn btn-large waves-effect waves-light yellow " on:click="loadWidget('AdminControlCenter')">Admin Control Center</button>
-
-<!-- widget body -->
-{#if widgetname}
-  <svelte:component this={widgetname}/>
-{/if}
-
+<Sidenav background="/public/img/cds.svg" fixed>
+	<li><a href="#/SecurityPolicy">SecurityPolicy</a></li>
+	<li><a href="#/CandoServices">CandoServices</a></li>
+</Sidenav>
+<div class="row">
+	<div class="col offset-m3">
+		<Router routes={routes}>
+			<div class="error">
+				This page was not found.
+			</div>
+		</Router>
+	</div>
+</div>
 <script>
+	import SecurityPolicy from "./pages/SecurityPolicy.html";
+	import CandoServices from "./pages/CandoServices.html";
+	
 	export default {
-		oncreate(){
-			// ...
-		},
-		data() {
-			return {
-				// TODO: setup seo stuff like following:
-				// NOTE: this.metaCont is the activation_token from registeration story!
-				// NOTE: we'll fill this varabile after successful login using user obj
-				/* title: 'cds - '+this.metaCont,
-					meta: [
-						{ hid: 'description', name: 'description', content: this.metaCont },
-						{ hid: 'robots', name: 'robots', content: 'noindex,nofollow'}
-					]
-				*/
-				widgetname: '',
-				title: 'CDS-ADMIN PANEL',          
-				name: 'azizi' // use user.name obj after successful auth
+	  oncreate() {
+		M.AutoInit();
+	  },
+	  data() {
+	    return {
+	      // TODO: setup seo stuff like following:
+	      // NOTE: this.metaCont is the activation_token from registeration story!
+	      // NOTE: we'll fill this varabile after successful login using user obj
+	      /* title: 'cds - '+this.metaCont,
+						meta: [
+							{ hid: 'description', name: 'description', content: this.metaCont },
+							{ hid: 'robots', name: 'robots', content: 'noindex,nofollow'}
+						]
+					*/
+	      title: "CDS-ADMIN PANEL",
+		  name: "azizi", // use user.name obj after successful auth
+		  routes: {
+			'/SecurityPolicy': [SecurityPolicy, {message: 'from "/SecurityPolicy" path'}],
+			'/CandoServices': [CandoServices, {message: 'from "/CandoServices" path'}]
 			}
-		},
-		methods : {
-			async loadWidget(widgetname){
-				const widget = await import(`./../widgets/admin/${widgetname}.html`)
-				this.set({widgetname: widget}) 
-          }
-		}
-	}
+	    };
+	  },
+	  methods: {},
+	  components: {
+		Router: "svelte-app-router",
+	    Sidenav: "../tags/Sidenav.html"
+	  }
+	};
 </script>
