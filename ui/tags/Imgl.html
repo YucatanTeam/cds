@@ -1,0 +1,39 @@
+{#if !done}
+    <div class="preloader-wrapper small active">
+        <div class="spinner-layer spinner-yellow-only">
+        <div class="circle-clipper left">
+            <div class="circle"></div>
+        </div><div class="gap-patch">
+            <div class="circle"></div>
+        </div><div class="circle-clipper right">
+            <div class="circle"></div>
+        </div>
+        </div>
+    </div>
+{:else}
+    <img class={class} style={style} id={id} src={src} alt={alt} />
+{/if}
+<script>
+export default {
+    data: () => ({
+        done: false,
+        src: '',
+        alt: '',
+        class: '',
+        style: '',
+        id: ''
+    }),
+    oncreate() {
+        const {src} = this.get();
+        if(src != null && src != '') {
+            const img = new Image();
+            img.src = src;
+            img.onload = e => {
+                this.set({done: true});
+                this.fire("load")
+            };
+        }
+    }
+
+}
+</script>

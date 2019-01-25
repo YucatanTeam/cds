@@ -1,0 +1,27 @@
+<div class="card white z-depth-3 {class}">
+	{#if image}
+        <div class="card-image">
+            <Imgl src="/public/img/cds.svg" alt={alt} />
+        </div>
+    {/if}
+	<div class="card-content">
+		<slot>
+        <!-- card content -->
+        </slot>
+	</div>
+</div>
+
+<script>
+export default {
+    data() {
+        return {
+            class: '',
+            image: null,
+            alt: ''
+        }
+    },
+    components: {
+        Imgl: "../tags/Imgl.html"
+    }
+}
+</script>

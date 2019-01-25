@@ -1,0 +1,27 @@
+<div class="input-field {col}">
+	<input id={id} type={type} class={validate ? "validate" : ""} />
+	{#if label}
+        <label for={id}>{label}</label>
+    {/if}
+    {#if helper}
+	    <span class="helper-text" data-empty={dataempty} data-error={dataerror}></span>
+    {/if}
+</div>
+
+<script>
+export default {
+    data() {
+        return {
+            validate: false,
+            helper: false,
+            type: 'text',
+            label: null,
+            id: '',
+            col: '',
+            name: '',
+            dataempty: '',
+            dataerror: '',
+        }
+    }
+}
+</script>

@@ -1,0 +1,76 @@
+<a href="#!" class="btn waves-effect waves-light yellow black-text {disabled}" on:click=send()>
+    <slot><!-- btn text --></slot>
+</a>
+
+
+<script>
+export default {
+    data() {
+        return {
+            disabled: false,
+            body: {}, // you can fill this
+            bodyById: null, // list of DOM input element IDs to make body from their values
+            get: null,
+            post: null,
+            response: null, // bind:response if you need the response
+        }
+    },
+    methods: {
+        send() {
+            this.set({disabled: true});
+            var {get, post, body, bodyById} = this.get();
+            if(bodyById) {
+                for(var i of bodyById) {
+                    body[i] = document.getElementById(i).value;
+                }
+            }
+            if(post) {
+                return fetch(post, {
+                    method: "POST",
+                    mode: "same-origin",
+                    credentials: "same-origin",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    redirect: "follow",
+                    body: JSON.stringify(body),
+                })
+                .then(response => {
+                    if(response.redirected) {
+                        // redirect the client to panel
+                        window.location.href = response.url;
+                    }
+                    return response
+                })
+                .then(response => response.json())
+                .then(json => this.set({ response: json, disabled: false }))
+                .catch(err => this.set({ response: { err }, disabled: false }));
+            } else if(get) {
+                // make urlencoded
+                get += "?";
+                for(var i of body) {
+                    get += `${i}=${body[i]}&`;
+                }
+                return fetch(get, {
+                    method: "GET",
+                    mode: "same-origin",
+                    credentials: "same-origin",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    redirect: "follow",
+                })
+                .then(response => {
+                    if(response.redirected) {
+                        window.location.href = response.url;
+                    }
+                    return response
+                })
+                .then(response => response.json())
+                .then(json => this.set({ response: json, disabled: false }))
+                .catch(err => this.set({ response: { err }, disabled: false }));
+            }
+        }
+    }
+}
+</script>

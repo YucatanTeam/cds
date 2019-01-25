@@ -1,0 +1,17 @@
+<div class="row">
+    <!-- TODO alert here, use response, proper css -->
+    {#if response}
+        {#if !response.err}
+            <div>done : {response.body}</div>
+        {:else}
+            <div>error : {response.err}</div>
+        {/if}
+    {/if}
+    <form class="col s12">
+        <div class="row">
+        <slot>
+            <!-- form inputs -->
+        </slot>
+        </div>
+    </form>
+</div>
