@@ -8,7 +8,7 @@
     "init": "node bin/init.js",
     "build": "rollup -c",
     "autobuild": "rollup -c -w",
-    "dev": "run-p start autobuild"
+    "dev": "run-p test autobuild"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
