@@ -1,7 +1,14 @@
-<div class="card white z-depth-3 {class}">
+
+<!--
+    col string: classes after materialize col class
+    image string: img-src
+    alt string: img-alt
+-->
+
+<div class="card white z-depth-3 {col ? "col" : "" } {col}">
 	{#if image}
         <div class="card-image">
-            <Imgl src="/public/img/cds.svg" alt={alt} />
+            <Imgl src={image} alt={alt} />
         </div>
     {/if}
 	<div class="card-content">
@@ -15,13 +22,13 @@
 export default {
     data() {
         return {
-            class: '',
+            col: null,
             image: null,
             alt: ''
         }
     },
     components: {
-        Imgl: "../tags/Imgl.html"
+        Imgl: "./Imgl.html"
     }
 }
 </script>
