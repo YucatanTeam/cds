@@ -37,7 +37,7 @@
 		},
 		methods : {
 			async loadWidget(widgetname){
-				const widget = await import(`./../widgets/admin/${widgetname}.html`)
+				const widget = await import(`./pages/${widgetname}.html`)
 				this.set({widgetname: widget}) 
           }
 		}
