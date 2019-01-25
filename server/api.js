@@ -1,11 +1,11 @@
 const express = require('express')
 require('svelte/ssr/register'); // for svelte server side rendering
+const passport = require('passport');
 
 function page(root) {
     return express.static(`${__dirname}/../www/${root}`)
 }
 
-const passport = require('passport');
 
 function private(req, res, next) {
     //  commented for debugging
