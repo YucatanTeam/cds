@@ -4,7 +4,7 @@ import commonjs from 'rollup-plugin-commonjs';
 import { terser } from 'rollup-plugin-terser';
 
 const pages = [
-	// 'admin'
+	'admin',
 	'login'
 	// 'index'
 	// 'user'
