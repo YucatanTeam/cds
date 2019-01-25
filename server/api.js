@@ -20,6 +20,8 @@ function access(level) {
     }
 }
 
+// require routes here
+// ...
 
 module.exports = ({app, db}) => {
     app.get("/ping", access(7), (req, res) => {

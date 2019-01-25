@@ -2,16 +2,44 @@
 	<title>{title}</title>
 </svelte:head>
 
+
 <h1>Hello {name}!</h1>
-<button class="btn btn-large waves-effect waves-light yellow " on:click="set({title: 'boo'})">booer</button>
+
+<!-- sidenav links -->
+<button class="btn btn-large waves-effect waves-light yellow " on:click="loadWidget('SecurityPolicy')">seurity policy</button>
+<button class="btn btn-large waves-effect waves-light yellow " on:click="loadWidget('AdminControlCenter')">Admin Control Center</button>
+
+<!-- widget body -->
+{#if widgetname}
+  <svelte:component this={widgetname}/>
+{/if}
 
 <script>
 	export default {
+		oncreate(){
+			// ...
+		},
 		data() {
 			return {
-				title: 'yo',
-				name: 'lala'
+				// TODO: setup seo stuff like following:
+				// NOTE: this.metaCont is the activation_token from registeration story!
+				// NOTE: we'll fill this varabile after successful login using user obj
+				/* title: 'cds - '+this.metaCont,
+					meta: [
+						{ hid: 'description', name: 'description', content: this.metaCont },
+						{ hid: 'robots', name: 'robots', content: 'noindex,nofollow'}
+					]
+				*/
+				widgetname: '',
+				title: 'CDS-ADMIN PANEL',          
+				name: 'azizi' // use user.name obj after successful auth
 			}
+		},
+		methods : {
+			async loadWidget(widgetname){
+				const widget = await import(`./../widgets/admin/${widgetname}.html`)
+				this.set({widgetname: widget}) 
+          }
 		}
 	}
 </script>
