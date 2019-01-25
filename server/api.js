@@ -8,7 +8,8 @@ function page(root) {
 const passport = require('passport');
 
 function private(req, res, next) {
-    if(!req.user) return res.redirect("/login");
+    //  commented for debugging
+    // if(!req.user) return res.redirect("/login");
     next();
 }
 function access(level) {
