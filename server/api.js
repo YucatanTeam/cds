@@ -36,7 +36,7 @@ module.exports = ({app, db}) => {
         // redirect to /admin panel if its an admin account
         // else redirect to /user panel
     app.post('/login', (req, res) => {
-        return res.json({err: null, body:"hello"})
+        return res.json({err: null, body: req.body.email})
         // return res.redirect("/")
     });
 
