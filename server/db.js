@@ -16,24 +16,19 @@ const db = {
             });
         },
         getUserByEmailPass(email, password, cb) { // callback with email and password from our form
-            console.log(`finding ${email}:${password}`)
             db.connection.query("SELECT * FROM `user` WHERE `email` = ?", [email], function (err, rows) {
-                console.log(`found rows`, rows)
                 if (err)
                     return cb(err);
                 if (!rows.length) {
                     return cb(null, false);
                 }
-                console.log(`no errors`)
                 // bcrypt appends the 'salt' to the 'hash' so we dont need to store the salt.
                 bcrypt.compare(password, rows[0].password, function(err, res) {
                     if(res) {
                         // Passwords match
-                        console.log(`password match`)
                         return cb(null, rows[0]);
                     } else {
                         // Passwords don't match
-                        console.log(`wrong password`)
                         return cb(null, false);
                     }
                 });
