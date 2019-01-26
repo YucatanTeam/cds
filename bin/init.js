@@ -29,6 +29,7 @@ connection.connect(err => {
     // TODO make init queries
     
 
+<<<<<<< HEAD
 
     /* -------------------------
        [ insertion / creation ]
@@ -92,4 +93,25 @@ connection.connect(err => {
     // user table
     // ...
 
+=======
+
+    // create user table
+    connection.query(`CREATE TABLE user (
+        id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        firstname text NULL,
+        lastname text NULL,
+        email text NOT NULL,
+        password text NOT NULL,
+        access int NOT NULL DEFAULT '2',
+        avatar blob NULL
+      );` ,[] ,console.log);
+
+      // add account dev@cds.or.ir:dev with dev access (7)
+      connection.query(`INSERT INTO user(id, email, password, access) VALUES(1, 'dev@cds.org.ir', '$2b$10$Sj/q46mjuAlwoVT/mCDrmONPpySXR50R1uIIKVpQ34Jieuh/4Zz9y', 7)` ,[] ,console.log);
+
+    // TODO make init queries
+
+    console.log("done.")
+    process.exit(0)
+>>>>>>> 12620b24ca5d9daef5aeb630a5b675c5732693f0
 });
