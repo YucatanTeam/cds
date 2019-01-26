@@ -25,7 +25,7 @@ function access(level) {
 // ...
 
 module.exports = ({app, db}) => {
-    app.get("/ping", access(7), (req, res) => {
+    app.get("/ping", access(7), (req, res) => { // developer pong the name!
         return res.end("pong " + req.user.firstname);
     });
 
