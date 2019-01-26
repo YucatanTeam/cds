@@ -15,6 +15,7 @@ function private(req, res, next) {
 function access(level) {
     // level: 0 ban, 1 restricted, 2 user, 3 mod, 5 admin, 7 dev
     return (req, res, next) => {
+        console.log(`checking access(${level}) for ${req.user.email}`)
         if(!req.user) return res.redirect("/login");
         if(req.user.access < level) return res.status(403).end();
         next();
@@ -31,14 +32,16 @@ module.exports = ({app, db}) => {
 
     app.use("/login", page('login'))
     
-    // app.post('/login', passport.authenticate('local', { failureRedirect: "/login"}), (req, res) => {
-        // TODO
-        // return res.redirect("/admin");
-        // redirect to /admin panel if its an admin account
-        // else redirect to /user panel
-    app.post('/login', (req, res) => {
-        return res.json({err: null, body: req.body.email})
-        // return res.redirect("/")
+    app.post('/login', passport.authenticate('local-login', { failureRedirect: "/login"}), (req, res) => {
+        // TODO find a way to send 'incoorect login' message to login page
+        console.log(req.user.email, "is logged in with access ", req.user.access)
+        if(req.user.access >= 5) {
+            console.log("redirecting ro /admin")
+            return res.redirect("/admin");
+        } else {
+            // return res.redirect("/user");
+            return res.redirect("/"); // change this when /user is implemented
+        }
     });
 
     app.get('/logout', (req, res) => {
@@ -47,6 +50,6 @@ module.exports = ({app, db}) => {
     });
 
     app.use('/public', page('public'))
-    app.use('/admin', private, page('admin'))
+    app.use('/admin', access(5), page('admin'))
     app.use('/', page('index'))
 }
