@@ -27,9 +27,6 @@ connection.connect(err => {
     console.log(`database is connected to ${DB_USER}@${DB_HOST}/${DB_NAME}`);
     
     // TODO make init queries
-    
-
-<<<<<<< HEAD
 
     /* -------------------------
        [ insertion / creation ]
@@ -50,13 +47,13 @@ connection.connect(err => {
                                     en_content TEXT NOT NULL,
                                     tags JSON NOT NULL,
                                     en_tags JSON NOT NULL,
-                                    status TINYINT DEFAULT 0,
+                                    status TINYINT NOT NULL DEFAULT 0,
                                     slug TEXT NOT NULL,
                                     en_slug TEXT NOT NULL,
                                     cuid VARCHAR(100) NOT NULL,
                                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                                     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                                    cover VARCHAR(1024) DEFAULT NULL)ENGINE=INNODB;` ,[] ,console.log);
+                                    cover blob NULL)ENGINE=INNODB;` ,[] ,console.log);
 
      // TODO insertaion bug!!! GOT SOME ERROR
     connection.query(`INSERT INTO post VALUES(
@@ -79,7 +76,7 @@ connection.connect(err => {
                 content TEXT NOT NULL,
                 name VARCHAR(255) NOT NULL,
                 email VARCHAR(255) NOT NULL,
-                status TINYINT DEFAULT 0,
+                status TINYINT NOT NULL DEFAULT 0,
                 cuid VARCHAR(100) NOT NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -92,10 +89,6 @@ connection.connect(err => {
     // ------------------------------------------------------------
     // user table
     // ...
-
-=======
-
-    // create user table
     connection.query(`CREATE TABLE user (
         id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
         firstname text NULL,
@@ -109,9 +102,6 @@ connection.connect(err => {
       // add account dev@cds.or.ir:dev with dev access (7)
       connection.query(`INSERT INTO user(id, email, password, access) VALUES(1, 'dev@cds.org.ir', '$2b$10$Sj/q46mjuAlwoVT/mCDrmONPpySXR50R1uIIKVpQ34Jieuh/4Zz9y', 7)` ,[] ,console.log);
 
-    // TODO make init queries
-
     console.log("done.")
     process.exit(0)
->>>>>>> 12620b24ca5d9daef5aeb630a5b675c5732693f0
 });
