@@ -25,7 +25,23 @@ connection.connect(err => {
     if(err) return console.error(err);
     console.log(`database is connected to ${DB_USER}@${DB_HOST}/${DB_NAME}`);
 
-    connection.query("CREATE TABLE test(a TEXT)" ,[] ,console.log);
+
+    // create user table
+    connection.query(`CREATE TABLE user (
+        id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        firstname text NULL,
+        lastname text NULL,
+        email text NOT NULL,
+        password text NOT NULL,
+        access int NOT NULL DEFAULT '2',
+        avatar blob NULL
+      );` ,[] ,console.log);
+
+      // add account dev@cds.or.ir:dev with dev access (7)
+      connection.query(`INSERT INTO user(id, email, password, access) VALUES(1, 'dev@cds.org.ir', '$2b$10$Sj/q46mjuAlwoVT/mCDrmONPpySXR50R1uIIKVpQ34Jieuh/4Zz9y', 7)` ,[] ,console.log);
 
     // TODO make init queries
+
+    console.log("done.")
+    process.exit(0)
 });
