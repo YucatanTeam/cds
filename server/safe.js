@@ -1,27 +1,12 @@
-const crypto = require('crypto')
-const safe = {
-    api:{
-        hash(pswd, cb){
-            salt = crypto.randomBytes(16).toString('hex')
-            middlehash = crypto.pbkdf2Sync(pswd, salt, 10000, 512, 'sha512').toString('hex')
-            hash = middlehash.concat('.', salt) // hash.salt
-            if(hash){
-                cb(null, hash)
-            } else{
-                cb('!Err', null)
-            }
-        },
-        compare(pswd, hashpswd, cb){
-            salt = hashpswd.split(".")[1]
-            middlehash = hashpswd.split(".")[0]
-            if(crypto.pbkdf2Sync(pswd, salt, 10000, 512, 'sha512').toString('hex') === middlehash){
-                cb(null, true)
-            } else{
-                cb('!Err', false)
-            }
-
-        }
+const crypto = require('crypto');
+module.exports = {
+    hash(password, cb) {
+        const salt = crypto.randomBytes(16).hexSlice()
+        crypto.pbkdf2(password, salt, 100000, 64, 'sha512', (err, dk) => cb(err, salt + dk.toString()))
+    },
+    compare(password, saltdk, cb) {
+        const salt = saltdk.slice(0, 32);
+        const dk = saltdk.slice(32);
+        crypto.pbkdf2(password, salt, 100000, 64, 'sha512', (err, sdk) => cb(err, sdk.toString() === dk))
     }
 }
-
-module.exports = safe

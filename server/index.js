@@ -33,7 +33,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(cookieSession({
     name: "session",
     keys: [
-        process.env.SECRET || require('crypto').randomBytes(32).hexSlice()
+        process.env.SECRET || 'force'//require('crypto').randomBytes(32).hexSlice()
     ],
     maxAge: 1 * 60 * 60 * 1000, // 24 hrs
 }));
