@@ -1,0 +1,66 @@
+<!-- 
+    pages: int:
+        number of pages
+        set this in parent component
+    page: int:
+        number of active page
+        bind this to use in parent component
+ -->
+
+<ul class="pagination">
+    <li class="{page === 1 ? "disabled" : "waves-effect"}"><a on:click=prev()><I>chevron_left</I></a></li>
+    {#each plist as p}
+        {#if p}
+            {#if p !== page}
+                <li class="waves-effect"><a on:click=goto(p)>{p}</a></li>
+            {:else}
+                <li class="active"><a>{p}</a></li>
+            {/if}
+        {/if}
+    {/each}
+    <li class="{page === pages ? "disabled" : "waves-effect"}"><a on:click=next()><I>chevron_right</I></a></li>
+</ul>
+
+<script>
+export default {
+    data() {
+        return {
+            pages: 5,
+            page: 1
+        }
+    },
+    computed: {
+        plist: ({pages}) => {
+            var li = [];
+            for(var i = 1; i <= pages; i++) {
+                li[i] = i;
+            }
+            return li;
+        }
+    },
+    methods: {
+        next() {
+            var {page, pages} = this.get()
+            page ++
+            if(page > pages) {
+                page = pages
+            }
+            this.set({page})
+        },
+        prev() {
+            var {page, pages} = this.get()
+            page --
+            if(page < 1) {
+                page = 1
+            }
+            this.set({page})
+        },
+        goto(page) {
+            this.set({page})
+        },
+    },
+    components: {
+        I: "./Icon.html"
+    }
+}
+</script>
