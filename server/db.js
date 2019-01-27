@@ -1,4 +1,14 @@
-const bcrypt = require('bcrypt');
+
+const crypto = require('crypto');
+function hash(password, cb) {
+    const salt = crypto.randomBytes(16).hexSlice()
+    crypto.pbkdf2(password, salt, 100000, 64, 'sha512', (err, dk) => cb(err, salt + dk.toString()))
+}
+function compare(password, saltdk, cb) {
+    const salt = saltdk.slice(0, 32);
+    const dk = saltdk.slice(32);
+    crypto.pbkdf2(password, salt, 100000, 64, 'sha512', (err, sdk) => cb(err, sdk.toString() === dk))
+}
 
 const db = {
     connection: null,
@@ -22,8 +32,8 @@ const db = {
                 if (!rows.length) {
                     return cb(null, false);
                 }
-                // bcrypt appends the 'salt' to the 'hash' so we dont need to store the salt.
-                bcrypt.compare(password, rows[0].password, function(err, res) {
+                // hash function appends the 'salt' to the 'hash' so we dont need to store the salt.
+                compare(password, rows[0].password, function(err, res) {
                     if(res) {
                         // Passwords match
                         return cb(null, rows[0]);
@@ -49,11 +59,11 @@ const db = {
 
                     newUserMysql.email = email;
 
-                    bcrypt.hash(password, 10, function(err, hash) {
-                        // hash contains the salt (salt.hash) so we dont need to store salt
-                        // Store hash in database
+                    hash(password, 10, function(err, saltdk) {
+                        // saltdk contains the salt and hash (salt + hash) so we dont need to store salt
+                        // Store saltdk in database
                         var insertQuery = "INSERT INTO users ( email, password, access ) values ( ?, ?, 2 )";
-                        db.connection.query(insertQuery, [email, hash], function (err, rows) {
+                        db.connection.query(insertQuery, [email, saltdk], function (err, rows) {
                             newUserMysql.id = rows.insertId;
                             return cb(null, newUserMysql);
                         });
@@ -64,8 +74,8 @@ const db = {
         },
         editUser(user ,cb) {
             var password = user.password;
-            bcrypt.hash(password, 10, function(err, hash) {
-                user.password = hash;
+            hash(password, 10, function(err, saltdk) {
+                user.password = saltdk;
                 db.connection.query(`UPDATE user SET firstname = ?, lastname = ?, username = ?, phone = ?, access = ?, password = ? WHERE id = ?`, [user.firstname,user.lastname,user.username,user.phone,parseInt(user.access),user.password,user.id], cb);
             });
         },
@@ -73,8 +83,8 @@ const db = {
             db.connection.query(`DELETE FROM user WHERE id = ?`, [id], cb);
         },
         changePassword(id, pass, cb) {
-            bcrypt.hash(pass, 10, function(err, hash) {
-                db.connection.query("UPDATE user SET password = ? WHERE id = ?", [hash, id], cb);
+            hash(pass, 10, function(err, saltdk) {
+                db.connection.query("UPDATE user SET password = ? WHERE id = ?", [saltdk, id], cb);
             });
             
         }
