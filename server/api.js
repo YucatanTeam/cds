@@ -16,7 +16,7 @@ function access(level) {
     // level: 0 ban, 1 restricted, 2 user, 3 mod, 5 admin, 7 dev
     return (req, res, next) => {
         if(!req.user) return res.redirect("/login");
-        if(req.user.access < level) return res.status(403).end();
+        if(req.user.access < level) return res.status(403).end(); // don't have enogh permition!
         next();
     }
 }
