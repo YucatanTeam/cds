@@ -7,11 +7,7 @@
 const mysql = require("mysql");
 const cuid = require("cuid"); // use this to create a cuid in insertaion ops
 
-const crypto = require('crypto');
-function hash(password, cb) {
-    const salt = crypto.randomBytes(16).hexSlice()
-    crypto.pbkdf2(password, salt, 100000, 64, 'sha512', (err, dk) => cb(err, salt + dk.toString()))
-}
+const safe = require('../server/safe.js');
 
 const DB_HOST = process.env.DB_HOST || 'localhost';
 const DB_PORT = process.env.DB_PORT || null;
@@ -107,7 +103,7 @@ connection.connect(err => {
     );` ,[] ,(err, rows)=>{
         if(err) errlog(err, rows)
         // add account dev@cds.or.ir:dev with dev access (7)
-        else hash("dev",(err, password) => {
+        else safe.hash("dev",(err, password) => {
             connection.query(`INSERT INTO user(id, email, password, access) VALUES(1, 'dev@cds.org.ir', ?, 7)` ,[password] ,errlog);
         });
     });

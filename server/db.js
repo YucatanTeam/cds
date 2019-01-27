@@ -1,14 +1,5 @@
 
-const crypto = require('crypto');
-function hash(password, cb) {
-    const salt = crypto.randomBytes(16).hexSlice()
-    crypto.pbkdf2(password, salt, 100000, 64, 'sha512', (err, dk) => cb(err, salt + dk.toString()))
-}
-function compare(password, saltdk, cb) {
-    const salt = saltdk.slice(0, 32);
-    const dk = saltdk.slice(32);
-    crypto.pbkdf2(password, salt, 100000, 64, 'sha512', (err, sdk) => cb(err, sdk.toString() === dk))
-}
+const safe = require('./safe.js');
 
 const db = {
     connection: null,
@@ -33,7 +24,7 @@ const db = {
                     return cb(null, false);
                 }
                 // hash function appends the 'salt' to the 'hash' so we dont need to store the salt.
-                compare(password, rows[0].password, function(err, res) {
+                safe.compare(password, rows[0].password, function(err, res) {
                     if(res) {
                         // Passwords match
                         return cb(null, rows[0]);
@@ -59,7 +50,7 @@ const db = {
 
                     newUserMysql.email = email;
 
-                    hash(password, 10, function(err, saltdk) {
+                    safe.hash(password, 10, function(err, saltdk) {
                         // saltdk contains the salt and hash (salt + hash) so we dont need to store salt
                         // Store saltdk in database
                         var insertQuery = "INSERT INTO users ( email, password, access ) values ( ?, ?, 2 )";
@@ -74,7 +65,7 @@ const db = {
         },
         editUser(user ,cb) {
             var password = user.password;
-            hash(password, 10, function(err, saltdk) {
+            safe.hash(password, 10, function(err, saltdk) {
                 user.password = saltdk;
                 db.connection.query(`UPDATE user SET firstname = ?, lastname = ?, username = ?, phone = ?, access = ?, password = ? WHERE id = ?`, [user.firstname,user.lastname,user.username,user.phone,parseInt(user.access),user.password,user.id], cb);
             });
@@ -83,7 +74,7 @@ const db = {
             db.connection.query(`DELETE FROM user WHERE id = ?`, [id], cb);
         },
         changePassword(id, pass, cb) {
-            hash(pass, 10, function(err, saltdk) {
+            safe.hash(pass, 10, function(err, saltdk) {
                 db.connection.query("UPDATE user SET password = ? WHERE id = ?", [saltdk, id], cb);
             });
             
