@@ -1,35 +1,16 @@
-const express = require('express')
 require('svelte/ssr/register'); // for svelte server side rendering
 const passport = require('passport');
-
-function page(root) {
-    return express.static(`${__dirname}/../www/${root}`)
-}
-
-
-function private(req, res, next) {
-    //  commented for debugging
-    // if(!req.user) return res.redirect("/login");
-    next();
-}
-function access(level) {
-    // level: 0 ban, 1 restricted, 2 user, 3 mod, 5 admin, 7 dev
-    return (req, res, next) => {
-        if(!req.user) return res.redirect("/login");
-        if(req.user.access < level) return res.status(403).end(); // don't have enogh permition!
-        next();
-    }
-}
+const safe = require('./safe.js');
 
 // require routes here
 // ...
 
 module.exports = ({app, db}) => {
-    app.get("/ping", access(7), (req, res) => { // developer pong the name!
+    app.get("/ping", safe.access(7), (req, res) => { // developer pong the name!
         return res.end("pong " + req.user.firstname);
     });
 
-    app.use("/login", page('login'))
+    app.use("/login", safe.page('login'))
     
     app.post('/login', passport.authenticate('local-login', { failureRedirect: "/login"}), (req, res) => {
         // TODO find a way to send 'incoorect login' message to login page
@@ -46,7 +27,7 @@ module.exports = ({app, db}) => {
         return res.redirect('/');
     });
 
-    app.use('/public', page('public'))
-    app.use('/admin', access(5), page('admin'))
-    app.use('/', page('index'))
+    app.use('/public', safe.page('public'))
+    app.use('/admin', safe.access(5), safe.page('admin'))
+    app.use('/', safe.page('index'))
 }
