@@ -1,0 +1,98 @@
+<!-- 
+    content : array of objects:
+        each object will be rendered as a row
+        table headers will be set to content[0] keys
+        to render actions in a column set the value of content to a list of booleans
+        each boolean indicates that the correspondig action is enabled for that row or not
+
+    actions : array of objects:
+        like {icon: "delete", tooltip: "delete", action(obj, component) {
+            // some code here
+            // obj is the content (row) that its action was clicked
+            // component is the Table component (this component)
+        }}
+
+    indexed : boolean:
+        if indexed was true first column will be number of row 
+
+    highlight : boolean:
+        table highlight effect
+
+ -->
+
+<table class="{highlight ? "highlight" : "striped"}">
+    <thead>
+        <tr>
+            {#if indexed}
+                <th>/</th>
+            {/if}
+            {#if content && content.length}
+                {#each Object.keys(content[0]) as key}
+                    <th>{key}</th>
+                {:else}
+                    <th>Empty table</th>
+                {/each}
+            {/if}
+        </tr>
+    </thead>
+    {#if content && content.length}
+    <tbody>
+        {#each content as row, i}
+            <tr>
+                {#if indexed}
+                    <td>{i+1}</td>
+                {/if}
+                {#each Object.keys(row) as key}
+                    <td>
+                        {#if typeof(row[key]) === 'object'}
+                            <td>
+                                {#each actions as action, ai}
+                                    {#if row[key][ai] === true}
+                                        <a on:click=call_action(ai,i)><I>{action.icon}</I></a>
+                                    {:else}
+                                        <span><I>{action.icon}</I></span>
+                                    {/if}
+                                {/each}
+                            </td>
+                        {:else}
+                            <td>{row[key]}</td>
+                        {/if}
+                    </td>
+                {/each}
+            </tr>
+        {/each}
+    </tbody>
+    {:else}
+        <tbody><tr><td>Empty list</td></tr></tbody>
+    {/if}
+</table>
+
+<script>
+
+export default {
+    data() {
+        return {
+            indexed: false,
+            content: [{name: "force", actions: [false]}, {name: "wo", actions: [true]}],
+            actions: [{icon: "delete",tooltip: "delete", action(obj, component) {
+                    var {content} = component.get();
+                    console.log("were here !", content)
+                    delete content[content.indexOf(obj)];
+                    content = content.filter(e => e != null)
+                    console.log("and deleted !", content)
+                    component.set({content})
+                }
+            }]
+        }
+    },
+    methods: {
+        call_action(ai, i) {
+            var {content, actions} = this.get();
+            actions[ai].action(content[i], this);
+        }
+    },
+    components: {
+        I: "./Icon.html"
+    }
+}
+</script>
