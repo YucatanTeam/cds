@@ -1,6 +1,14 @@
 require('svelte/ssr/register'); // for svelte server side rendering
 const express = require('express')
 const passport = require('passport');
+const slug = require('limax')
+
+/* --------------------
+    TODO : slug the url
+   --------------------
+    slug: req.body.title.replace(/ /g,"-"),
+    en_slug: slug(req.body.en_title.toLowerCase(), { lowercase: true }),
+*/
 
 function page(root) {
     return express.static(`${__dirname}/../www/${root}`)
