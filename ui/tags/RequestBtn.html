@@ -33,7 +33,7 @@ export default {
                         "Content-Type": "application/json"
                     },
                     redirect: "follow",
-                    body: JSON.stringify(body),
+                    body: JSON.stringify(body)
                 })
                 .then(response => {
                     if(response.redirected) {
