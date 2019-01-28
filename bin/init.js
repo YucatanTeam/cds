@@ -3,10 +3,8 @@
 // to scaffold the project!
 
 
-
 const mysql = require("mysql");
 const cuid = require("cuid"); // use this to create a cuid in insertaion ops
-
 const safe = require('../server/safe.js');
 
 const DB_HOST = process.env.DB_HOST || 'localhost';
@@ -27,15 +25,7 @@ const connection = mysql.createConnection({
 connection.connect(err => {
     if(err) return console.error(err);
     console.log(`database is connected to ${DB_USER}@${DB_HOST}/${DB_NAME}`);
-    const errlog = (err, rows) => err ? console.log(err.sqlMessage) : console.log(".");
-    // TODO make init queries
-
-    /* -------------------------
-       [ insertion / creation ]
-    
-        // db creation...
-    // connection.query(`CREATE SCHEMA ${DB_NAME} DEFAULT CHARACTER SET utf8 COLLATE utf8_persian_ci ;`)
-    */
+    const errlog = (err, rows) => err ? console.log(err.sqlMessage) : console.log("ok");
 
 
     // ============================================================================================================
@@ -86,8 +76,16 @@ connection.connect(err => {
     INDEX post_ind (post_id),
     FOREIGN KEY (post_id)
         REFERENCES post(id)
-        ON DELETE CASCADE)ENGINE=INNODB;` ,[] ,errlog);
-
+        ON DELETE CASCADE)ENGINE=INNODB;` ,[] ,(err, rows) => {
+            if(err) errlog(err, rows)
+            else connection.query(`INSERT INTO comment(post_id, content, name, email, cuid) VALUES(
+                '1',
+                'این پست عالی است!',
+                'wilonion',
+                'ea_pain@yahoo.com',
+                ?
+            );` ,[cuid()] ,errlog)
+        });
 
     // ============================================================================================================
     // user table
@@ -100,7 +98,7 @@ connection.connect(err => {
     password text NOT NULL,
     access int NOT NULL DEFAULT '2',
     avatar blob NULL
-    );` ,[] ,(err, rows)=>{
+    )ENGINE=INNODB;` ,[] ,(err, rows)=>{
         if(err) errlog(err, rows)
         // add account dev@cds.or.ir:dev with dev access (7)
         else safe.hash("dev",(err, password) => {
