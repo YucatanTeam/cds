@@ -24,7 +24,7 @@ export default {
                     body[i] = document.getElementById(i).value;
                 }
             }
-            if(post) {
+            if(post) { // TODO fix the "SyntaxError: Unexpected token < in JSON at position 0" bug!
                 return fetch(post, {
                     method: "POST",
                     mode: "same-origin",
