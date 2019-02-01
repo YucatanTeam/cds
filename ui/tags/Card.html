@@ -3,9 +3,10 @@
     col string: classes after materialize col class
     image string: img-src
     alt string: img-alt
+    static boolean: hover animation or static
 -->
 
-<div class="card white z-depth-3 {col ? "col" : "" } {col}">
+<div class="card white {static ? "z-depth-3" : "hoverable"} {col ? "col" : "" } {col}">
 	{#if image}
         <div class="card-image">
             <Imgl src={image} alt={alt} />
