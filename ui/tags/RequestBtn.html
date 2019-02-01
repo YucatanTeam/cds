@@ -1,6 +1,6 @@
-<a href="#!" class="btn waves-effect waves-light yellow black-text {disabled}" on:click=send()>
+<button class="btn waves-effect waves-light yellow black-text {disabled}" on:click=send(event)>
     <slot><!-- btn text --></slot>
-</a>
+</button>
 
 
 <script>
@@ -16,7 +16,11 @@ export default {
         }
     },
     methods: {
-        send() {
+        send(e) {
+            function handle(err) {
+                // TODO handle err properly !
+                this.set({ response: { err }, disabled: false })
+            }
             this.set({disabled: true});
             var {get, post, body, bodyById} = this.get();
             if(bodyById) {
@@ -37,15 +41,20 @@ export default {
                 })
                 .then(response => {
                     if(response.redirected) {
-                        // redirect the client to panel
                         window.location.href = response.url;
                         return {json:()=>({})};
                     }
                     return response
                 })
-                .then(response => response.json())
+                .then(response => {
+                    var contentType = response.headers.get("content-type");
+                    if(contentType && contentType.includes("application/json")) {
+                        return response.json();
+                    }
+                    throw new TypeError("response is not JSON");
+                })
                 .then(json => this.set({ response: json, disabled: false }))
-                .catch(err => this.set({ response: { err }, disabled: false }));
+                .catch(handle);
             } else if(get) {
                 // make urlencoded
                 get += "?";
@@ -68,9 +77,15 @@ export default {
                     }
                     return response
                 })
-                .then(response => response.json())
+                .then(response => {
+                    var contentType = response.headers.get("content-type");
+                    if(contentType && contentType.includes("application/json")) {
+                        return response.json();
+                    }
+                    throw new TypeError("response is not JSON");
+                })
                 .then(json => this.set({ response: json, disabled: false }))
-                .catch(err => this.set({ response: { err }, disabled: false }));
+                .catch(handle);
             }
         }
     }
