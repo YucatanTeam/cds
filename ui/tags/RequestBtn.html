@@ -24,7 +24,7 @@ export default {
                     body[i] = document.getElementById(i).value;
                 }
             }
-            if(post) { // TODO fix the "SyntaxError: Unexpected token < in JSON at position 0" bug!
+            if(post) {
                 return fetch(post, {
                     method: "POST",
                     mode: "same-origin",
@@ -39,6 +39,7 @@ export default {
                     if(response.redirected) {
                         // redirect the client to panel
                         window.location.href = response.url;
+                        return {json:()=>({})};
                     }
                     return response
                 })
@@ -63,6 +64,7 @@ export default {
                 .then(response => {
                     if(response.redirected) {
                         window.location.href = response.url;
+                        return {json:()=>({})};
                     }
                     return response
                 })
