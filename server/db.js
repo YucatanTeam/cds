@@ -1,6 +1,15 @@
 
 const safe = require('./safe.js');
 
+
+/* --------------------
+    TODO : slug the url
+   --------------------
+    slug: req.body.title.replace(/ /g,"-"),
+    en_slug: slug(req.body.en_title.toLowerCase(), { lowercase: true }),
+*/
+
+
 const db = {
     connection: null,
     api: {
@@ -77,6 +86,45 @@ const db = {
                 db.connection.query("UPDATE user SET password = ? WHERE id = ?", [saltdk, id], cb);
             });
             
+        },
+        getAllComments(cb){
+            db.connection.query(`SELECT * FROM comment`, [], (err, rows)=>{
+                if(rows.length >= 1) {
+                    return cb(err, rows);
+                } else {
+                    return cb(err, false);
+                }
+            });
+        },
+        deleteCommentByCuid(cuid, cb){
+
+        },
+        deleteCommentById(id, cb){
+
+        },
+        editCommentByCuid(cuid, cb){
+
+        },
+        editCommentById(id, cb){
+
+        },
+        deleteAllComments(cb){
+
+        },
+        getCommentById(id, cb){
+
+        },
+        getCommentByName(name, cb){
+
+        },
+        getCommentByEmail(email, cb){
+
+        },
+        getCommentByCuid(cuid, cb){
+
+        },
+        getCommentsByNameEmail(name, email, cb){
+
         }
     }
 }
