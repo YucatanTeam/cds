@@ -4,10 +4,9 @@ import commonjs from 'rollup-plugin-commonjs';
 import { terser } from 'rollup-plugin-terser';
 
 const pages = [
-	'admin',
+	'panel',
 	'login',
-	'index',
-	'user'
+	'index'
 ]
 
 const production = !process.env.ROLLUP_WATCH;
