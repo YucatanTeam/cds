@@ -45,7 +45,7 @@ module.exports = ({app, db}) => {
     // ------------
     app.use("/login", page('login'))
     app.post('/login', passport.authenticate('local-login', { failureRedirect: "/login"}), (req, res) => {
-        // TODO find a way to send 'incoorect login' message to login page
+        // TODO find a way to send 'incoorect login' message to login page then fix its ui in Form tag
         return res.redirect("/panel");
     });
     app.get('/logout', (req, res) => {
@@ -59,7 +59,7 @@ module.exports = ({app, db}) => {
     // ------------
     app.get('/getuser', private(), (req, res, next)=>{
         try{
-          res.json({type: 'success', message: 'ok', user: req.user})
+          res.json({type: 'success', message: 'ok', user: req.user}) // do whatever u want with json resp in client side
         } catch(err){
             next(err);
         }
@@ -72,7 +72,7 @@ module.exports = ({app, db}) => {
     // ------------
     app.get('/getAllComments', access(5), (req, res, next)=>{
         try {
-            db.api.getAllComments((err, rows)=>{
+            db.api.getAllComments((err, rows)=>{ // // do whatever u want with json resp in client side
                 if(rows) res.json({type:'success', message:'Fetched Successfully', rows})
                 if(err) res.status(404).json({type: 'error', message:'No Comments Fetched From Server', err})
             })
