@@ -1,6 +1,6 @@
 
 
-{#await promise}
+{#await promise} <!-- TODO : Uncaught (in promise) TypeError: Cannot read property 'removeChild' of null -->
     
     <div class="preloader-wrapper big active">
         <div class="spinner-layer spinner-blue">
@@ -66,7 +66,7 @@
                     }
                     throw new TypeError("response is not JSON");
                 })
-                .then(json => {this.set({ content: json.rows }); console.log(this.get().content) })
+                .then(json => {this.set({ content: json }); console.log(this.get().content) }) // TODO can't get the content in parent comp!
                 .catch(handle)
             )
            })
