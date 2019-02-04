@@ -1,6 +1,6 @@
 
 const safe = require('./safe.js');
-
+const slug = require('limax')
 
 /* --------------------
     TODO : slug the url
