@@ -1,8 +1,8 @@
 
 
-<!-- set actions and bind content , response and url -->
+<!-- set actions and bind content  -->
 <div class="row">
-    <Loading get="/getAllcomments" bind:response bind:content>
+    <Loading get="/getAllcomments" bind:content bind:response>
         <Table  indexed
             highlight
             rows={1}
@@ -24,8 +24,8 @@ export default {
     data(){
         return {
             response: null,
-            content: null
-        }
+            content: null,
+        };
     },
     components: {
         Loading: "../../tags/Loading.html",
