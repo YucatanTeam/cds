@@ -1,0 +1,77 @@
+
+
+{#await promise}
+    
+    <div class="preloader-wrapper big active">
+        <div class="spinner-layer spinner-blue">
+            <div class="circle-clipper left">
+            <div class="circle"></div>
+            </div><div class="gap-patch">
+            <div class="circle"></div>
+            </div><div class="circle-clipper right">
+            <div class="circle"></div>
+            </div>
+        </div>
+    </div>
+
+{:then content}
+
+    <slot><!-- put whatever tag you want here --></slot>
+
+{:catch error}
+    <p>refresh the page!</p>
+{/await}
+
+<script>
+  export default{
+      data(){
+          return {
+              response: null,
+              get: null,
+              content: null,
+              promise: null
+          }
+      },
+      oncreate(){
+         function handle(err){
+              this.set({response: err})
+        }
+        
+        var {get} = this.get()
+        if(get){
+             this.set({promise: new Promise(fulfuil=>{
+            fulfuil(
+              fetch(get, {
+                    method: "GET",
+                    mode: "same-origin",
+                    credentials: "same-origin",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    redirect: "follow",
+                })
+                .then(response => {
+                    if(response.redirected) {
+                        window.location.href = response.url;
+                        return {json:()=>({})};
+                    }
+                    // console.log(response)
+                    return response
+                })
+                .then(response => {
+                    var contentType = response.headers.get("content-type");
+                    if(contentType && contentType.includes("application/json")) {
+                        // console.log(response.json())
+                        return response.json();
+                    }
+                    throw new TypeError("response is not JSON");
+                })
+                .then(json => {this.set({ content: json.rows }); console.log(this.get().content) })
+                .catch(handle)
+            )
+           })
+          })
+        }
+     }
+  }
+  </script>
