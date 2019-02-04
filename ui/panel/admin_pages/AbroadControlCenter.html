@@ -1,0 +1,36 @@
+
+
+
+<h5>Abroad Control Center</h5>
+<p>msg : {message}</p>
+
+
+<div>
+canada, australia, new zealand, abroad in other countries, visa and articles, migration and language courses(see cds.org.ir its related tab) 
+</div>
+
+
+<!-- set actions and bind content -->
+<div class="row">
+    <Table  indexed
+            highlight
+            rows={1}
+            content={[{name: "force", actions: [false]}, {name: "wo", actions: [true]}]}
+            search={["name"]}
+            actions={[{icon: "delete",tooltip: "delete", action(obj, component) {
+                    var {content} = component.get();
+                    delete content[content.indexOf(obj)];
+                    content = content.filter(e => e != null)
+                    component.set({content})
+                }
+            }]}
+            on:result=console.log("result:",event)/> 
+</div>
+
+<script>
+export default {
+    components: {
+        Table: "../../tags/Table.html",
+    }
+}
+</script>
