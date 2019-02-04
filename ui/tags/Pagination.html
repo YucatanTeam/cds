@@ -12,9 +12,9 @@
     {#each plist as p}
         {#if p}
             {#if p !== page}
-                <li class="waves-effect"><a on:click=goto(p)>{p}</a></li>
+                <li class="waves-effect"><a class="white" on:click=goto(p)>{p}</a></li>
             {:else}
-                <li class="active"><a>{p}</a></li>
+                <li class="active"><a class="yellow">{p}</a></li>
             {/if}
         {/if}
     {/each}

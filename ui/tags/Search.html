@@ -1,0 +1,83 @@
+<!-- 
+    data: list of objects
+    by: list of strings: search for values of this strings from data
+    icon ,label ,id : string: materialize icon and label and id for search input
+    col: string: class string for materialize 'col' like "s10 offset-s1"
+
+    Search.on("result", res => {
+        if(res) {
+            // 'res' from data matched
+            // do whatever you want with it
+        } else {
+            // something was searched but it was not in data
+        }
+    })
+
+ -->
+
+<div sv-data={data} class="input-field {col ? "col" : ""} {col ? col : ""}">
+    <i class="material-icons prefix">{icon}</i>
+    <input type="text" id="{id}" class="autocomplete" on:keypress=key(event)>
+    <label for="{id}">{label}</label>
+</div>
+
+<script>
+
+export default {
+    data() {
+        return {
+            data: {},
+            by: ["name"],
+            col: null,
+            icon: "search",
+            label: "search",
+            id: "autocomplete-input"
+        }
+    },
+    onupdate({changed, current, previous}) {
+        const self = this;
+
+        if(changed.data) {
+            // update materialize autocomplete data
+            var options = { data: {}, onAutocomplete: it => self.key({keyCode: 13})  };
+
+            for(var by of current.by) {
+                for(var d of current.data) {
+                    options.data[d[by]] = null
+                }
+            }
+
+            var elems = document.querySelectorAll('.autocomplete');
+            var instances = M.Autocomplete.init(elems, options);
+        }
+    },
+    oncreate() {
+        window.comp = this;
+    },
+    methods: {
+        key(e) {
+            const {data, id, by} = this.get();
+            if(e.keyCode === 13) {
+                var key = document.getElementById(id).value;
+                var found = false;
+                for(var b of by) {
+                    var done = false;
+                    for(var d of data) {
+                        if(d[b] === key) {
+                            document.getElementById(id).value = "";
+                            this.fire("result", d);
+                            done = true;
+                            found = true;
+                            break;
+                        }
+                    }
+                    if(done) break;
+                }
+                if(!found) {
+                    this.fire("result", null);
+                }
+            }
+        }
+    }
+}
+</script>
