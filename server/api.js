@@ -1,9 +1,6 @@
 require('svelte/ssr/register'); // for svelte server side rendering
 const express = require('express')
 const passport = require('passport');
-const slug = require('limax')
-
-
 
 
     // ------------
@@ -11,6 +8,13 @@ const slug = require('limax')
     // ------------
 function page(root) {
     return express.static(`${__dirname}/../www/${root}`)
+}
+
+function private(){
+    return (req, res, next) =>{
+        if(!req.user) return res.redirect("/login");
+        next();
+    }
 }
 
 function access(level) {
@@ -42,12 +46,7 @@ module.exports = ({app, db}) => {
     app.use("/login", page('login'))
     app.post('/login', passport.authenticate('local-login', { failureRedirect: "/login"}), (req, res) => {
         // TODO find a way to send 'incoorect login' message to login page
-        if(req.user.access >= 5) {
-            return res.redirect("/panel");
-        } else {
-            // return res.redirect("/user");
-            return res.redirect("/"); // change this when /user is implemented
-        }
+        return res.redirect("/panel");
     });
     app.get('/logout', (req, res) => {
         req.logout();
@@ -55,7 +54,17 @@ module.exports = ({app, db}) => {
     });
 
     
-    
+    // ------------
+    // user api
+    // ------------
+    app.get('/getuser', private(), (req, res, next)=>{
+        try{
+          res.json({type: 'success', message: 'ok', user: req.user})
+        } catch(err){
+            next(err);
+        }
+    })
+
     
     
     // ------------
