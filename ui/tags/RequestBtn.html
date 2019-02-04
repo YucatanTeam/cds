@@ -17,6 +17,8 @@ export default {
     },
     methods: {
         send(e) {
+            // prevent the page from reloading
+				e.preventDefault();
             function handle(err) {
                 // TODO handle err properly !
                 this.set({ response: { err }, disabled: false })
