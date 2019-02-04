@@ -10,9 +10,10 @@ canada, australia, new zealand, abroad in other countries, visa and articles, mi
 </div>
 
 
-<!-- set actions and bind content -->
+<!-- set actions and bind content , response and url -->
 <div class="row">
-    <Table  indexed
+    <Loading get="" bind:response bind:content>
+        <Table  indexed
             highlight
             rows={1}
             content={[{name: "force", actions: [false]}, {name: "wo", actions: [true]}]}
@@ -24,13 +25,21 @@ canada, australia, new zealand, abroad in other countries, visa and articles, mi
                     component.set({content})
                 }
             }]}
-            on:result=console.log("result:",event)/> 
+            on:result=console.log("result:",event)/>
+    </Loading>
 </div>
 
 <script>
 export default {
+    data(){
+        return {
+            response: null,
+            content: null
+        }
+    },
     components: {
-        Table: "../../tags/Table.html",
+        Loading: "../../tags/Loading.html",
+        Table: "../../tags/Table.html"
     }
 }
 </script>

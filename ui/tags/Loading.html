@@ -38,7 +38,7 @@
         }
         
         var {get} = this.get()
-        if(get){
+        if(get){ // if everything was ok with the get request..
              this.set({promise: new Promise(fulfuil=>{
             fulfuil(
               fetch(get, {
