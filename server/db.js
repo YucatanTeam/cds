@@ -1,14 +1,5 @@
 
 const safe = require('./safe.js');
-const slug = require('limax')
-
-/* --------------------
-    TODO : slug the url
-   --------------------
-    slug: req.body.title.replace(/ /g,"-"),
-    en_slug: slug(req.body.en_title.toLowerCase(), { lowercase: true }),
-*/
-
 
 const db = {
     connection: null,
