@@ -2,8 +2,12 @@
 	<title>{title}</title>
 </svelte:head>
 
-<Loading get="/getuser" bind:response bind:content>
-	<Sidenav background="/public/img/cds.svg" fixed> <!-- TODO : fill the background with user avatar -->
+
+<Sidenav background="/public/img/cds.svg" fixed> <!-- TODO : fill the background with user avatar -->
+	
+	{#await getuser}
+        <Loading small/>
+    {:then user}
 		<li><a class="truncate" href="#/AbroadControlCenter"><I>language</I>Abroad Control Center</a></li>
 		<li><a class="truncate" href="#/AccessControlCenter"><I>accessibility</I>Access Control Center</a></li>
 		<li><a class="truncate" href="#/AnswerQuestionControlCenter"><I>question_answer</I>FAQ Control Center</a></li>
@@ -17,18 +21,20 @@
 		<li><a class="truncate" href="#/SecurityPolicy"><I>security</I>Security Policy</a></li>
 		<li><a class="truncate" href="#/SeoSetup"><I>search</I>Seo Setup</a></li>
 		<li><a class="truncate" href="#/StudentControlCenter"><I>assignment_ind</I>Student Control Center</a></li>
-	</Sidenav>
+	{:catch err}
+        <p>Error {err.code}</p>
+    {/await}
+</Sidenav>
 
-	<div class="row">
-		<div class="col offset-s1 offset-m4 offset-l3">
-			<Router routes={routes}>
-				<div class="error">
-					This page was not found.
-				</div>
-			</Router>
-		</div>
+<div class="row">
+	<div class="col offset-s1 offset-m4 offset-l3">
+		<Router routes={routes}>
+			<div class="error">
+				This page was not found.
+			</div>
+		</Router>
 	</div>
-</Loading>
+</div>
 
 <script>
 	import SecurityPolicy from "./admin_pages/SecurityPolicy.html";
@@ -46,15 +52,17 @@
 	import SandBox from "./admin_pages/SandBox.html";
 
 	export default {
-	  oncreate() {
+	  	oncreate() {
 			M.AutoInit();
-
 		},
-	  data() {
-	    return {
-			response: null,
-			content: null,
-	  		title: "CDS-PANEL",
+	  	data() {
+			return {
+				getuser:
+					fetch("/getuser")
+					.then(r=>{ if(r.status == 200) return r; else throw {code: r.status}})
+					.then(r=>r.json())
+					.then(j=>j.body),
+				title: "CDS-PANEL",
 				routes: {
 				'/SecurityPolicy': [SecurityPolicy, {message: 'from "/SecurityPolicy" path'}],
 				'/CandoServices': [CandoServices, {message: 'from "/CandoServices" path'}],
@@ -70,14 +78,13 @@
 				'/CommentControlCenter': [CommentControlCenter, {message: 'from "/CommetControlCenter" path'}],
 				'/SandBox': [SandBox, {message: 'from "/SandBox" path'}]
 				}
-	    };
-	  },
-	  methods: {},
-	  components: {
-		Router: "svelte-app-router",
+			};
+		},
+		components: {
+			Router: "svelte-app-router",
 			Sidenav: "../tags/Sidenav.html",
 			I: '../tags/Icon.html',
 			Loading: '../tags/Loading.html'
-	  }
+	  	}
 	};
 </script>
