@@ -56,15 +56,15 @@ export default {
                     return response
                 })
                 .then(response => {
-                    var body = null;
                     var contentType = response.headers.get("content-type");
                     if(contentType && contentType.includes("application/json")) {
-                        body = response.json();
+                        return response.json().then(json => ({status: response.status, body: json}));
                     }
-                    return {status: response.status, body};
+                    return {status: response.status, body: null};
                 })
                 .then(response => {
-                    self.set({ response });
+                    console.log(response)
+                    self.set({ response , done: true});
                     self.fire("response", {err: null, response});
                 })
                 .catch(err => {
