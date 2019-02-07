@@ -22,6 +22,7 @@ export default {
         };
     },
     methods: {
+        // https://svelte.technology/guide#component-events
         handle({ err, response }) {
             if (response && response.status == 401) {
                 this.set({ response: { err: "Invalid credentials", body: null } });

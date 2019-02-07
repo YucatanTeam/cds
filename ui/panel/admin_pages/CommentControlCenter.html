@@ -2,7 +2,7 @@
 
 <!-- set actions and bind content  -->
 <div class="row">
-    <Loading get="/getAllcomments" bind:content bind:response>
+    <Loading get="/getAllcomments" bind:response on:response="handle(event)">
         <Table  indexed
             highlight
             rows={1}
@@ -23,9 +23,17 @@
 export default {
     data(){
         return {
-            response: null,
-            content: null,
+            response: null
         };
+    },
+    methods:{
+        handle({err, response}){
+            if(response && response.status == 401){
+                this.set({response:{err: "Oops!", body:null}});
+            } else if(response && response.status == 200){
+                this.set({response:{err:null, body:response.body}});
+            }
+        }
     },
     components: {
         Loading: "../../tags/Loading.html",

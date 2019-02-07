@@ -2,7 +2,7 @@
 	<title>{title}</title>
 </svelte:head>
 
-<Loading get="/getuser" bind:response bind:content>
+<Loading get="/getuser" bind:response>
 	<Sidenav background="/public/img/cds.svg" fixed> <!-- TODO : fill the background with user avatar -->
 		<li><a class="truncate" href="#/AbroadControlCenter"><I>language</I>Abroad Control Center</a></li>
 		<li><a class="truncate" href="#/AccessControlCenter"><I>accessibility</I>Access Control Center</a></li>
