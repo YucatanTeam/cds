@@ -74,9 +74,11 @@ export default {
                 });
             } else if(get) {
                 // make urlencoded
-                get += "?";
-                for(var i of body) {
-                    get += `${i}=${body[i]}&`;
+                if(body) {
+                    get += "?";
+                    for(var i of body) {
+                        get += `${i}=${body[i]}&`;
+                    }
                 }
                 return fetch(get, {
                     method: "GET",
