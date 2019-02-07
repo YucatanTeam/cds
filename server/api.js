@@ -11,8 +11,8 @@ function page(root) {
 function access(level) {
     // level: 0 ban, 1 restricted, 2 user, 3 mod, 5 admin, 7 dev
     return (req, res, next) => {
-        if(!req.user) return res.status(401).end();
-        if(req.user.access < level) return res.status(403).end();
+        if(!req.user) return res.status(401).end("Unauthorized !");
+        if(req.user.access < level) return res.status(403).end("Access denied !");
         next();
     }
 }
@@ -32,6 +32,9 @@ module.exports = ({app, db}) => {
         return res.end("pong " + req.user.firstname);
     });
     
+    app.get("/ping/:id/:name", access(7), (req, res) => { // example for route controll
+        return res.status(200).send(`hello ${req.params.name} (${req.params.id})`);
+    });
     
     
     // ------------
