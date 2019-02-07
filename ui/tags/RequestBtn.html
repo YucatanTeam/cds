@@ -1,3 +1,16 @@
+<!-- 
+    body: object: request body sent as json
+    bodyById: array of DOM input element IDs to make body from their values
+    get: route for get method
+    post: route for post method
+    response: response of request. bind this to use
+    comp.on('response', cb({err, response})); // 'response' event
+        err is any error if occured
+        response is {status: a code, body: json from specified route}
+ -->
+
+
+
 <button class="btn waves-effect waves-light yellow black-text {disabled ? "disabled" : ""}" on:click=send(event)>
     <slot><!-- btn text --></slot>
 </button>
@@ -18,13 +31,7 @@ export default {
     methods: {
         send(e) {
             const self = this;
-            console.log("booo")
-            // prevent the page from reloading
-				e.preventDefault();
-            function handle(err) {
-                // TODO handle err properly !
-                self.set({ response: { err }, disabled: false })
-            }
+            e.preventDefault();
             self.set({disabled: true});
             var {get, post, body, bodyById} = self.get();
             if(bodyById) {
@@ -46,19 +53,25 @@ export default {
                 .then(response => {
                     if(response.redirected) {
                         window.location.href = response.url;
-                        return {json:()=>({})};
                     }
-                    return response
+                    return response;
                 })
                 .then(response => {
+                    var body = null;
                     var contentType = response.headers.get("content-type");
                     if(contentType && contentType.includes("application/json")) {
-                        return response.json();
+                        body = response.json();
                     }
-                    throw new TypeError("response is not JSON");
+                    return {status: response.status, body};
                 })
-                .then(json => self.set({ response: json, disabled: false }))
-                .catch(handle);
+                .then(response => {
+                    self.set({ response, disabled: false });
+                    self.fire("response", {err: null, response});
+                })
+                .catch(err => {
+                    self.set({ response: null, disabled: false });
+                    self.fire("response", {err, response: null});
+                });
             } else if(get) {
                 // make urlencoded
                 get += "?";
@@ -77,19 +90,25 @@ export default {
                 .then(response => {
                     if(response.redirected) {
                         window.location.href = response.url;
-                        return {json:()=>({})};
                     }
                     return response
                 })
                 .then(response => {
+                    var body = null;
                     var contentType = response.headers.get("content-type");
                     if(contentType && contentType.includes("application/json")) {
-                        return response.json();
+                        body = response.json();
                     }
-                    throw new TypeError("response is not JSON");
+                    return {status: response.status, body};
                 })
-                .then(json => self.set({ response: json, disabled: false }))
-                .catch(handle);
+                .then(response => {
+                    self.set({ response, disabled: false });
+                    self.fire("response", {err: null, response});
+                })
+                .catch(err => {
+                    self.set({ response: null, disabled: false });
+                    self.fire("response", {err, response: null});
+                });
             }
         }
     }
