@@ -1,4 +1,4 @@
-<button class="btn waves-effect waves-light yellow black-text {disabled}" on:click=send(event)>
+<button class="btn waves-effect waves-light yellow black-text {disabled ? "disabled" : ""}" on:click=send(event)>
     <slot><!-- btn text --></slot>
 </button>
 
@@ -17,14 +17,16 @@ export default {
     },
     methods: {
         send(e) {
+            const self = this;
+            console.log("booo")
             // prevent the page from reloading
 				e.preventDefault();
             function handle(err) {
                 // TODO handle err properly !
-                this.set({ response: { err }, disabled: false })
+                self.set({ response: { err }, disabled: false })
             }
-            this.set({disabled: true});
-            var {get, post, body, bodyById} = this.get();
+            self.set({disabled: true});
+            var {get, post, body, bodyById} = self.get();
             if(bodyById) {
                 for(var i of bodyById) {
                     body[i] = document.getElementById(i).value;
@@ -55,7 +57,7 @@ export default {
                     }
                     throw new TypeError("response is not JSON");
                 })
-                .then(json => this.set({ response: json, disabled: false }))
+                .then(json => self.set({ response: json, disabled: false }))
                 .catch(handle);
             } else if(get) {
                 // make urlencoded
@@ -86,7 +88,7 @@ export default {
                     }
                     throw new TypeError("response is not JSON");
                 })
-                .then(json => this.set({ response: json, disabled: false }))
+                .then(json => self.set({ response: json, disabled: false }))
                 .catch(handle);
             }
         }
