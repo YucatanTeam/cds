@@ -30,97 +30,48 @@ export default {
     data() {
         return {
             done: false,
-            body: {}, // you can fill this
-            bodyById: null, // list of DOM input element IDs to make body from their values
             get: null,
-            post: null,
             response: null, // bind:response if you need the response
             error: null,
         }
     },
-    oncreate() {
-        const self = this;
-        self.set({disabled: true});
-        var {get, post, body, bodyById} = self.get();
-        if(bodyById) {
-            for(var i of bodyById) {
-                body[i] = document.getElementById(i).value;
+    onupdate({changed, current, previous}) {
+        if(!previous) {
+            const self = this;
+            var {get} = self.get();
+            if(get) {
+                return fetch(get, {
+                    method: "GET",
+                    mode: "same-origin",
+                    credentials: "same-origin",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    redirect: "follow",
+                })
+                .then(response => {
+                    if(response.redirected) {
+                        window.location.href = response.url;
+                    }
+                    return response
+                })
+                .then(response => {
+                    var body = null;
+                    var contentType = response.headers.get("content-type");
+                    if(contentType && contentType.includes("application/json")) {
+                        body = response.json();
+                    }
+                    return {status: response.status, body};
+                })
+                .then(response => {
+                    self.set({ response });
+                    self.fire("response", {err: null, response});
+                })
+                .catch(err => {
+                    self.set({ error: err, response: null });
+                    self.fire("response", {err, response: null});
+                });
             }
-        }
-        if(post) {
-            return fetch(post, {
-                method: "POST",
-                mode: "same-origin",
-                credentials: "same-origin",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                redirect: "follow",
-                body: JSON.stringify(body)
-            })
-            .then(response => {
-                if(response.redirected) {
-                    window.location.href = response.url;
-                }
-                return response;
-            })
-            .then(response => {
-                var json = null;
-                var contentType = response.headers.get("content-type");
-                if(contentType && contentType.includes("application/json")) {
-                    json = response.json();
-                }
-                return {status: response.status, body: json};
-            })
-            .then(response => {
-                self.set({ response, disabled: false });
-                self.fire("response", {err: null, response});
-            })
-            .catch(err => {
-                self.set({ error: err, response: null, disabled: false });
-                self.fire("response", {err, response: null});
-            });
-        } else if(get) {
-            // make urlencoded
-            if(body) {
-                get += "?";
-                console.log(body, get)
-                for(var i in body) {
-                    console.log(i, body[i])
-                    get += `${i}=${body[i]}&`;
-                }
-            }
-            return fetch(get, {
-                method: "GET",
-                mode: "same-origin",
-                credentials: "same-origin",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
-                },
-                redirect: "follow",
-            })
-            .then(response => {
-                if(response.redirected) {
-                    window.location.href = response.url;
-                }
-                return response
-            })
-            .then(response => {
-                var body = null;
-                var contentType = response.headers.get("content-type");
-                if(contentType && contentType.includes("application/json")) {
-                    body = response.json();
-                }
-                return {status: response.status, body};
-            })
-            .then(response => {
-                self.set({ response, disabled: false });
-                self.fire("response", {err: null, response});
-            })
-            .catch(err => {
-                self.set({ error: err, response: null, disabled: false });
-                self.fire("response", {err, response: null});
-            });
         }
     }
 }
