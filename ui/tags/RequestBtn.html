@@ -57,12 +57,12 @@ export default {
                     return response;
                 })
                 .then(response => {
-                    var body = null;
+                    var json = null;
                     var contentType = response.headers.get("content-type");
                     if(contentType && contentType.includes("application/json")) {
-                        body = response.json();
+                        json = response.json();
                     }
-                    return {status: response.status, body};
+                    return {status: response.status, body: json};
                 })
                 .then(response => {
                     self.set({ response, disabled: false });
@@ -76,7 +76,7 @@ export default {
                 // make urlencoded
                 if(body) {
                     get += "?";
-                    for(var i of body) {
+                    for(var i in body) {
                         get += `${i}=${body[i]}&`;
                     }
                 }
