@@ -12,7 +12,7 @@ canada, australia, new zealand, abroad in other countries, visa and articles, mi
 
 <!-- set actions and bind content  -->
 <div class="row">
-    <Loading get="" bind:response bind:content>
+    <Loading get="/getuser" bind:response>
         <Table  indexed
             highlight
             rows={1}
@@ -35,6 +35,12 @@ export default {
         return {
             response: null,
             content: null
+        }
+    },
+    computed: {
+        sss: ({response}) => {
+            window.resres = response
+            return 1
         }
     },
     components: {

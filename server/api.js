@@ -54,7 +54,7 @@ module.exports = ({app, db}) => {
     // user api
     // ------------
     app.get('/getuser', access(1), (req, res)=>{
-        res.json({body: req.user}) // do whatever u want with json resp in client side
+        setTimeout(e=>res.json({body: req.user}), 2000) // do whatever u want with json resp in client side
         // make a new user object for client.
         // req.user includes password
     })
