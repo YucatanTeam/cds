@@ -13,7 +13,7 @@ canada, australia, new zealand, abroad in other countries, visa and articles, mi
 <!-- set actions and bind content  -->
 <div class="row">
     {#await getuser}
-        <Loading small/>
+        <Loading big/>
     {:then user}
         <p>access: {user.access}</p>
         <Table indexed highlight rows={1}
