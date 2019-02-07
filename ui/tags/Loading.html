@@ -1,77 +1,127 @@
+<!-- 
+    body: object: request body sent as json
+    bodyById: array of DOM input element IDs to make body from their values
+    get: route for get method
+    post: route for post method
+    response: response of request. bind this to use
+ -->
 
 
-{#await promise} <!-- TODO : Uncaught (in promise) TypeError: Cannot read property 'removeChild' of null -->
-    
-    <div class="preloader-wrapper big active">
-        <div class="spinner-layer spinner-blue">
-            <div class="circle-clipper left">
+{#if !done}
+    <div class="preloader-wrapper small active">
+        <div class="spinner-layer spinner-yellow-only">
+        <div class="circle-clipper left">
             <div class="circle"></div>
-            </div><div class="gap-patch">
+        </div><div class="gap-patch">
             <div class="circle"></div>
-            </div><div class="circle-clipper right">
+        </div><div class="circle-clipper right">
             <div class="circle"></div>
-            </div>
+        </div>
         </div>
     </div>
-
-{:then content}
-
+{:elseif !error}
     <slot><!-- put whatever tag you want here --></slot>
-
-{:catch error}
-    <p>refresh the page!</p>
-{/await}
+{:else}
+    <p>{error} , refresh the page!</p>
+{/if}
 
 <script>
-  export default{
-      data(){
-          return {
-              response: null,
-              get: null,
-              content: null,
-              promise: null
-          }
-      },
-      oncreate(){
-         function handle(err){
-              this.set({response: err})
+export default {
+    data() {
+        return {
+            done: false,
+            body: {}, // you can fill this
+            bodyById: null, // list of DOM input element IDs to make body from their values
+            get: null,
+            post: null,
+            response: null, // bind:response if you need the response
+            error: null,
         }
-        
-        var {get} = this.get()
-        if(get){ // if everything was ok with the get request..
-             this.set({promise: new Promise(fulfuil=>{
-            fulfuil(
-              fetch(get, {
-                    method: "GET",
-                    mode: "same-origin",
-                    credentials: "same-origin",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded"
-                    },
-                    redirect: "follow",
-                })
-                .then(response => {
-                    if(response.redirected) {
-                        window.location.href = response.url;
-                        return {json:()=>({})};
-                    }
-                    // console.log(response)
-                    return response
-                })
-                .then(response => {
-                    var contentType = response.headers.get("content-type");
-                    if(contentType && contentType.includes("application/json")) {
-                        // console.log(response.json())
-                        return response.json();
-                    }
-                    throw new TypeError("response is not JSON");
-                })
-                .then(json => {this.set({ content: json }); console.log(this.get().content) }) // TODO can't get the content in parent comp!
-                .catch(handle)
-            )
-           })
-          })
+    },
+    oncreate() {
+        const self = this;
+        self.set({disabled: true});
+        var {get, post, body, bodyById} = self.get();
+        if(bodyById) {
+            for(var i of bodyById) {
+                body[i] = document.getElementById(i).value;
+            }
         }
-     }
-  }
-  </script>
+        if(post) {
+            return fetch(post, {
+                method: "POST",
+                mode: "same-origin",
+                credentials: "same-origin",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                redirect: "follow",
+                body: JSON.stringify(body)
+            })
+            .then(response => {
+                if(response.redirected) {
+                    window.location.href = response.url;
+                }
+                return response;
+            })
+            .then(response => {
+                var json = null;
+                var contentType = response.headers.get("content-type");
+                if(contentType && contentType.includes("application/json")) {
+                    json = response.json();
+                }
+                return {status: response.status, body: json};
+            })
+            .then(response => {
+                self.set({ response, disabled: false });
+                self.fire("response", {err: null, response});
+            })
+            .catch(err => {
+                self.set({ error: err, response: null, disabled: false });
+                self.fire("response", {err, response: null});
+            });
+        } else if(get) {
+            // make urlencoded
+            if(body) {
+                get += "?";
+                console.log(body, get)
+                for(var i in body) {
+                    console.log(i, body[i])
+                    get += `${i}=${body[i]}&`;
+                }
+            }
+            return fetch(get, {
+                method: "GET",
+                mode: "same-origin",
+                credentials: "same-origin",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                redirect: "follow",
+            })
+            .then(response => {
+                if(response.redirected) {
+                    window.location.href = response.url;
+                }
+                return response
+            })
+            .then(response => {
+                var body = null;
+                var contentType = response.headers.get("content-type");
+                if(contentType && contentType.includes("application/json")) {
+                    body = response.json();
+                }
+                return {status: response.status, body};
+            })
+            .then(response => {
+                self.set({ response, disabled: false });
+                self.fire("response", {err: null, response});
+            })
+            .catch(err => {
+                self.set({ error: err, response: null, disabled: false });
+                self.fire("response", {err, response: null});
+            });
+        }
+    }
+}
+</script>
