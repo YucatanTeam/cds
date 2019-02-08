@@ -53,19 +53,42 @@
 	import CommentControlCenter  from "./admin_pages/CommentControlCenter.html";
 	import SandBox from "./admin_pages/SandBox.html";
 
+	const utils = {
+		// to follow redirect after a fetch
+		followRedirect(response) {
+			if(response.redirected) {
+				window.location.href = response.url;
+			}
+			return response;
+		},
+		fetch(src, options) {
+			return (
+				fetch(src, options)
+				.then(response => {
+					if(response.redirected) {
+						window.location.href = response.url;
+					}
+					return response;
+				})
+				.then(r=>{ if(r.status == 200) return r; else throw {code: r.status}})
+				.then(r=>r.json())
+				.then(j=>j.body)
+			)
+		}
+	};
+
 	export default {
 	  	oncreate() {
 			M.AutoInit();
+			window.utils = utils;
 		},
 	  	data() {
 			return {
 				getuser:
-					fetch("/getuser")
-					.then(r=>{ if(r.status == 200) return r; else throw {code: r.status}})
-					.then(r=>r.json())
-					.then(j=>{
-						window.cdsuser = j.body;
-						return j.body;
+					utils.fetch("/getuser")
+					.then(user=>{
+						window.cdsuser = user;
+						return user;
 					}),
 				title: "CDS-PANEL",
 				routes: {
