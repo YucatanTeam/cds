@@ -77,7 +77,13 @@ module.exports = ({app, db}) => {
                 email: req.user.email}
         setTimeout(e=>res.json({body: user, err:null}), 100) // do whatever u want with json resp in client side
     })
-
+    
+    app.post('/updateUser', access(1), (req, res) => {
+        console.log(req.body)
+        // TODO validate req.body
+        // TODO db.api.updateUser(validReqBody)
+        res.status(200).end("ok")
+    })
     
     
     // ------------
