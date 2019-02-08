@@ -3,31 +3,31 @@
 </svelte:head>
 
 
-<Sidenav background="/public/img/cds.svg" fixed> <!-- TODO : fill the background with user avatar -->
-	
-	{#await getuser}
-        <Loading small/>
-    {:then user}
-		<li><a class="truncate" href="#/AbroadControlCenter"><I>language</I>Abroad Control Center</a></li>
-		<li><a class="truncate" href="#/AccessControlCenter"><I>accessibility</I>Access Control Center</a></li>
-		<li><a class="truncate" href="#/AnswerQuestionControlCenter"><I>question_answer</I>FAQ Control Center</a></li>
-		<li><a class="truncate" href="#/SandBox"><I>devices</I>Sand Box</a></li>
-		<li><a class="truncate" href="#/CandoServices"><I>store</I>Cando Services</a></li>
-		<li><a class="truncate" href="#/CertificateControlCenter"><I>fingerprint</I>Certificate Control Center</a></li>
-		<li><a class="truncate" href="#/ConsultancyServices"><I>live_help</I>Consultancy Services</a></li>
-		<li><a class="truncate" href="#/MagazineControlCenter"><I>import_contacts</I>Magazine Control Center</a></li>
-		<li><a class="truncate" href="#/CommentControlCenter"><I>comment</I>Comment Control Center</a></li>
-		<li><a class="truncate" href="#/Modules"><I>bubble_chart</I>Modules</a></li>
-		<li><a class="truncate" href="#/SecurityPolicy"><I>security</I>Security Policy</a></li>
-		<li><a class="truncate" href="#/SeoSetup"><I>search</I>Seo Setup</a></li>
-		<li><a class="truncate" href="#/StudentControlCenter"><I>assignment_ind</I>Student Control Center</a></li>
-	{:catch err}
-        <p>Error {err.code}</p>
-    {/await}
-</Sidenav>
 
 <div class="row">
-	<div class="col offset-s1 offset-m4 offset-l3">
+	<Sidenav background="/public/img/cds.svg" fixed> <!-- TODO : fill the background with user avatar -->
+		
+		{#await getuser}
+			<Loading small/>
+		{:then user}
+			<li><a class="truncate" href="#/AbroadControlCenter"><I>language</I>Abroad Control Center</a></li>
+			<li><a class="truncate" href="#/AccessControlCenter"><I>accessibility</I>Access Control Center</a></li>
+			<li><a class="truncate" href="#/AnswerQuestionControlCenter"><I>question_answer</I>FAQ Control Center</a></li>
+			<li><a class="truncate" href="#/SandBox"><I>devices</I>Sand Box</a></li>
+			<li><a class="truncate" href="#/CandoServices"><I>store</I>Cando Services</a></li>
+			<li><a class="truncate" href="#/CertificateControlCenter"><I>fingerprint</I>Certificate Control Center</a></li>
+			<li><a class="truncate" href="#/ConsultancyServices"><I>live_help</I>Consultancy Services</a></li>
+			<li><a class="truncate" href="#/MagazineControlCenter"><I>import_contacts</I>Magazine Control Center</a></li>
+			<li><a class="truncate" href="#/CommentControlCenter"><I>comment</I>Comment Control Center</a></li>
+			<li><a class="truncate" href="#/Modules"><I>bubble_chart</I>Modules</a></li>
+			<li><a class="truncate" href="#/SecurityPolicy"><I>security</I>Security Policy</a></li>
+			<li><a class="truncate" href="#/SeoSetup"><I>search</I>Seo Setup</a></li>
+			<li><a class="truncate" href="#/StudentControlCenter"><I>assignment_ind</I>Student Control Center</a></li>
+		{:catch err}
+			<p>Error {err.code}</p>
+		{/await}
+	</Sidenav>
+	<div class="col offset-l3">
 		<Router routes={routes}>
 			<div class="error">
 				This page was not found.
@@ -61,7 +61,10 @@
 					fetch("/getuser")
 					.then(r=>{ if(r.status == 200) return r; else throw {code: r.status}})
 					.then(r=>r.json())
-					.then(j=>j.body),
+					.then(j=>{
+						window.cdsuser = j.body;
+						return j.body;
+					}),
 				title: "CDS-PANEL",
 				routes: {
 				'/SecurityPolicy': [SecurityPolicy, {message: 'from "/SecurityPolicy" path'}],

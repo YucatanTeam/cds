@@ -1,34 +1,31 @@
 <!-- background string: img-src -->
-
-<nav class="show-on-small white">
+<nav class="hide-on-large-only white">
 	<div class="nav-wrapper">
-		<ul id="nav-mobile" class="left show-on-small">
-			<li><a data-target="slide-out" class="sidenav-trigger show-on-small black-text"><I>menu</I></a></li>
+		<ul id="nav-mobile" class="left hide-on-large-only">
+			<li><a data-target="slide-out" class="sidenav-trigger hide-on-large-only black-text"><I>menu</I></a></li>
 		</ul>
 	</div>
 </nav>
-<div class="col m3 l2">
-	<ul id="slide-out" class="sidenav {fixed ? "sidenav-fixed" : ""}">
-		{#if background}
-		<li>
-			<div class="user-view">
-				<div class="background">
-					<Imgl src={background} alt="avatar"/>
-				</div>
-				<br><br><br><br>
+<ul id="slide-out" class="col s10 m5 l3 sidenav {fixed ? "sidenav-fixed" : ""}">
+	{#if background}
+	<li>
+		<div class="user-view">
+			<div class="background">
+				<Imgl src={background} alt="avatar"/>
 			</div>
-		</li>
-		{/if}
-		<li><a data-target="slide-out" class="sidenav-close show-on-small"><I>close</I></a></li>
-		<li><div class="divider"></div></li>
-		<slot>
-			<!-- sidenav link goes here
-			<li><a>First Sidebar Link</a></li>
-			<li><a>Second Sidebar Link</a></li>
-		-->
-		</slot>
-	</ul>
-</div>
+			<br><br><br><br>
+		</div>
+	</li>
+	{/if}
+	<li><a data-target="slide-out" class="sidenav-close hide-on-large-only"><I>close</I></a></li>
+	<li><div class="divider"></div></li>
+	<slot>
+		<!-- sidenav link goes here
+		<li><a>First Sidebar Link</a></li>
+		<li><a>Second Sidebar Link</a></li>
+	-->
+	</slot>
+</ul>
 
 <script>
 	export default {
