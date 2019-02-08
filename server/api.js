@@ -21,13 +21,13 @@ function access(level, redirect) {
     // level: 0 ban, 1 restricted, 2 user, 3 mod, 5 admin, 7 dev
     return redirect ?
     (req, res, next) => {
-        if(!req.user) return res.status(401).end("Unauthorized !");
-        if(req.user.access < level) return res.status(403).end("Access denied !");
+        if(!req.user) return res.redirect(redirect);
+        if(req.user.access < level) return res.redirect(redirect);
         next();
     } :
     (req, res, next) => {
-        if(!req.user) return res.redirect(redirect);
-        if(req.user.access < level) return res.redirect(redirect);
+        if(!req.user) return res.status(401).end("Unauthorized !");
+        if(req.user.access < level) return res.status(403).end("Access denied !");
         next();
     }
 }
