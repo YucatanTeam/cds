@@ -97,7 +97,7 @@ connection.connect(err => {
     email text NOT NULL,
     password text NOT NULL,
     access int NOT NULL DEFAULT '2',
-    avatar blob NULL
+    avatar text NULL
     )ENGINE=INNODB;` ,[] ,(err, rows)=>{
         if(err) errlog(err, rows)
         // add account dev@cds.or.ir:dev with dev access (7)
