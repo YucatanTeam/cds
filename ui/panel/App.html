@@ -61,18 +61,39 @@
 			}
 			return response;
 		},
-		fetch(src, options) {
+		fetch(src, postBody) {
 			return (
-				fetch(src, options)
+				fetch(src, postBody ? {
+                    method: "POST",
+                    mode: "same-origin",
+                    credentials: "same-origin",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    redirect: "follow",
+                    body: JSON.stringify(postBody)
+                } : {
+                    method: "GET",
+                    mode: "same-origin",
+                    credentials: "same-origin",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    redirect: "follow",
+                })
 				.then(response => {
-					if(response.redirected) {
-						window.location.href = response.url;
-					}
-					return response;
-				})
-				.then(r=>{ if(r.status == 200) return r; else throw {code: r.status}})
-				.then(r=>r.json())
-				.then(j=>j.body)
+                    if(response.redirected) {
+                        window.location.href = response.url;
+                    }
+                    return response;
+                })
+                .then(response => {
+                    var contentType = response.headers.get("content-type");
+                    if(contentType && contentType.includes("application/json")) {
+                        return response.json().then(json => ({status: response.status, body: json.body}));
+                    }
+                    return {status: response.status, body: null};
+                })
 			)
 		}
 	};
