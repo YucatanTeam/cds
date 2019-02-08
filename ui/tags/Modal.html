@@ -1,0 +1,44 @@
+<!-- to trigger the modal with id:'modal1':
+        <button data-target="modal1" class="btn modal-tigger">modal1</button>
+    id: string: id of a modal
+    buttons: object of named functions like `OK(comp){...}` to make buttons for footer
+
+-->
+<button data-target="{id}" class="btn waves-effect waves-light yellow modal-trigger">{id}</button>
+<div id="{id}" class="modal">
+    <div class="modal-content">
+        <slot>
+            <!-- modal content goes here -->
+        </slot>
+    </div>
+    <div class="modal-footer">
+        {#each buttons as btn, i}
+            <a class="modal-close waves-effect waves-light yellow btn-flat" on:click=click(i)>{btn.name}</a>
+        {/each}
+    </div>
+</div>
+
+<script>
+    export default {
+        data() {
+            return {
+                id: "modal",
+                buttons: [function OK(comp){}]
+            }
+        },
+        onupdate({changed}) {
+            if(changed.id) {
+                var elems = document.querySelector('.modal');
+                var instances = M.Modal.init(elems, {});
+                M.AutoInit();
+                console.log(instances)
+            }
+        },
+        methods: {
+            click(i) {
+                const { buttons } = this.get();
+                buttons[i](this);
+            }
+        }
+    }
+</script>
