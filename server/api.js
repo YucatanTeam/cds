@@ -17,11 +17,17 @@ function page(root) {
     // ------------
     // guard api
     // ------------
-function access(level) {
+function access(level, redirect) {
     // level: 0 ban, 1 restricted, 2 user, 3 mod, 5 admin, 7 dev
-    return (req, res, next) => {
+    return redirect ?
+    (req, res, next) => {
         if(!req.user) return res.status(401).end("Unauthorized !");
         if(req.user.access < level) return res.status(403).end("Access denied !");
+        next();
+    } :
+    (req, res, next) => {
+        if(!req.user) return res.redirect(redirect);
+        if(req.user.access < level) return res.redirect(redirect);
         next();
     }
 }
@@ -96,6 +102,6 @@ module.exports = ({app, db}) => {
     // public api
     // ------------
     app.use('/public', page('public'))
-    app.use('/panel', access(2), page('panel'))
+    app.use('/panel', access(2, "/login"), page('panel'))
     app.use('/', page('index'))
 }
