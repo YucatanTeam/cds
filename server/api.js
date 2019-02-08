@@ -75,7 +75,7 @@ module.exports = ({app, db}) => {
                 id: req.user.id,
                 avatar: req.user.avatar,
                 email: req.user.email}
-        setTimeout(e=>res.json({body: user, err:null}), 2000) // do whatever u want with json resp in client side
+        setTimeout(e=>res.json({body: user, err:null}), 100) // do whatever u want with json resp in client side
     })
 
     
