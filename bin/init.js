@@ -102,7 +102,7 @@ connection.connect(err => {
         if(err) errlog(err, rows)
         // add account dev@cds.or.ir:dev with dev access (7)
         else safe.hash("dev",(err, password) => {
-            connection.query(`INSERT INTO user(id, email, password, access) VALUES(1, 'dev@cds.org.ir', ?, 7)` ,[password] ,errlog);
+            connection.query(`INSERT INTO user(id, email, password, access, firstname, lastname) VALUES(1, 'dev@cds.org.ir', ?, 7, 'dev', 'eloper')` ,[password] ,errlog);
         });
     });
 });
