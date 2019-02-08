@@ -1,15 +1,5 @@
 {#if !done}
-    <div class="preloader-wrapper small active">
-        <div class="spinner-layer spinner-yellow-only">
-        <div class="circle-clipper left">
-            <div class="circle"></div>
-        </div><div class="gap-patch">
-            <div class="circle"></div>
-        </div><div class="circle-clipper right">
-            <div class="circle"></div>
-        </div>
-        </div>
-    </div>
+    <Loading small/>
 {:else}
     <img class={class} style={style} id={id} src={src} alt={alt} />
 {/if}
@@ -33,7 +23,9 @@ export default {
                 this.fire("load")
             };
         }
+    },
+    components: {
+        Loading: "./Loading.html"
     }
-
 }
 </script>
