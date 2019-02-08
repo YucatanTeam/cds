@@ -63,10 +63,13 @@ module.exports = ({app, db}) => {
     // user api
     // ------------
     app.get('/getuser', access(1), (req, res)=>{
-        // return res.status(401).end("Unauthorized !"); // for debug
-        setTimeout(e=>res.json({body: req.user}), 2000) // do whatever u want with json resp in client side
-        // make a new user object for client.
-        // req.user includes password
+        var user = {access: req.user.access,
+                firstname: req.user.firstname,
+                lastname: req.user.lastname,
+                id: req.user.id,
+                avatar: req.user.avatar,
+                email: req.user.email}
+        setTimeout(e=>res.json({body: user, err:null}), 2000) // do whatever u want with json resp in client side
     })
 
     
@@ -76,8 +79,8 @@ module.exports = ({app, db}) => {
     // ------------
     app.get('/getAllComments', access(5), (req, res)=>{
         db.api.getAllComments((err, rows)=>{ // // do whatever u want with json resp in client side
-            if(rows) res.json({type:'success', message:'Fetched Successfully', rows})
-            if(err) res.status(404).json({type: 'error', message:'No Comments Fetched From Server', err})
+            if(rows) res.json({body: rows, err:null})
+            if(err) res.status(404).end("Nothing Found !");
         })
     });
 
