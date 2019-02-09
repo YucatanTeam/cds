@@ -9,6 +9,14 @@ const slug = require('limax')
    --------------------
     slug: req.body.title.replace(/ /g,"-"),
     en_slug: slug(req.body.en_title.toLowerCase(), { lowercase: true }),
+
+    ----------------------
+    TODO : bool of actions
+    ----------------------
+    TODO add actions[true, ... , false] to rows arr based on user.access
+    TODO we have 4 bool of actions for dev access : create , delete , edit , block/unblock 
+    mod can only edit , restricted can only read , admin and dev can CRUD but admin can't create in some places !
+
 */
 
 function page(root) {
@@ -78,13 +86,36 @@ module.exports = ({app, db}) => {
     // comment api
     // ------------
     app.get('/getAllComments', access(5), (req, res)=>{
-        db.api.getAllComments((err, rows)=>{ // // do whatever u want with json resp in client side
-            if(rows) res.json({body: rows, err:null})
+        db.api.getAllComments((err, rows)=>{
+            if(rows){
+                for ( var index=0; index<rows.length; index++ ) {
+                    if(req.user.access === 7) rows[index].actions = [true, true, true, true] // dev access can create , edit , delete , block/unblock comments 
+                    if(req.user.access === 5) rows[index].actions = [false, true, true, true] // admin access can't create but can edit , delete and block/unblock comments
+                    if(req.user.access === 3) rows[index].actions = [false, true, false, false] // mod access can't create , delete and block/unblock comments but can edit them
+                    if(req.user.access === 1) rows[index].actions = [false, false, false, false] // restricted access can do nothing ; but can read the whole comments
+                    // for req.user.access === 2 the whole routes are different.
+                    // for req.user.access === 0 the whole panel is locked !
+                }
+                res.json({body: rows, err:null})
+            }
             if(err) res.status(404).end("Nothing Found !");
         })
     });
 
 
+    // ---------
+    // mc_lc api
+    // ---------
+    // related to abroad control center
+    
+
+
+
+    
+    // ----------
+    // abroad api
+    // ----------
+    // related to abroad control center
 
 
 

@@ -3,24 +3,39 @@
 </svelte:head>
 
 
-<Sidenav background="/public/img/cds.svg" fixed> <!-- TODO : fill the background with user avatar -->
+<Sidenav background="/public/img/cds.svg" fixed>
 	
 	{#await getuser}
         <Loading small/>
     {:then user}
-		<li><a class="truncate" href="#/AbroadControlCenter"><I>language</I>Abroad Control Center</a></li>
-		<li><a class="truncate" href="#/AccessControlCenter"><I>accessibility</I>Access Control Center</a></li>
-		<li><a class="truncate" href="#/AnswerQuestionControlCenter"><I>question_answer</I>FAQ Control Center</a></li>
-		<li><a class="truncate" href="#/SandBox"><I>devices</I>Sand Box</a></li>
-		<li><a class="truncate" href="#/CandoServices"><I>store</I>Cando Services</a></li>
-		<li><a class="truncate" href="#/CertificateControlCenter"><I>fingerprint</I>Certificate Control Center</a></li>
-		<li><a class="truncate" href="#/ConsultancyServices"><I>live_help</I>Consultancy Services</a></li>
-		<li><a class="truncate" href="#/MagazineControlCenter"><I>import_contacts</I>Magazine Control Center</a></li>
-		<li><a class="truncate" href="#/CommentControlCenter"><I>comment</I>Comment Control Center</a></li>
-		<li><a class="truncate" href="#/Modules"><I>bubble_chart</I>Modules</a></li>
-		<li><a class="truncate" href="#/SecurityPolicy"><I>security</I>Security Policy</a></li>
-		<li><a class="truncate" href="#/SeoSetup"><I>search</I>Seo Setup</a></li>
-		<li><a class="truncate" href="#/StudentControlCenter"><I>assignment_ind</I>Student Control Center</a></li>
+	  	{#if user.access == 7}
+	  					<!-- dev sidenav -->
+			<li><a class="truncate" href="#/AbroadControlCenter"><I>language</I>Abroad Control Center</a></li>
+			<li><a class="truncate" href="#/AccessControlCenter"><I>accessibility</I>Access Control Center</a></li>
+			<li><a class="truncate" href="#/AnswerQuestionControlCenter"><I>question_answer</I>FAQ Control Center</a></li>
+			<li><a class="truncate" href="#/SandBox"><I>devices</I>Sand Box</a></li>
+			<li><a class="truncate" href="#/CandoServices"><I>store</I>Cando Services</a></li>
+			<li><a class="truncate" href="#/CertificateControlCenter"><I>fingerprint</I>Certificate Control Center</a></li>
+			<li><a class="truncate" href="#/ConsultancyServices"><I>live_help</I>Consultancy Services</a></li>
+			<li><a class="truncate" href="#/MagazineControlCenter"><I>import_contacts</I>Magazine Control Center</a></li>
+			<li><a class="truncate" href="#/CommentControlCenter"><I>comment</I>Comment Control Center</a></li>
+			<li><a class="truncate" href="#/Modules"><I>bubble_chart</I>Modules</a></li>
+			<li><a class="truncate" href="#/SecurityPolicy"><I>security</I>Security Policy</a></li>
+			<li><a class="truncate" href="#/SeoSetup"><I>search</I>Seo Setup</a></li>
+			<li><a class="truncate" href="#/StudentControlCenter"><I>assignment_ind</I>Student Control Center</a></li>
+			<li><a class="truncate" href="#/DatabaseControlCenter"><I>storage</I>Database Control Center</a></li>
+	  	
+		{:elseif user.access == 5}
+			<!-- admin sidenav -->
+		{:elseif user.access == 3}
+	  		<!-- mod sidenav -->
+	 	{:elseif user.access == 2}
+	  		<!-- user sidenav -->
+		{:elseif user.access == 1}
+			<!-- restricted sidenav -->
+		{:else}
+			<!-- ban sidenav -->
+	  	{/if}
 	{:catch err}
         <p>Error {err.code}</p>
     {/await}
@@ -28,11 +43,35 @@
 
 <div class="row">
 	<div class="col offset-s1 offset-m4 offset-l3">
-		<Router routes={routes}>
-			<div class="error">
-				This page was not found.
-			</div>
-		</Router>
+		{#await getuser}
+			<Loading small/>
+		{:then user}
+			{#if user.access == 7}
+				<!-- dev routes -->
+				<Router routes={devroutes}>
+					<div class="error">
+						This page was not found.
+					</div>
+				</Router>
+			{:elseif user.access == 5}
+				<!-- admin routes -->
+				<Router routes={adminroutes}>
+					<div class="error">
+						This page was not found.
+					</div>
+				</Router>
+			{:elseif user.access == 3}
+				<!-- mod routes -->
+			{:elseif user.access == 2}
+				<!-- user routes -->
+			{:elseif user.access == 1}
+				<!-- restricted routes -->
+			{:else}
+				<!-- ban routes -->
+			{/if}
+		{:catch err}
+			<p>Error {err.code}</p>
+		{/await}
 	</div>
 </div>
 
@@ -50,6 +89,7 @@
 	import StudentControlCenter from "./admin_pages/StudentControlCenter.html";
 	import CommentControlCenter  from "./admin_pages/CommentControlCenter.html";
 	import SandBox from "./admin_pages/SandBox.html";
+	import DatabaseControlCenter from "./dev_pages/DatabaseControlCenter.html";
 
 	export default {
 	  	oncreate() {
@@ -63,20 +103,37 @@
 					.then(r=>r.json())
 					.then(j=>j.body),
 				title: "CDS-PANEL",
-				routes: {
-				'/SecurityPolicy': [SecurityPolicy, {message: 'from "/SecurityPolicy" path'}],
-				'/CandoServices': [CandoServices, {message: 'from "/CandoServices" path'}],
-				'/AccessControlCenter': [AccessControlCenter, {message: 'from "/AccessControlCenter" path'}],
-				'/AbroadControlCenter': [AbroadControlCenter, {message: 'from "/AbroadControlCenter" path'}],
-				'/AnswerQuestionControlCenter': [AnswerQuestionControlCenter, {message: 'from "/AnswerQuestionControlCenter" paht'}],
-				'/CertificateControlCenter': [CertificateControlCenter, {message: 'from "/CertificateControlCenter" path'}],
-				'/ConsultancyServices': [ConsultancyServices, {message: 'from "/ConsultancyServices" path'}],
-				'/MagazineControlCenter': [MagazineControlCenter, {message: 'from "/MagazineControlCenter" path'}],
-				'/Modules': [Modules, {message: 'from "/Modules" path'}],
-				'/SeoSetup': [SeoSetup, {message: 'from "/SeoSetup" path'}],
-				'/StudentControlCenter': [StudentControlCenter, {message: 'from "/StudentControlCenter" path'}],
-				'/CommentControlCenter': [CommentControlCenter, {message: 'from "/CommetControlCenter" path'}],
-				'/SandBox': [SandBox, {message: 'from "/SandBox" path'}]
+				// TODO we have dev outes , user routes , admin routes, mod routes , restricted routes , ban routes
+				devroutes: {
+				'/SecurityPolicy': [SecurityPolicy, {message: 'Hello From Security Policy ;) You can setup your personal info here.'}],
+				'/CandoServices': [CandoServices, {message: 'Hello From Cando Services ;) You can setup CANDO services here.'}],
+				'/AccessControlCenter': [AccessControlCenter, {message: 'Hello From Access Control Center ;) You can setup the access control list here.'}],
+				'/AbroadControlCenter': [AbroadControlCenter, {message: 'Hello From Abroad Control Center ;) You can setup all abroad issues here.'}],
+				'/AnswerQuestionControlCenter': [AnswerQuestionControlCenter, {message: 'Hello From Answer Question Control Center ;) Feel free to setup what you want.'}],
+				'/CertificateControlCenter': [CertificateControlCenter, {message: 'Hello From Certificate Control Center ;) You can setup all CANDO certificate issues here.'}],
+				'/ConsultancyServices': [ConsultancyServices, {message: 'Hello From Consultansy Services ;) You can setup all consultancy issues here.'}],
+				'/MagazineControlCenter': [MagazineControlCenter, {message: 'Hello From Magazine Control Center ;) You can setup all CANDO posts and NEWS here.'}],
+				'/Modules': [Modules, {message: 'Hello From Modules ;) You can setup a module here.'}],
+				'/SeoSetup': [SeoSetup, {message: 'Hello From Seo Setup ;) Feel free and setup your seo.'}],
+				'/StudentControlCenter': [StudentControlCenter, {message: 'Hello From Student Control Center ;) Here you can control all CANDO students, Feel free and setup what you want. '}],
+				'/CommentControlCenter': [CommentControlCenter, {message: 'Hello From Comment Control Center ;) You can setup CANDO comments here.'}],
+				'/SandBox': [SandBox, {message: 'Hello From Sand Box ;) Feel free and setup your UI.'}],
+				'/DatabaseControlCenter': [SandBox, {message: 'Hello From Database Control Center ;) Feel free and setup cds DB.'}]
+				},
+				adminroutes: {
+				'/SecurityPolicy': [SecurityPolicy, {message: 'Hello From Security Policy ;) You can setup your personal info here.'}],
+				'/CandoServices': [CandoServices, {message: 'Hello From Cando Services ;) You can setup CANDO services here.'}],
+				'/AccessControlCenter': [AccessControlCenter, {message: 'Hello From Access Control Center ;) You can setup the access control list here.'}],
+				'/AbroadControlCenter': [AbroadControlCenter, {message: 'Hello From Abroad Control Center ;) You can setup all abroad issues here.'}],
+				'/AnswerQuestionControlCenter': [AnswerQuestionControlCenter, {message: 'Hello From Answer Question Control Center ;) Feel free to setup what you want.'}],
+				'/CertificateControlCenter': [CertificateControlCenter, {message: 'Hello From Certificate Control Center ;) You can setup all CANDO certificate issues here.'}],
+				'/ConsultancyServices': [ConsultancyServices, {message: 'Hello From Consultansy Services ;) You can setup all consultancy issues here.'}],
+				'/MagazineControlCenter': [MagazineControlCenter, {message: 'Hello From Magazine Control Center ;) You can setup all CANDO posts and NEWS here.'}],
+				'/Modules': [Modules, {message: 'Hello From Modules ;) You can setup a module here.'}],
+				'/SeoSetup': [SeoSetup, {message: 'Hello From Seo Setup ;) Feel free and setup your seo.'}],
+				'/StudentControlCenter': [StudentControlCenter, {message: 'Hello From Student Control Center ;) Here you can control all CANDO students, Feel free and setup what you want. '}],
+				'/CommentControlCenter': [CommentControlCenter, {message: 'Hello From Comment Control Center ;) You can setup CANDO comments here.'}],
+				'/SandBox': [SandBox, {message: 'Hello From Sand Box ;) Feel free and setup your UI.'}]
 				}
 			};
 		},

@@ -1,3 +1,31 @@
+<h5>{message}</h5>
 
-<h5>security policy cards here</h5>
-<p>msg: {message}</p>
+<!-- TODO security policy cards here -->
+
+<!-- set actions and bind content  -->
+<div class="row">
+    {#await getuser}
+        <Loading small/>
+    {:then user}
+        <p>hello {user.email} with access: {user.access}</p>
+    {:catch err}
+        <p>Error {err.code}</p>
+    {/await}
+</div>
+
+<script>
+export default {
+    data(){
+        return {
+            getuser:
+                fetch("/getuser")
+                .then(r=>{ if(r.status == 200) return r; else throw {code: r.status}})
+                .then(r=>r.json())
+                .then(j=>j.body)
+        }
+    },
+    components: {
+        Loading: "../../tags/Loading.html"
+    }
+}
+</script>

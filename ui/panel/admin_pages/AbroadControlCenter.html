@@ -1,14 +1,14 @@
 
 
+<!-- TODO : show all contents about mc_lc in tag table 
+            with their related abroad(tab title) using some mysql joining query -->
+<!-- TODO : actions => enable/disable(mc_lc and abroad[tab titles]) , 
+            edit(open modal tag to edit both table) ,
+            delete , create(new mc_lc using ckeditor and abroad content) 
+-->
+<!-- TODO : in main UI of the site use slide for abroad in other countries section -->
 
-<h5>Abroad Control Center</h5>
-<p>msg : {message}</p>
-
-
-<div>
-canada, australia, new zealand, abroad in other countries, visa and articles, migration and language courses(see cds.org.ir its related tab) 
-</div>
-
+<h5>{message}</h5>
 
 <!-- set actions and bind content  -->
 <div class="row">
@@ -16,17 +16,6 @@ canada, australia, new zealand, abroad in other countries, visa and articles, mi
         <Loading small/>
     {:then user}
         <p>access: {user.access}</p>
-        <Table indexed highlight rows={1}
-        content={[{name: "force", actions: [false]}, {name: "wo", actions: [true]}]}
-        search={["name"]}
-        actions={[{icon: "delete",tooltip: "delete", action(obj, component) {
-                var {content} = component.get();
-                delete content[content.indexOf(obj)];
-                content = content.filter(e => e != null)
-                component.set({content})
-            }
-        }]}
-        on:result=console.log("result:",event)/>
     {:catch err}
         <p>Error {err.code}</p>
     {/await}
@@ -44,8 +33,7 @@ export default {
         }
     },
     components: {
-        Loading: "../../tags/Loading.html",
-        Table: "../../tags/Table.html"
+        Loading: "../../tags/Loading.html"
     }
 }
 </script>

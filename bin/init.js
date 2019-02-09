@@ -28,13 +28,13 @@ connection.connect(err => {
     const errlog = (err, rows) => err ? console.log(err.sqlMessage) : console.log("ok");
 
 
-    // ============================================================================================================
+    // ============================================== POST INIT SETUP ==============================================================
     // post table
     // ...
     connection.query(`CREATE TABLE IF NOT EXISTS post (
     id INT AUTO_INCREMENT PRIMARY KEY, 
-    title VARCHAR(255) NOT NULL,
-    en_title VARCHAR(255) NOT NULL,
+    title TEXT NOT NULL,
+    en_title TEXT NOT NULL,
     content TEXT NOT NULL,
     en_content TEXT NOT NULL,
     tags JSON NOT NULL,
@@ -60,15 +60,15 @@ connection.connect(err => {
         );` ,[cuid()] ,errlog);
     });
     
-    // ------------------------------------------------------------
+    // ============================================= COMMENT INIT SETUP ===============================================================
     // comment table
     // ...
     connection.query(`CREATE TABLE IF NOT EXISTS comment (
     id INT AUTO_INCREMENT PRIMARY KEY, 
     post_id INT,
     content TEXT NOT NULL,
-    name VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL,
+    name TEXT NOT NULL,
+    email TEXT NOT NULL,
     status TINYINT NOT NULL DEFAULT 0,
     cuid VARCHAR(100) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -87,7 +87,81 @@ connection.connect(err => {
             );` ,[cuid()] ,errlog)
         });
 
-    // ============================================================================================================
+    // ================================ ABROAD CONTROL CENTER INIT SETUP ============================================================================
+    // SCHEME-EXPLANATION :
+    //      some tabs have the same structure like migration consultancy
+    //      and language courses; so our job is to organize them in such 
+    //      a way that there are no two tabs be in conflict(avoid repeating) 
+    //      together. in order to do that we need to normalize our db like following:
+    //      because these tabs are in common with their structure like slug, tags and content
+    //      so we have to create a mc_lc table to store all posts about these tabs;
+    //      something we should know is that, these tabs have their own title and abroad country,
+    //      some of their posts are in common with country name and title with each other but their slug and content are different. 
+    //      so again to normalize our db we should create a table called abroad to store our abroad countries
+    //      and their related tabs title. finally we'll put the abroad primary key as a foreign key
+    //      reference in our mc_lc table.
+    // ...
+    
+
+    // abroad table
+    // all abroad countries and their tab title !
+    // ...
+    connection.query(`CREATE TABLE IF NOT EXISTS abroad (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        country_name TEXT NOT NULL,
+        country_en_name TEXT NOT NULL,
+        title TEXT NOT NULL,
+        en_title TEXT NOT NULL,
+        cuid VARCHAR(100) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP    
+    )ENGINE=INNODB;` ,[] ,(err, rows) =>{
+        if(err) errlog(err, rows)
+        else connection.query(`INSERT INTO abroad(country_name, country_en_name, title, en_title, cuid) VALUES(
+            'کانادا',
+            'canada',
+            'مهاجرت به کانادا',
+            'migratio to canada',
+            ?
+        );` ,[cuid()] ,errlog)
+    });
+
+    // migration consultancy and language courses table content
+    // all langs courses tabs(contents) related to a abroad !
+    // all migration consultancy tabs(contents) related to a abroad !
+    // ...
+    connection.query(`CREATE TABLE IF NOT EXISTS mc_lc (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        abroad_id INT,
+        slug TEXT NOT NULL,
+        en_slug TEXT NOT NULL,
+        content TEXT NOT NULL,
+        en_content TEXT NOT NULL,
+        tags JSON NOT NULL,
+        en_tags JSON NOT NULL,
+        status TINYINT NOT NULL DEFAULT 0,
+        cuid VARCHAR(100) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        INDEX abroad_ind (abroad_id),
+        FOREIGN KEY (abroad_id)
+            REFERENCES abroad(id)
+                ON DELETE CASCADE)ENGINE=INNODB;` ,[] ,(err, rows) =>{
+        if(err) errlog(err, rows)
+        else connection.query(`INSERT INTO mc_lc(abroad_id, slug, en_slug, content, en_content, tags, en_tags, cuid) VALUES(
+            '1',
+            'نظام-آموزشی-کانادا',
+            'Canadian-Education-System',
+            'نظام تحصيلي در سرتاسر كانادا از استاندارد بسيار بالائي برخوردار مي‌باشد.',
+            'ckeditor content goes here ...',
+            JSON_ARRAY('نظام آموزشی', 'کانادا'),
+            JSON_ARRAY('education system', 'canada'),
+            ?
+        );`, [cuid()], errlog)
+    });
+
+
+    // ========================================= USER INIT SETUP ===================================================================
     // user table
     // ...
     connection.query(`CREATE TABLE IF NOT EXISTS user (

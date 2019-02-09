@@ -108,7 +108,7 @@ export default {
                 const { content, rows } = this.get();
                 //going to res' page
                 const page = Math.ceil((content.indexOf(res) + 1) / rows);
-                console.log(page)
+                // console.log(page)
                 this.set({page});
             }
             this.fire("result", res);
