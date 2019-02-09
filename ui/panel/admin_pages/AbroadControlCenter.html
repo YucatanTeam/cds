@@ -13,7 +13,7 @@
 <!-- set actions and bind content  -->
 <div class="row">
     {#await getuser}
-        <Loading small/>
+        <Loading big/>
     {:then user}
         <p>access: {user.access}</p>
     {:catch err}

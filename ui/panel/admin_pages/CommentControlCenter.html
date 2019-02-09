@@ -5,12 +5,7 @@
     {#await getcomments}
         <Loading small/>
     {:then comments}
-    <!-- TODO complete all actions using fetch method ; 
-            FOR COMMENT CONTROL CENTER WE HAVE FOLLOWING RULES: 
-                dev access has 4 true bool of actions 
-                admin has 3 true bool of actions 
-                mod has onnly one true bool of actions
-                restricted can do nothing ! -->
+    <!-- TODO complete all actions using fetch method -->
         <Table indexed highlight rows={1}
         content={comments}
         search={["name", "content", "email", "cuid", "id", "post_id"]}

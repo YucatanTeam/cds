@@ -13,10 +13,8 @@ const slug = require('limax')
     ----------------------
     TODO : bool of actions
     ----------------------
-    TODO add actions[true, ... , false] to rows arr based on user.access
-    TODO we have 4 bool of actions for dev access : create , delete , edit , block/unblock 
-    mod can only edit , restricted can only read , admin and dev can CRUD but admin can't create in some places !
-
+    TODO add actions[true, ... , false] to rows arr based on user.access in access middleware
+    NOTE : we have 4 bool of actions for dev access : create , delete , edit , block/unblock 
 */
 
 function page(root) {
@@ -25,9 +23,15 @@ function page(root) {
     // ------------
     // guard api
     // ------------
-function access(level) {
+function access(level, redirect) {
     // level: 0 ban, 1 restricted, 2 user, 3 mod, 5 admin, 7 dev
-    return (req, res, next) => {
+    return redirect ?
+    (req, res, next) => {
+        if(!req.user) return res.redirect(redirect);
+        if(req.user.access < level) return res.redirect(redirect);
+        next();
+    } :
+    (req, res, next) => {
         if(!req.user) return res.status(401).end("Unauthorized !");
         if(req.user.access < level) return res.status(403).end("Access denied !");
         next();
@@ -71,15 +75,21 @@ module.exports = ({app, db}) => {
     // user api
     // ------------
     app.get('/getuser', access(1), (req, res)=>{
-        user = {access: req.user.access,
+        var user = {access: req.user.access,
                 firstname: req.user.firstname,
                 lastname: req.user.lastname,
                 id: req.user.id,
                 avatar: req.user.avatar,
                 email: req.user.email}
-        setTimeout(e=>res.json({body: user, err:null}), 2000) // do whatever u want with json resp in client side
+        setTimeout(e=>res.json({body: user, err:null}), 100) // do whatever u want with json resp in client side
     })
-
+    
+    app.post('/updateUser', access(1), (req, res) => {
+        console.log(req.body)
+        // TODO validate req.body
+        // TODO db.api.updateUser(validReqBody)
+        res.status(200).end("ok")
+    })
     
     
     // ------------
@@ -89,12 +99,8 @@ module.exports = ({app, db}) => {
         db.api.getAllComments((err, rows)=>{
             if(rows){
                 for ( var index=0; index<rows.length; index++ ) {
-                    if(req.user.access === 7) rows[index].actions = [true, true, true, true] // dev access can create , edit , delete , block/unblock comments 
-                    if(req.user.access === 5) rows[index].actions = [false, true, true, true] // admin access can't create but can edit , delete and block/unblock comments
-                    if(req.user.access === 3) rows[index].actions = [false, true, false, false] // mod access can't create , delete and block/unblock comments but can edit them
-                    if(req.user.access === 1) rows[index].actions = [false, false, false, false] // restricted access can do nothing ; but can read the whole comments
-                    // for req.user.access === 2 the whole routes are different.
-                    // for req.user.access === 0 the whole panel is locked !
+                    // [CREATE , DELETE , EDIT , BLOCK/UNBLOCK STATUS]
+                    rows[index].actions = [false, true, true, true] // admin can't create new comment ; only for dev is true!
                 }
                 res.json({body: rows, err:null})
             }
@@ -127,6 +133,6 @@ module.exports = ({app, db}) => {
     // public api
     // ------------
     app.use('/public', page('public'))
-    app.use('/panel', access(2), page('panel'))
+    app.use('/panel', access(2, "/login"), page('panel'))
     app.use('/', page('index'))
 }

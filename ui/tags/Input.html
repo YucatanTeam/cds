@@ -1,5 +1,5 @@
-<div class="input-field {col}">
-	<input id={id} type={type} class={validate ? "validate" : ""} />
+<div class="input-field {col ? "col" : "" } {col}">
+	<input id={id} type={type} class={validate ? "validate" : ""} data-length="{length}"/>
 	{#if label}
         <label for={id}>{label}</label>
     {/if}
@@ -21,7 +21,11 @@ export default {
             name: '',
             dataempty: '',
             dataerror: '',
+            length: null
         }
+    },
+    oncreate() {
+        M.updateTextFields()
     }
 }
 </script>

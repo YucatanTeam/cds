@@ -2,14 +2,15 @@
 	<title>{title}</title>
 </svelte:head>
 
+<!-- TODO fix sidenav bug ; it's very big can't see other route link!!! -->
+<!-- TODO we have to implement different sidenavs and routes contents based on user access -->
 
-<Sidenav background="/public/img/cds.svg" fixed>
-	
-	{#await getuser}
-        <Loading small/>
-    {:then user}
-	  	{#if user.access == 7}
-	  					<!-- dev sidenav -->
+<div class="row">
+	<Sidenav background="/public/img/cds.svg" fixed>
+		
+		{#await getuser}
+			<Loading small/>
+		{:then user}
 			<li><a class="truncate" href="#/AbroadControlCenter"><I>language</I>Abroad Control Center</a></li>
 			<li><a class="truncate" href="#/AccessControlCenter"><I>accessibility</I>Access Control Center</a></li>
 			<li><a class="truncate" href="#/AnswerQuestionControlCenter"><I>question_answer</I>FAQ Control Center</a></li>
@@ -24,54 +25,21 @@
 			<li><a class="truncate" href="#/SeoSetup"><I>search</I>Seo Setup</a></li>
 			<li><a class="truncate" href="#/StudentControlCenter"><I>assignment_ind</I>Student Control Center</a></li>
 			<li><a class="truncate" href="#/DatabaseControlCenter"><I>storage</I>Database Control Center</a></li>
-	  	
-		{:elseif user.access == 5}
-			<!-- admin sidenav -->
-		{:elseif user.access == 3}
-	  		<!-- mod sidenav -->
-	 	{:elseif user.access == 2}
-	  		<!-- user sidenav -->
-		{:elseif user.access == 1}
-			<!-- restricted sidenav -->
-		{:else}
-			<!-- ban sidenav -->
-	  	{/if}
-	{:catch err}
-        <p>Error {err.code}</p>
-    {/await}
-</Sidenav>
-
-<div class="row">
-	<div class="col offset-s1 offset-m4 offset-l3">
-		{#await getuser}
-			<Loading small/>
-		{:then user}
-			{#if user.access == 7}
-				<!-- dev routes -->
-				<Router routes={devroutes}>
-					<div class="error">
-						This page was not found.
-					</div>
-				</Router>
-			{:elseif user.access == 5}
-				<!-- admin routes -->
-				<Router routes={adminroutes}>
-					<div class="error">
-						This page was not found.
-					</div>
-				</Router>
-			{:elseif user.access == 3}
-				<!-- mod routes -->
-			{:elseif user.access == 2}
-				<!-- user routes -->
-			{:elseif user.access == 1}
-				<!-- restricted routes -->
-			{:else}
-				<!-- ban routes -->
-			{/if}
 		{:catch err}
 			<p>Error {err.code}</p>
 		{/await}
+	</Sidenav>
+	<div class="col offset-l3">
+		<div class="container">
+			<!-- if user.access is 7 then devroutes will be use -->
+			<!-- if user.access is 5 then adminroutes will be use -->
+			<!-- ..... -->
+			<Router routes={devroutes}>
+				<div class="error">
+					This page was not found.
+				</div>
+			</Router>
+		</div>
 	</div>
 </div>
 
@@ -91,17 +59,64 @@
 	import SandBox from "./admin_pages/SandBox.html";
 	import DatabaseControlCenter from "./dev_pages/DatabaseControlCenter.html";
 
+	const utils = {
+		// to follow redirect after a fetch
+		followRedirect(response) {
+			if(response.redirected) {
+				window.location.href = response.url;
+			}
+			return response;
+		},
+		fetch(src, postBody) {
+			return (
+				fetch(src, postBody ? {
+                    method: "POST",
+                    mode: "same-origin",
+                    credentials: "same-origin",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    redirect: "follow",
+                    body: JSON.stringify(postBody)
+                } : {
+                    method: "GET",
+                    mode: "same-origin",
+                    credentials: "same-origin",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    redirect: "follow",
+                })
+				.then(response => {
+                    if(response.redirected) {
+                        window.location.href = response.url;
+                    }
+                    return response;
+                })
+                .then(response => {
+                    var contentType = response.headers.get("content-type");
+                    if(contentType && contentType.includes("application/json")) {
+                        return response.json().then(json => ({status: response.status, body: json.body}));
+                    }
+                    return {status: response.status, body: null};
+                })
+			)
+		}
+	};
+
 	export default {
 	  	oncreate() {
 			M.AutoInit();
+			window.utils = utils;
 		},
 	  	data() {
 			return {
 				getuser:
-					fetch("/getuser")
-					.then(r=>{ if(r.status == 200) return r; else throw {code: r.status}})
-					.then(r=>r.json())
-					.then(j=>j.body),
+					utils.fetch("/getuser")
+					.then(user=>{
+						window.cdsuser = user;
+						return user;
+					}),
 				title: "CDS-PANEL",
 				// TODO we have dev outes , user routes , admin routes, mod routes , restricted routes , ban routes
 				devroutes: {
@@ -118,7 +133,7 @@
 				'/StudentControlCenter': [StudentControlCenter, {message: 'Hello From Student Control Center ;) Here you can control all CANDO students, Feel free and setup what you want. '}],
 				'/CommentControlCenter': [CommentControlCenter, {message: 'Hello From Comment Control Center ;) You can setup CANDO comments here.'}],
 				'/SandBox': [SandBox, {message: 'Hello From Sand Box ;) Feel free and setup your UI.'}],
-				'/DatabaseControlCenter': [SandBox, {message: 'Hello From Database Control Center ;) Feel free and setup cds DB.'}]
+				'/DatabaseControlCenter': [DatabaseControlCenter, {message: 'Hello From Database Control Center ;) Feel free and setup cds DB.'}]
 				},
 				adminroutes: {
 				'/SecurityPolicy': [SecurityPolicy, {message: 'Hello From Security Policy ;) You can setup your personal info here.'}],

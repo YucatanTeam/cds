@@ -1,31 +1,65 @@
-<h5>{message}</h5>
-
-<!-- TODO security policy cards here -->
-
-<!-- set actions and bind content  -->
 <div class="row">
-    {#await getuser}
-        <Loading small/>
-    {:then user}
-        <p>hello {user.email} with access: {user.access}</p>
-    {:catch err}
-        <p>Error {err.code}</p>
-    {/await}
+    <Card image="/public/img/privacy.png" col="s12 m10 offset-m1 l8 offset-l2">
+        <h4>Hello {user.firstname ? user.firstname : ""} !</h4>
+        <p><span class="red-text"><I>format_quote</I></span> Here you can use <span class="red-text">WHO AM I</span> button to check your identity!</p><br>
+        <Modal id="whoami" buttons={[function Agree(c) {console.log(c)}]}>
+            <h4>You are</h4>
+            <p>{user.firstname} {user.lastname}</p>
+        </Modal>
+        <button class="btn white red-text waves-effect waves-gray" on:click=logout()>log me out!</button>
+    </Card>
+</div>
+<div class="row">
+    <!-- TODO put `noavatar.png` in `ui/static/img` and `www/public/img` -->
+    <Card image="{user.avatar ? user.avatar : "noavatar.png"}" col="s12 m10 offset-m1 l8 offset-l2"> 
+        <p><span class="red-text"><I>format_quote</I></span> Feel free and make some changes to your info.<br> 
+        Password must contain at least one lowercase alphabetical character,<br>
+        one uppercase alphabetical character, one numeric character,<br>
+        one special character and must be eight characters or longer.<br></p>
+        <Form bind:response=changeInfo>
+            <Input id="username" label="username" validate length=10 col="s9"/>
+            <Input id="email" label="email" type="email" validate col="s9"/>
+            <Input id="password" label="password" type="password" validate col="s9"/>
+            <button class="btn waves-effect waves-light yellow white-text col s4" on:click=updateUser()>update</button>
+        </Form>
+    </Card>
 </div>
 
 <script>
 export default {
-    data(){
+    data() {
+        const user = window.cdsuser;
         return {
-            getuser:
-                fetch("/getuser")
-                .then(r=>{ if(r.status == 200) return r; else throw {code: r.status}})
-                .then(r=>r.json())
-                .then(j=>j.body)
+            user,
+            changeInfo: null,
+        }
+    },
+    methods: {
+        logout() {
+            utils.fetch("/logout").catch(err => M.toast({html:"can't log out !"}));
+        },
+        updateUser() {
+            const elusername = document.getElementById('username');
+            const elemail = document.getElementById('email');
+            const elpassword = document.getElementById('password');
+
+            // TODO validate inputs
+            // and alert if needed
+            
+            const username = elusername.value;
+            const email = elemail.value;
+            const password = elpassword.value;
+
+            utils.fetch("/updateUser", {username, password, email}).catch(err => M.toast({html:"something went wrong !"}));
         }
     },
     components: {
-        Loading: "../../tags/Loading.html"
-    }
+			I: '../../tags/Icon.html',
+            Loading: '../../tags/Loading.html',
+            Card: '../../tags/Card.html',
+            Modal: '../../tags/Modal.html',
+            Input: '../../tags/Input.html',
+            Form: '../../tags/Form.html',
+	  	}
 }
 </script>
