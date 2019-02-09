@@ -1,5 +1,7 @@
 <!-- to trigger the modal with id:'modal1':
         <button data-target="modal1" class="btn modal-tigger">modal1</button>
+     or:
+        <a data-target="modal1" class="btn modal-tigger">modal1</a>
     id: string: id of a modal
     buttons: object of named functions like `OK(comp){...}` to make buttons for footer
 
@@ -30,8 +32,6 @@
             if(changed.id) {
                 var elems = document.querySelector('.modal');
                 var instances = M.Modal.init(elems, {});
-                M.AutoInit();
-                console.log(instances)
             }
         },
         methods: {
