@@ -5,7 +5,7 @@
     {#await getcomments}
         <Loading small/>
     {:then comments}
-    <!-- TODO complete all actions using fetch method -->
+    <!-- TODO complete all actions using fetch method , modal tag and ckeditor -->
         <Table indexed highlight rows={1}
         content={comments}
         search={["name", "content", "email", "cuid", "id", "post_id"]}

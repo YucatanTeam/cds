@@ -100,7 +100,7 @@ module.exports = ({app, db}) => {
             if(rows){
                 for ( var index=0; index<rows.length; index++ ) {
                     // [CREATE , DELETE , EDIT , BLOCK/UNBLOCK STATUS]
-                    rows[index].actions = [false, true, true, true] // admin can't create new comment ; only for dev is true!
+                    rows[index].actions = [true, true, true, true]
                 }
                 res.json({body: rows, err:null})
             }
