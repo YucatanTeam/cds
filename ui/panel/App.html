@@ -3,7 +3,7 @@
 </svelte:head>
 
 <!-- TODO fix sidenav bug ; it's very big can't see other route link!!! -->
-<!-- TODO we have to implement different sidenavs and routes contents based on user access -->
+<!-- TODO we have to implement different links and routes contents based on user access -->
 
 <div class="row">
 	<Sidenav background="/public/img/cds.svg" fixed>
@@ -31,10 +31,7 @@
 	</Sidenav>
 	<div class="col offset-l3">
 		<div class="container">
-			<!-- if user.access is 7 then devroutes will be use -->
-			<!-- if user.access is 5 then adminroutes will be use -->
-			<!-- ..... -->
-			<Router routes={devroutes}>
+			<Router routes={routes}>
 				<div class="error">
 					This page was not found.
 				</div>
@@ -118,8 +115,7 @@
 						return response.body;
 					}),
 				title: "CDS-PANEL",
-				// TODO we have dev outes , user routes , admin routes, mod routes , restricted routes , ban routes
-				devroutes: {
+				routes: {
 				'/SecurityPolicy': [SecurityPolicy, {message: 'Hello From Security Policy ;) You can setup your personal info here.'}],
 				'/CandoServices': [CandoServices, {message: 'Hello From Cando Services ;) You can setup CANDO services here.'}],
 				'/AccessControlCenter': [AccessControlCenter, {message: 'Hello From Access Control Center ;) You can setup the access control list here.'}],
