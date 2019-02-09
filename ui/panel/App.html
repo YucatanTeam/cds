@@ -113,9 +113,9 @@
 			return {
 				getuser:
 					utils.fetch("/getuser")
-					.then(user=>{
-						window.cdsuser = user;
-						return user;
+					.then(response => {
+						window.cdsuser = response.body;
+						return response.body;
 					}),
 				title: "CDS-PANEL",
 				// TODO we have dev outes , user routes , admin routes, mod routes , restricted routes , ban routes
