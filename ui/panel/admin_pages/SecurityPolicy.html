@@ -1,65 +1,89 @@
 <div class="row">
-    <Card image="/public/img/privacy.png" col="s12 m10 offset-m1 l8 offset-l2">
-        <h4>Hello {user.firstname ? user.firstname : ""} !</h4>
-        <p><span class="red-text"><I>format_quote</I></span> Here you can use <span class="red-text">WHO AM I</span> button to check your identity!</p><br>
-        <Modal id="whoami" buttons={[function Agree(c) {console.log(c)}]}>
-            <h4>You are</h4>
-            <p>{user.firstname} {user.lastname}</p>
-        </Modal>
-        <button class="btn white red-text waves-effect waves-gray" on:click=logout()>log me out!</button>
-    </Card>
+	<Card image="/public/img/privacy.png" col="s12 m10 offset-m1 l8 offset-l2">
+		<h4>Hello {user.firstname ? user.firstname : ""} !</h4>
+		<p><span class="red-text"><I>format_quote</I></span> Here you can use <span class="red-text">WHO AM I</span> button
+			to check your identity!</p><br>
+		<Modal id="whoami" buttons={[function Agree(c) {console.log(c)}]}>
+			<h4>You are</h4>
+			<p>{user.firstname} {user.lastname}</p>
+		</Modal>
+		<button class="btn white red-text waves-effect waves-gray" on:click=logout()>log me out!</button>
+	</Card>
 </div>
 <div class="row">
-    <!-- TODO put `noavatar.png` in `ui/static/img` and `www/public/img` -->
-    <Card image="{user.avatar ? user.avatar : "noavatar.png"}" col="s12 m10 offset-m1 l8 offset-l2"> 
-        <p><span class="red-text"><I>format_quote</I></span> Feel free and make some changes to your info.<br> 
-        Password must contain at least one lowercase alphabetical character,<br>
-        one uppercase alphabetical character, one numeric character,<br>
-        one special character and must be eight characters or longer.<br></p>
-        <Form bind:response=changeInfo>
-            <Input id="username" label="username" validate length=10 col="s9"/>
-            <Input id="email" label="email" type="email" validate col="s9"/>
-            <Input id="password" label="password" type="password" validate col="s9"/>
-            <button class="btn waves-effect waves-light yellow white-text col s4" on:click=updateUser()>update</button>
-        </Form>
-    </Card>
+	<Card image="/user/avatar" col="s12 m10 offset-m1 l8 offset-l2">
+		<h4>Your account.</h4>
+		<p><span class="red-text"><I>format_quote</I></span> Feel free and make some changes to your info.<br>
+			Password must contain at least one lowercase alphabetical character,<br>
+			one uppercase alphabetical character, one numeric character,<br>
+			one special character and must be eight characters or longer.<br></p>
+		<Form bind:response=changeInfo>
+			<Input id="email" label="email" type="email" validate col="s9" />
+			<Input id="password" label="password" type="password" validate col="s9" />
+			<Input id="confirm" label="confirm" type="password" validate col="s9" />
+			<button class="btn waves-effect waves-light yellow white-text col s4" on:click=updateUser()>update</button>
+		</Form>
+	</Card>
+</div>
+<div class="row">
+	<!-- TODO put `noavatar.png` in `ui/static/img` and `www/public/img` -->
+	<Card col="s12 m10 offset-m1 l8 offset-l2">
+		<h4><span class="red-text"><I>format_quote</I></span> Change your avatar.</h4>
+		<div class="file-field input-field">
+			<div class="btn waves-effect waves-light white-text yellow">
+				<span>image</span>
+				<input id="avatarpicker" type="file">
+			</div>
+			<div class="file-path-wrapper">
+				<input class="file-path validate" type="text">
+			</div>
+		</div>
+        <button class="btn waves-effect waves-light white-text yellow submit" on:click=uploadAvatar()>upload</button>
+	</Card>
 </div>
 
 <script>
-export default {
-    data() {
+    export default {
+      data() {
         const user = window.cdsuser;
         return {
-            user,
-            changeInfo: null,
-        }
-    },
-    methods: {
+          user,
+          changeInfo: null
+        };
+      },
+      methods: {
         logout() {
-            utils.fetch("/logout").catch(err => M.toast({html:"can't log out !"}));
+          utils.fetch("/logout").catch(err => M.toast({ html: "can't log out !" }));
         },
         updateUser() {
-            const elusername = document.getElementById('username');
-            const elemail = document.getElementById('email');
-            const elpassword = document.getElementById('password');
+          const elemail = document.getElementById("email");
+          const elpassword = document.getElementById("password");
+          const elconfirm = document.getElementById("confirm");
 
-            // TODO validate inputs
-            // and alert if needed
-            
-            const username = elusername.value;
-            const email = elemail.value;
-            const password = elpassword.value;
+          // TODO validate inputs
+          // and alert if needed
 
-            utils.fetch("/updateUser", {username, password, email}).catch(err => M.toast({html:"something went wrong !"}));
+          const email = elemail.value;
+          const password = elpassword.value;
+
+          utils
+            .fetch("/updateUser", { username, password, email })
+            .catch(err => M.toast({ html: "something went wrong !" }));
+        },
+        uploadAvatar() {
+          utils
+            .upload("/user/avatar", "avatarpicker")
+            .then(res => { if(res.status != 200) throw "not ok"; })
+            .catch(err => M.toast({ html: "something went wrong !" }));
         }
-    },
-    components: {
-			I: '../../tags/Icon.html',
-            Loading: '../../tags/Loading.html',
-            Card: '../../tags/Card.html',
-            Modal: '../../tags/Modal.html',
-            Input: '../../tags/Input.html',
-            Form: '../../tags/Form.html',
-	  	}
-}
+      },
+      components: {
+        I: "../../tags/Icon.html",
+        Loading: "../../tags/Loading.html",
+        Card: "../../tags/Card.html",
+        Modal: "../../tags/Modal.html",
+        Input: "../../tags/Input.html",
+        Form: "../../tags/Form.html"
+      }
+    };
 </script>
