@@ -73,7 +73,12 @@
         uploadAvatar() {
           utils
             .upload("/user/avatar", "avatarpicker")
-            .then(res => { if(res.status != 200) throw "not ok"; })
+            .then(res => {
+                if(res.status != 200)
+                    throw "not ok";
+                else
+                    M.toast({ html: "Done" })
+            })
             .catch(err => M.toast({ html: "something went wrong !" }));
         }
       },
