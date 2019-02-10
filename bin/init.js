@@ -179,4 +179,13 @@ connection.connect(err => {
             connection.query(`INSERT INTO user(id, email, password, access, firstname, lastname) VALUES(1, 'dev@cds.org.ir', ?, 7, 'dev', 'eloper')` ,[password] ,errlog);
         });
     });
+
+    // ========================================= DEV INIT SETUP ===================================================================
+    // error table
+    // ...
+    connection.query(`CREATE TABLE IF NOT EXISTS error (
+        id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        msg text NULL,
+        status int NULL
+        )ENGINE=INNODB;` ,[] ,errlog);
 });
