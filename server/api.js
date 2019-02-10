@@ -146,7 +146,7 @@ module.exports = ({app, db}) => {
                     fs.unlink(file0, dev.report);
                     return res.status(500).end("Internal Server Error !");
                 }
-                db.api.setAvatar(req.user.id, avatar, function (err) {
+                db.api.user.changeAvatar(req.user.id, avatar, function (err) {
                     if (err) {
                         dev.report(err);
                         fs.unlink(file0, dev.report);
