@@ -1,21 +1,71 @@
 
+<!-- 
+    actions :
+        is a list of bool pushed at the end of each row on server side 
+        there are 4 actions are available  :
+            CREATE , DELETE , EDIT , BLOCK/UNBLOCK STATUS        
+-->
+
+
 <h5>{message}</h5>
 <!-- set actions and bind content  -->
 <div class="row">
     {#await getcomments}
         <Loading small/>
     {:then comments}
-    <!-- TODO complete all actions using fetch method , modal tag and ckeditor -->
         <Table indexed highlight rows={1}
         content={comments}
         search={["name", "content", "email", "cuid", "id", "post_id"]}
-        actions={[{icon: "delete",tooltip: "delete", action(obj, component) {
-                var {content} = component.get();
-                delete content[content.indexOf(obj)];
-                content = content.filter(e => e != null)
-                component.set({content})
-            }
-        }]}
+        actions={[
+                                        /* ------------------------------------------
+                                            list of all actions for comment data table 
+                                        ------------------------------------------
+                                        */
+                  // ==============================================================================================
+                  // CREATE : only for dev ( must chek on server side using user access inside comment api routes )
+                  // ==============================================================================================
+                  {icon: "fiber_new",tooltip: "create", action(obj, component) {
+                        
+                        // TODO : trigger a modal
+                    }
+                  }, 
+                  // ==============================================================================================
+                  // DELETE
+                  // ==============================================================================================
+                 {icon: "delete",tooltip: "delete", action(obj, component) {
+                        // deleting comment from our data table on client side
+                        /*
+                        var {content} = component.get();
+                        delete content[content.indexOf(obj)];
+                        content = content.filter(e => e != null)
+                        component.set({content})
+                        */
+                        // deleting comment from our db on server side
+                        utils.fetch(`/deleteComment/${obj.cuid}`)
+                                .then(response=>{
+                                    console.log(response.body)
+                                    return response.body
+                                });
+                    }
+                  }, 
+                  // ==============================================================================================
+                  // EDIT
+                  // ==============================================================================================
+                  {icon: "edit",tooltip: "edit", action(obj, component) {
+                        
+                        // TODO : trigger a modal
+                    
+                    }
+                  }, 
+                  // ==============================================================================================
+                  // BLOCK/UNBLOCK STATUS
+                  // ==============================================================================================
+                    {icon: "block",tooltip: "block", action(obj, component) {
+                        
+                        // TODO : unblock(beenhere icon)/block comment api here ....
+                    }
+                  }, 
+                ]}
         />
     {:catch err}
         <p>Error {err.code}</p>
@@ -30,12 +80,14 @@ export default {
                 fetch("/getAllComments")
                 .then(r=>{ if(r.status == 200) return r; else throw {code: r.status}})
                 .then(r=>r.json())
-                .then(j=>j.body)
+                .then(j=>(j.body))
+
         }
     },
     components: {
         Loading: "../../tags/Loading.html",
-        Table: "../../tags/Table.html"
+        Table: "../../tags/Table.html",
+        Modal: '../../tags/Modal.html'
     }
 }
 </script>

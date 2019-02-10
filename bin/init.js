@@ -127,8 +127,8 @@ connection.connect(err => {
     });
 
     // migration consultancy and language courses table content
-    // all langs courses tabs(contents) related to a abroad !
-    // all migration consultancy tabs(contents) related to a abroad !
+    // all langs courses tabs(contents) related to an abroad !
+    // all migration consultancy tabs(contents) related to an abroad !
     // ...
     connection.query(`CREATE TABLE IF NOT EXISTS mc_lc (
         id INT AUTO_INCREMENT PRIMARY KEY,

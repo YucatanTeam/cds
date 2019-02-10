@@ -4,15 +4,18 @@ const safe = require('./safe.js');
 const db = {
     connection: null,
     api: {
+        /* --------------------
+            USER API
+        */
         getAllUsers(cb) { // cb(err, user)
             db.connection.query(`SELECT * FROM user`, [], cb);
         },
         getUserById(id, cb) { // cb(err, user)
             db.connection.query(`SELECT * FROM user WHERE id = ?`, [id], (err, rows) => {
                 if(rows.length === 1) {
-                    cb(err, rows[0]);
+                    return cb(err, rows[0]);
                 } else {
-                    cb(err, false);
+                    return cb(err, false);
                 }
             });
         },
@@ -78,6 +81,18 @@ const db = {
             });
             
         },
+        /* --------------------
+            COMMENTS API
+        */
+        getAllCommentsRelToPost(post_id, cb){
+            db.connection.query(`SELECT * FROM comment WHERE post_id = ?`, [post_id], (err, rows) => {
+                if(rows.length >= 1) {
+                    return cb(err, rows);
+                } else {
+                    return cb(err, false);
+                }
+            });
+        },
         getAllComments(cb){
             db.connection.query(`SELECT * FROM comment`, [], (err, rows)=>{
                 if(rows.length >= 1) {
@@ -88,35 +103,95 @@ const db = {
             });
         },
         deleteCommentByCuid(cuid, cb){
-
+            db.connection.query(`DELETE FROM comment WHERE cuid = ?`, [cuid], (err, results, fields)=>{
+                if(results){ // found one !
+                    return cb(err, results.affectedRows, fields)
+                } else{ // delete nothing!
+                    return cb(err, false, false)
+                }
+            });
         },
         deleteCommentById(id, cb){
-
-        },
-        editCommentByCuid(cuid, cb){
-
-        },
-        editCommentById(id, cb){
-
+            db.connection.query(`DELETE FROM comment WHERE id = ?`, [id], (err, results, fields)=>{
+                if(results){ // found one !
+                    return cb(err, results.affectedRows, fields)
+                } else{ // delete nothing!
+                    return cb(err, false, false)
+                }
+            });
         },
         deleteAllComments(cb){
+            db.connection.query(`DELETE * FROM comment`, [], (err, results, fields)=>{
+                if(results){ // found one !
+                    return cb(err, results.affectedRows, fields)
+                } else{ // delete nothing!
+                    return cb(err, false, false)
+                }
+            });
+        },
+        editComment(comment, cb){
 
         },
-        getCommentById(id, cb){
+        /* ---------------------------------------------
+            MIGRATION CONSULTANCY & LANGUAGE COURSES api
+        */
+        getAllMcLcRerlToAbroad(abroad_id, cb){
+            db.connection.query(`SELECT * FROM mc_lc WHERE abroad_id = ?`, [abroad_id], (err, rows) => {
+                if(rows.length >= 1) {
+                    return cb(err, rows);
+                } else {
+                    return cb(err, false);
+                }
+            });  
+        },
+        getAllMcLc(cb){
+            db.connection.query(`SELECT * FROM mc_lc`, [], (err, rows)=>{
+                if(rows.length >= 1) {
+                    return cb(err, rows);
+                } else {
+                    return cb(err, false);
+                }
+            });
+        },
+        deleteMcLcByCuid(cuid, cb){
+            db.connection.query(`DELETE FROM mc_lc WHERE cuid = ?`, [cuid], (err, results, fields)=>{
+                if(results){ // found one !
+                    return cb(err, results.affectedRows, fields)
+                } else{ // delete nothing!
+                    return cb(err, false, false)
+                }
+            });
+        },
+        deleteMcLcById(id, cb){
+            db.connection.query(`DELETE FROM mc_lc WHERE id = ?`, [id], (err, results, fields)=>{
+                if(results){ // found one !
+                    return cb(err, results.affectedRows, fields)
+                } else{ // delete nothing!
+                    return cb(err, false, false)
+                }
+            });
+        },
+        deleteAllMcLc(cb){
+            db.connection.query(`DELETE * FROM mc_lc`, [], (err, results, fields)=>{
+                if(results){ // found one !
+                    return cb(err, results.affectedRows, fields)
+                } else{ // delete nothing!
+                    return cb(err, false, false)
+                }
+            });
+        },
+        deleteAllAbroad(cb){
+            db.connection.query(`DELETE * FROM abroad`, [], (err, results, fields)=>{
+                if(results){ // found one !
+                    return cb(err, results.affectedRows, fields)
+                } else{ // delete nothing!
+                    return cb(err, false, false)
+                }
+            });
+        },
+        editMcLc(mclc, cb){
 
         },
-        getCommentByName(name, cb){
-
-        },
-        getCommentByEmail(email, cb){
-
-        },
-        getCommentByCuid(cuid, cb){
-
-        },
-        getCommentsByNameEmail(name, email, cb){
-
-        }
     }
 }
 

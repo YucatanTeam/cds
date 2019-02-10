@@ -10,11 +10,6 @@ const slug = require('limax')
     slug: req.body.title.replace(/ /g,"-"),
     en_slug: slug(req.body.en_title.toLowerCase(), { lowercase: true }),
 
-    ----------------------
-    TODO : bool of actions
-    ----------------------
-    TODO add actions[true, ... , false] to rows arr based on user.access in access middleware
-    NOTE : we have 4 bool of actions for dev access : create , delete , edit , block/unblock 
 */
 
 function page(root) {
@@ -91,15 +86,80 @@ module.exports = ({app, db}) => {
         res.status(200).end("ok")
     })
     
+
+
     
     // ------------
     // comment api
     // ------------
+    app.get('/getAllCommentsRelToAPost/:id', access(5), (req, res)=>{ // usage : recommended for client side
+        db.api.getAllCommentsRelToAPost(req.params.id, (err, rows)=>{
+
+            if(rows) res.json({body: rows, err:null})
+            if(err) res.status(404).end("Nothing Found !");
+        })
+    });
+
     app.get('/getAllComments', access(5), (req, res)=>{
         db.api.getAllComments((err, rows)=>{
-            if(rows){
+            if(rows) {
+                for ( var index=0; index<rows.length; index++ ) { // only dev can create new comment
+                    req.user.access === 5 ? rows[index].actions = [false, true, true, true] : rows[index].actions = [true, true, true, true]
+                }
+                res.json({body: rows, err:null})
+            }
+            if(err) res.status(404).end("Nothing Found !");
+        })
+    });
+
+    app.delete('/deleteComment/:cuid', access(5), (req, res)=>{
+        db.api.deleteCommentByCuid(req.params.cuid, (err, resaff, fields)=>{
+
+            if(resaff) res.json({body: resaff, err:null, fields: fields})
+            if(err) res.status(404).end("Nothing Deleted !");
+        })
+    });
+
+    app.delete('/deleteComment/:id', access(5), (req, res)=>{
+        db.api.deleteCommentById(req.params.id, (err, resaff, fields)=>{
+
+            if(resaff) res.json({body: resaff, err:null, fields: fields})
+            if(err) res.status(404).end("Nothing Deleted !");
+        })
+    });
+    
+    app.post('/deleteAllComments', access(5), (req, res)=>{
+        db.api.deleteAllComments((err, resaff, fields)=>{
+            
+            if(resaff) res.json({body: resaff, err:null, fields: fields})
+            if(err) res.status(404).end("Nothing Deleted !");
+        })
+    });
+
+    app.post('/editComment', access(5), (req, res)=>{
+        // TODO : validate req.body
+        // TODO : db.api.editComment(validated req.body, (err, row))
+    });
+
+
+
+
+    // ---------
+    // mc_lc api
+    // ---------
+    app.get('/getAllMcLcRerlToAbroad/:id', access(5), (req, res)=>{
+        db.api.getAllMcLcRerlToAbroad(req.params.id, (err, rows)=>{
+
+            if(rows) res.json({body: rows, err:null})
+            if(err) res.status(404).end("Nothing Found !");
+        });
+    })
+
+    app.get('/getAllMcLc', access(5), (req, res)=>{
+        db.api.getAllMcLc((err, rows)=>{
+            if(rows) {
                 for ( var index=0; index<rows.length; index++ ) {
-                    // [CREATE , DELETE , EDIT , BLOCK/UNBLOCK STATUS]
+                    // for dev and admin all actions(create , delete , edit , block/unblock status) are set to true
                     rows[index].actions = [true, true, true, true]
                 }
                 res.json({body: rows, err:null})
@@ -108,21 +168,34 @@ module.exports = ({app, db}) => {
         })
     });
 
+    app.delete('/deleteMcLc/:cuid', access(5), (req, res)=>{
+        db.api.deleteMcLcByCuid(req.params.cuid, (err, resaff, fields)=>{
 
-    // ---------
-    // mc_lc api
-    // ---------
-    // related to abroad control center
+            if(resaff) res.json({body: resaff, err:null, fields: fields})
+            if(err) res.status(404).end("Nothing Deleted !");
+        })
+    });
+
+    app.delete('/deleteMcLc/:id', access(5), (req, res)=>{
+        db.api.deleteMcLcById(req.params.id, (err, resaff, fields)=>{
+
+            if(resaff) res.json({body: resaff, err:null, fields: fields})
+            if(err) res.status(404).end("Nothing Deleted !");
+        })
+    });
     
+    app.post('/deleteAllMcLc', access(5), (req, res)=>{
+        db.api.deleteAllMcLc((err, resaff, fields)=>{
 
+            if(resaff) res.json({body: resaff, err:null, fields: fields})
+            if(err) res.status(404).end("Nothing Deleted !");
+        })
+    });
 
-
-    
-    // ----------
-    // abroad api
-    // ----------
-    // related to abroad control center
-
+    app.post('/editMcLc', access(5), (req, res)=>{
+        // TODO : validate req.body
+        // TODO : db.api.editMcLc(validated req.body, (err, row))
+    });
 
 
 

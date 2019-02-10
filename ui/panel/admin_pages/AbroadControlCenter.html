@@ -1,21 +1,74 @@
 
 
-<!-- TODO : show all contents about mc_lc in tag table 
-            with their related abroad(tab title) using some mysql joining query -->
-<!-- TODO : actions => enable/disable(mc_lc and abroad[tab titles]) , 
-            edit(open modal tag to edit both table) ,
-            delete , create(new mc_lc using ckeditor and abroad content) 
--->
-<!-- TODO : in main UI of the site use slide for abroad in other countries section -->
+<!-- 
+    actions :
+        is a list of bool pushed at the end of each row on server side 
+        there are 4 actions are available  :
+            CREATE , DELETE , EDIT , BLOCK/UNBLOCK STATUS        
+--> 
 
 <h5>{message}</h5>
 
 <!-- set actions and bind content  -->
 <div class="row">
-    {#await getuser}
-        <Loading big/>
-    {:then user}
-        <p>access: {user.access}</p>
+    {#await getmclc}
+        <Loading small/>
+    {:then mclc}
+        <Table indexed highlight rows={1}
+        content={mclc}
+        search={["slug", "en_slug", "tags", "content", "en_content", "en_tags", "id", "abroad_id"]}
+        actions={[
+                                        /* ------------------------------------------
+                                            list of all actions for mc_lc data table 
+                                        ------------------------------------------
+                                        */
+                  // ==============================================================================================
+                  // CREATE
+                  // ==============================================================================================
+                  {icon: "fiber_new",tooltip: "create", action(obj, component) {
+                        
+                        // TODO : trigger a modal
+                    }
+                  }, 
+                  // ==============================================================================================
+                  // DELETE
+                  // ==============================================================================================
+                 {icon: "delete",tooltip: "delete", action(obj, component) {
+                        // deleting mc_lc from our data table on client side
+                        /*
+                        var {content} = component.get();
+                        delete content[content.indexOf(obj)];
+                        content = content.filter(e => e != null)
+                        component.set({content})
+                        */
+                        // deleting mc_lc from our db on server side
+                        utils.fetch(`/deleteMcLc/${obj.cuid}`)
+                                .then(response=>{
+                                    console.log(response.body)
+                                    return response.body
+                                });
+                    }
+                  }, 
+                  // ==============================================================================================
+                  // EDIT
+                  // ==============================================================================================
+                  {icon: "edit",tooltip: "edit", action(obj, component) {
+                        
+                        // TODO : trigger a modal
+                    
+                    
+                    }
+                  }, 
+                  // ==============================================================================================
+                  // BLOCK/UNBLOCK STATUS
+                  // ==============================================================================================
+                    {icon: "block",tooltip: "block", action(obj, component) {
+                        
+                        // TODO : unblock(beenhere icon)/block a mc_lc rec api here ....
+                    }
+                  }, 
+                ]}
+        />
     {:catch err}
         <p>Error {err.code}</p>
     {/await}
@@ -25,15 +78,18 @@
 export default {
     data(){
         return {
-            getuser:
-                fetch("/getuser")
+            getmclc:
+                fetch("/getAllMcLc")
                 .then(r=>{ if(r.status == 200) return r; else throw {code: r.status}})
                 .then(r=>r.json())
                 .then(j=>j.body)
         }
     },
     components: {
-        Loading: "../../tags/Loading.html"
+        Loading: "../../tags/Loading.html",
+        Table: "../../tags/Table.html",
+        Modal: "../../tags/Modal.html",
+
     }
 }
 </script>
