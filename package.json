@@ -14,13 +14,15 @@
     "body-parser": "^1.18.3",
     "cookie-parser": "^1.4.3",
     "cookie-session": "^2.0.0-beta.3",
-    "cuid": "^2.1.4",
+    "cuid": "^2.1.6",
     "express": "^4.16.4",
+    "formidable": "^1.2.1",
     "helmet": "^3.15.0",
     "limax": "^1.7.0",
     "mysql": "^2.16.0",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
+    "sharp": "^0.21.3",
     "svelte-app-router": "^0.1.0"
   },
   "devDependencies": {
