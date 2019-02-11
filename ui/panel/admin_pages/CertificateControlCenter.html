@@ -1,3 +1,37 @@
 
 
-<!-- <h5>{message}</h5> -->
+<h5>{message}</h5>
+<hr>
+
+<div class="row">
+    {#await getcomments}
+        <Loading small/>
+    {:then comments}
+
+        <!-- ckeditor content -->
+
+
+    {:catch err}
+        <p>Error {err.code}</p>
+    {/await}
+</div>
+<script>
+export default {
+    data(){
+        return {
+            getcert:
+                fetch("/cert/get")
+                .then(r=>{ if(r.status == 200) return r; else throw {code: r.status}})
+                .then(r=>r.json())
+                .then(j=>j.body)
+        }
+    },
+    methods:{
+
+    },
+    components:{
+        Loading: "../../tags/Loading.html",
+    }
+
+}
+</script>

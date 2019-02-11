@@ -6,66 +6,77 @@
             CREATE , DELETE , EDIT , BLOCK/UNBLOCK STATUS        
 -->
 
-<!-- TODO trigger modal by fireing an event -->
+
+<!-- TODO ckeditor tag , timeago , tags tag , show some words of content not the whole in table -->
+<!-- TODO got a bug in modal for bojModal .... fix it! -->
 
 
-<!-- <h5>{message}</h5> -->
+<h5>{message}</h5>
+<hr>
 <!-- set actions and bind content  -->
 <div class="row">
     {#await getcomments}
         <Loading small/>
     {:then comments}
+
+            <!-- ======== THIS MODAL WILL TRIGGER ON edit & create ACTION OF EACH ROW ======== -->
+            <div id="{crudindex===1 ? "modaledit" : "modalcreate"}" class="modal">
+                <div class="modal-content">
+                    <h4>{crudindex===1 ? "Edit" : "Create"}</h4>
+                    {#each Object.keys(objModal) as key}
+                        <p>{objModal[key]}</p>
+                    {/each}
+                </div>
+                <div class="modal-footer">
+                    <button class="modal-close waves-effect waves-green btn-flat" on:click="save(objModal)">{crudindex===1 ? "Update" : "Add"}</button>
+                </div>
+            </div>
+
         <Table indexed highlight rows={1}
-        content={comments}
-        search={["name", "content", "email", "cuid", "id", "post_id"]}
-        actions={[
-                                        /* ------------------------------------------
-                                            list of all actions for comment data table 
-                                        ------------------------------------------
-                                        */
-                  // ==============================================================================================
-                  // CREATE : only for dev ( must chek on server side using user access inside comment api routes )
-                  // ==============================================================================================
-                  {icon: "fiber_new",tooltip: "create", action(obj, component) {
-                        
-                        // TODO : trigger a modal
-                    }
-                  }, 
-                  // ==============================================================================================
-                  // DELETE
-                  // ==============================================================================================
-                 {icon: "delete",tooltip: "delete", action(obj, component) {
-                        // deleting comment from our data table on client side
-                        /*
-                        var {content} = component.get();
-                        delete content[content.indexOf(obj)];
-                        content = content.filter(e => e != null)
-                        component.set({content})
-                        */
-                        // deleting comment from our db on server side
-                        utils.fetch(`/deleteComment/${obj.cuid}`)
-                                .then(response=>{
-                                    console.log(response.body)
-                                });
-                    }
-                  }, 
-                  // ==============================================================================================
-                  // EDIT
-                  // ==============================================================================================
-                  {icon: "edit",tooltip: "edit", action(obj, component) {
-                        
-                        // TODO : trigger a modal
-                    
-                    }
-                  }, 
-                  // ==============================================================================================
-                  // BLOCK/UNBLOCK STATUS
-                  // ==============================================================================================
-                    {icon: "block",tooltip: "block", action(obj, component) {
-                        
-                        // TODO : unblock(beenhere icon)/block comment api here ....
-                    }
-                  }, 
+            on:modal="open(event)"
+            content={comments}
+            search={["name", "content", "email", "cuid", "id", "post_id"]}
+            actions={[
+                                            /* ------------------------------------------
+                                                list of all actions for comment data table 
+                                            ------------------------------------------
+                                            */
+                    // ==============================================================================================
+                    // CREATE : only for dev ( must chek on server side using user access inside comment api routes )
+                    // ==============================================================================================
+                    {icon: "fiber_new",tooltip: "create", action(obj, component) {
+                            var index = 0
+                            component.fire("modal", {obj, index})
+                        }
+                    }, 
+                    // ==============================================================================================
+                    // DELETE
+                    // ==============================================================================================
+                    {icon: "delete",tooltip: "delete", action(obj, component) {
+
+                           /* utils.fetch(`/comment/delete/${obj.cuid}`)
+                                    .then(response=>{
+                                        console.log(response.body)
+                                    });
+                            */
+                        }
+                    }, 
+                    // ==============================================================================================
+                    // EDIT
+                    // ==============================================================================================
+                    {icon: "edit",tooltip: "edit", action(obj, component) {
+                            var index = 1
+                            component.fire("modal", {obj, index})    
+                        }
+                    }, 
+                    // ==============================================================================================
+                    // BLOCK/UNBLOCK STATUS
+                    // ==============================================================================================
+                        {icon: "block",tooltip: "block", action(obj, component) {
+                            
+                            
+                        }
+                    }, 
                 ]}
         />
     {:catch err}
@@ -77,18 +88,33 @@
 export default {
     data(){
         return {
+            objModal: null,
+            crudindex: 0, // 1 : edit , 0 : create
             getcomments:
-                fetch("/getAllComments")
+                fetch("/comment/getAll")
                 .then(r=>{ if(r.status == 200) return r; else throw {code: r.status}})
                 .then(r=>r.json())
                 .then(j=>(j.body))
 
         }
     },
+    methods:{
+        open({obj, index}){
+            this.set({crudindex: index, objModal: obj})
+            var elems = document.querySelector('.modal');
+            var instances = M.Modal.init(elems, {});
+            instances.open();
+        },
+        save(obj){
+            console.log("inside saving method..")
+            // TODO use utils.fetch() to send new obj to the server
+            // TODO validate obj on client side and alert if needed
+            // remember to validate the obj on server side also
+        }
+    },
     components: {
         Loading: "../../tags/Loading.html",
         Table: "../../tags/Table.html",
-        Modal: '../../tags/Modal.html'
     }
 }
 </script>

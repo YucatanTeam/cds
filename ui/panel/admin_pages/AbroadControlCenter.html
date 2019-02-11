@@ -7,11 +7,9 @@
             CREATE , DELETE , EDIT , BLOCK/UNBLOCK STATUS        
 --> 
 
-<!-- TODO trigger modal by fireing an event -->
 
-
-<!-- <h5>{message}</h5> -->
-
+<h5>{message}</h5>
+<hr>
 <!-- set actions and bind content  -->
 <div class="row">
     {#await getmclc}
@@ -45,7 +43,7 @@
                         component.set({content})
                         */
                         // deleting mc_lc from our db on server side
-                        utils.fetch(`/deleteMcLc/${obj.cuid}`)
+                        utils.fetch(`/mc_lc/delete/${obj.cuid}`)
                                 .then(response=>{
                                     console.log(response.body)
                                 });
@@ -81,7 +79,7 @@ export default {
     data(){
         return {
             getmclc:
-                fetch("/getAllMcLc")
+                fetch("/mc_lc/getAll")
                 .then(r=>{ if(r.status == 200) return r; else throw {code: r.status}})
                 .then(r=>r.json())
                 .then(j=>j.body)
@@ -89,8 +87,7 @@ export default {
     },
     components: {
         Loading: "../../tags/Loading.html",
-        Table: "../../tags/Table.html",
-        Modal: "../../tags/Modal.html",
+        Table: "../../tags/Table.html"
 
     }
 }
