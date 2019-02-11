@@ -9,7 +9,7 @@
 <!-- TODO trigger modal by fireing an event -->
 
 
-<h5>{message}</h5>
+<!-- <h5>{message}</h5> -->
 <!-- set actions and bind content  -->
 <div class="row">
     {#await getcomments}
@@ -46,7 +46,6 @@
                         utils.fetch(`/deleteComment/${obj.cuid}`)
                                 .then(response=>{
                                     console.log(response.body)
-                                    return response.body
                                 });
                     }
                   }, 

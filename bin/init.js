@@ -3,6 +3,9 @@
 // to scaffold the project!
 
 
+// TODO : write a script to reinitialize the cds db
+
+
 const mysql = require("mysql");
 const cuid = require("cuid"); // use this to create a cuid in insertaion ops
 const safe = require('../server/safe.js');
