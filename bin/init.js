@@ -3,9 +3,6 @@
 // to scaffold the project!
 
 
-// TODO : write a script to reinitialize the cds db
-
-
 const mysql = require("mysql");
 const cuid = require("cuid"); // use this to create a cuid in insertaion ops
 const safe = require('../server/safe.js');
@@ -116,6 +113,7 @@ connection.connect(err => {
         title TEXT NOT NULL,
         en_title TEXT NOT NULL,
         cuid VARCHAR(100) NOT NULL,
+        status TINYINT NOT NULL DEFAULT 0,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP    
     )ENGINE=INNODB;` ,[] ,(err, rows) =>{
@@ -163,6 +161,33 @@ connection.connect(err => {
         );`, [cuid()], errlog)
     });
 
+    // ========================================= CANDO-CERTIFICATE INIT SETUP ===================================================================
+    // cert table
+    // ...
+    connection.query(`CREATE TABLE IF NOT EXISTS cert (
+        id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        content TEXT NOT NULL,
+        en_content TEXT NOT NULL,
+        tags JSON NOT NULL,
+        en_tags JSON NOT NULL,
+        slug TEXT NOT NULL,
+        en_slug TEXT NOT NULL,
+        cuid VARCHAR(100) NOT NULL,
+        status TINYINT NOT NULL DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        )ENGINE=INNODB;` ,[] , (err, rows)=>{
+            if(err) errlog(err, rows)
+                else connection.query(`INSERT INTO cert(content, en_content, tags, en_tags, slug, en_slug, cuid) VALUES(
+                    'گواه نوشت کندو باعث افتخار است',
+                    'ckeditor content goes here ...',
+                    JSON_ARRAY('گواه نوشت', 'کندو'),
+                    JSON_ARRAY('education system', 'canada'),
+                    'گواه-نوشت-کندو',
+                    'Cando-Certificate',
+                    ?
+                );`, [cuid()], errlog)
+        });
 
     // ========================================= USER INIT SETUP ===================================================================
     // user table
