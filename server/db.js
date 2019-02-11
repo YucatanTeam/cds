@@ -108,114 +108,192 @@ const db = {
         /* --------------------
             COMMENTS API
         */
-        getAllCommentsRelToPost(post_id, cb){
-            db.connection.query(`SELECT * FROM comment WHERE post_id = ?`, [post_id], (err, rows) => {
-                if(rows.length >= 1) {
-                    return cb(err, rows);
-                } else {
-                    return cb(err, false);
-                }
-            });
-        },
-        getAllComments(cb){
-            db.connection.query(`SELECT * FROM comment`, [], (err, rows)=>{
-                if(rows.length >= 1) {
-                    return cb(err, rows);
-                } else {
-                    return cb(err, false);
-                }
-            });
-        },
-        deleteCommentByCuid(cuid, cb){
-            db.connection.query(`DELETE FROM comment WHERE cuid = ?`, [cuid], (err, results, fields)=>{
-                if(results){ // found one !
-                    return cb(err, results.affectedRows, fields)
-                } else{ // delete nothing!
-                    return cb(err, false, false)
-                }
-            });
-        },
-        deleteCommentById(id, cb){
-            db.connection.query(`DELETE FROM comment WHERE id = ?`, [id], (err, results, fields)=>{
-                if(results){ // found one !
-                    return cb(err, results.affectedRows, fields)
-                } else{ // delete nothing!
-                    return cb(err, false, false)
-                }
-            });
-        },
-        deleteAllComments(cb){
-            db.connection.query(`DELETE * FROM comment`, [], (err, results, fields)=>{
-                if(results){ // found one !
-                    return cb(err, results.affectedRows, fields)
-                } else{ // delete nothing!
-                    return cb(err, false, false)
-                }
-            });
-        },
-        editComment(comment, cb){
+        comment: {
+            getAllRelToAPost(post_id, cb){
+                db.connection.query(`SELECT * FROM comment WHERE post_id = ?`, [post_id], (err, rows) => {
+                    if(rows.length >= 1) {
+                        return cb(err, rows);
+                    } else {
+                        return cb(err, false);
+                    }
+                });
+            },
+            getAll(cb){
+                db.connection.query(`SELECT * FROM comment`, [], (err, rows)=>{
+                    if(rows.length >= 1) {
+                        return cb(err, rows);
+                    } else {
+                        return cb(err, false);
+                    }
+                });
+            },
+            deleteByCuid(cuid, cb){
+                db.connection.query(`DELETE FROM comment WHERE cuid = ?`, [cuid], (err, results, fields)=>{
+                    if(results){ // found one !
+                        return cb(err, results.affectedRows, fields)
+                    } else{ // delete nothing!
+                        return cb(err, false, false)
+                    }
+                });
+            },
+            deleteById(id, cb){
+                db.connection.query(`DELETE FROM comment WHERE id = ?`, [id], (err, results, fields)=>{
+                    if(results){ // found one !
+                        return cb(err, results.affectedRows, fields)
+                    } else{ // delete nothing!
+                        return cb(err, false, false)
+                    }
+                });
+            },
+            deleteAll(cb){
+                db.connection.query(`DELETE * FROM comment`, [], (err, results, fields)=>{
+                    if(results){ // found one !
+                        return cb(err, results.affectedRows, fields)
+                    } else{ // delete nothing!
+                        return cb(err, false, false)
+                    }
+                });
+            },
+            block(cuid, cb){
+                db.connection.query(`UPDATE comment SET status = 0 WHERE cuid = ?`, [cuid], cb ? cb : e=>e);
+            },
+            unblock(cuid, cb){
+                db.connection.query(`UPDATE comment SET status = 1 WHERE cuid = ?`, [cuid], cb ? cb : e=>e);
+            },
+            add(comment, cb){
 
+            },
+            update(comment, cb){
+
+            },
         },
         /* ---------------------------------------------
-            MIGRATION CONSULTANCY & LANGUAGE COURSES api
+            MIGRATION CONSULTANCY & LANGUAGE COURSES API
         */
-        getAllMcLcRerlToAbroad(abroad_id, cb){
-            db.connection.query(`SELECT * FROM mc_lc WHERE abroad_id = ?`, [abroad_id], (err, rows) => {
-                if(rows.length >= 1) {
-                    return cb(err, rows);
-                } else {
-                    return cb(err, false);
-                }
-            });  
+        mc_lc:{
+            getAllRerlToAbroad(abroad_id, cb){
+                db.connection.query(`SELECT * FROM mc_lc WHERE abroad_id = ?`, [abroad_id], (err, rows) => {
+                    if(rows.length >= 1) {
+                        return cb(err, rows);
+                    } else {
+                        return cb(err, false);
+                    }
+                });  
+            },
+            getById(id, cb){
+
+            },
+            getByCuid(cuid, cb){
+
+            },
+            getAll(cb){
+                db.connection.query(`SELECT * FROM mc_lc`, [], (err, rows)=>{
+                    if(rows.length >= 1) {
+                        return cb(err, rows);
+                    } else {
+                        return cb(err, false);
+                    }
+                });
+            },
+            block(cuid, cb){
+                db.connection.query(`UPDATE mc_lc SET status = 0 WHERE cuid = ?`, [cuid], cb ? cb : e=>e);
+            },
+            unblock(cuid, cb){
+                db.connection.query(`UPDATE mc_lc SET status = 1 WHERE cuid = ?`, [cuid], cb ? cb : e=>e);
+            },
+            deleteByCuid(cuid, cb){
+                db.connection.query(`DELETE FROM mc_lc WHERE cuid = ?`, [cuid], (err, results, fields)=>{
+                    if(results){ // found one !
+                        return cb(err, results.affectedRows, fields)
+                    } else{ // delete nothing!
+                        return cb(err, false, false)
+                    }
+                });
+            },
+            deleteById(id, cb){
+                db.connection.query(`DELETE FROM mc_lc WHERE id = ?`, [id], (err, results, fields)=>{
+                    if(results){ // found one !
+                        return cb(err, results.affectedRows, fields)
+                    } else{ // delete nothing!
+                        return cb(err, false, false)
+                    }
+                });
+            },
+            deleteAll(cb){
+                db.connection.query(`DELETE * FROM mc_lc`, [], (err, results, fields)=>{
+                    if(results){ // found one !
+                        return cb(err, results.affectedRows, fields)
+                    } else{ // delete nothing!
+                        return cb(err, false, false)
+                    }
+                });
+            },
+            add(mclc, cb){
+
+            },
+            update(mclc, cb){
+                
+            }
+
+            
         },
-        getAllMcLc(cb){
-            db.connection.query(`SELECT * FROM mc_lc`, [], (err, rows)=>{
-                if(rows.length >= 1) {
-                    return cb(err, rows);
-                } else {
-                    return cb(err, false);
-                }
-            });
-        },
-        deleteMcLcByCuid(cuid, cb){
-            db.connection.query(`DELETE FROM mc_lc WHERE cuid = ?`, [cuid], (err, results, fields)=>{
-                if(results){ // found one !
-                    return cb(err, results.affectedRows, fields)
-                } else{ // delete nothing!
-                    return cb(err, false, false)
-                }
-            });
-        },
-        deleteMcLcById(id, cb){
-            db.connection.query(`DELETE FROM mc_lc WHERE id = ?`, [id], (err, results, fields)=>{
-                if(results){ // found one !
-                    return cb(err, results.affectedRows, fields)
-                } else{ // delete nothing!
-                    return cb(err, false, false)
-                }
-            });
-        },
-        deleteAllMcLc(cb){
-            db.connection.query(`DELETE * FROM mc_lc`, [], (err, results, fields)=>{
-                if(results){ // found one !
-                    return cb(err, results.affectedRows, fields)
-                } else{ // delete nothing!
-                    return cb(err, false, false)
-                }
-            });
-        },
-        deleteAllAbroad(cb){
-            db.connection.query(`DELETE * FROM abroad`, [], (err, results, fields)=>{
-                if(results){ // found one !
-                    return cb(err, results.affectedRows, fields)
-                } else{ // delete nothing!
-                    return cb(err, false, false)
-                }
-            });
-        },
-        editMcLc(mclc, cb){
+        /* -----------------
+            ABROAD API
+        */
+        abroad:{
+            add(abroad, cb){
+
+            },
+            all(cb){
+
+            },
+            getById(id, cb){
+
+            },
+            getByCuid(cuid, cb){
+
+            },
+            deleteAll(cb){
+
+            },
+            deleteByCuid(cuid, cb){
+
+            },
+            deleteById(id, cb){
+
+            },
+            block(cuid, cb){
+                db.connection.query(`UPDATE abroad SET status = 0 WHERE cuid = ?`, [cuid], cb ? cb : e=>e);
+            },
+            unblock(cuid, cb){
+                db.connection.query(`UPDATE abroad SET status = 1 WHERE cuid = ?`, [cuid], cb ? cb : e=>e);
+            },
+            update(abroad, cb){
+
+            }
 
         },
+        /* -----------------
+            CERT API
+        */
+       cert:{
+            get(cb){
+
+            },
+            delete(id, cb){
+
+            },
+            update(id, cb){
+
+            },
+            block(cuid, cb){
+                db.connection.query(`UPDATE cert SET status = 0 WHERE cuid = ?`, [cuid], cb ? cb : e=>e);
+            },
+            unblock(cuid, cb){
+                db.connection.query(`UPDATE cert SET status = 1 WHERE cuid = ?`, [cuid], cb ? cb : e=>e);
+            },
+       },
+
     }
 }
 
