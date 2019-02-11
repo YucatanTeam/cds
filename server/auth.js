@@ -4,7 +4,7 @@ const LocalStrategy = require('passport-local').Strategy;
 module.exports = ({ app, db }) => {
 
     passport.serializeUser((user, done) => done(null, user.id));
-    passport.deserializeUser(db.api.getUserById);
+    passport.deserializeUser(db.api.user.getById);
 
 
     // =========================================================================
@@ -17,7 +17,7 @@ module.exports = ({ app, db }) => {
         // by default, local strategy uses username and password, we will override with email
         usernameField: 'email',
         passwordField: 'password',
-    }, db.api.addUser));
+    }, db.api.user.add));
 
     // =========================================================================
     // LOCAL LOGIN =============================================================
@@ -29,7 +29,7 @@ module.exports = ({ app, db }) => {
         // by default, local strategy uses username and password, we will override with email
         usernameField: 'email',
         passwordField: 'password'
-    }, db.api.getUserByEmailPass));
+    }, db.api.user.getByEmailPass));
 
 
     app.use(passport.initialize());

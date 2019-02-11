@@ -98,6 +98,35 @@
                     return {status: response.status, body: null};
                 })
 			)
+		},
+		upload(endpoint, inputid) {
+			var input = document.getElementById(inputid);
+            var data = new FormData();
+			for(var idx in input.files) {
+				data.append('file' + idx, input.files[idx]);
+			}
+			return (
+				fetch(endpoint, {
+                    method: "POST",
+                    mode: "same-origin",
+                    credentials: "same-origin",
+                    redirect: "follow",
+                    body: data
+                })
+				.then(response => {
+                    if(response.redirected) {
+                        window.location.href = response.url;
+                    }
+                    return response;
+                })
+                .then(response => {
+                    var contentType = response.headers.get("content-type");
+                    if(contentType && contentType.includes("application/json")) {
+                        return response.json().then(json => ({status: response.status, body: json.body}));
+                    }
+                    return {status: response.status, body: null};
+                })
+			)
 		}
 	};
 
@@ -109,7 +138,7 @@
 	  	data() {
 			return {
 				getuser:
-					utils.fetch("/getuser")
+					utils.fetch("/user")
 					.then(response => {
 						window.cdsuser = response.body;
 						return response.body;

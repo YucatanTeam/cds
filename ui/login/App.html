@@ -8,7 +8,7 @@
             <Form bind:response>
                 <Input col="s12" label="Email" id="email" type="email" validate helper data-empty="E-mail is required" data-error="E-mail must be valid" />
                 <Input col="s12" label="Password" id="password" type="password" validate helper data-empty="Password is required" />
-                <RequestBtn post="/login" bodyById={[ 'email' , 'password' ]} on:response="handle(event)">Log In</RequestBtn>
+                <RequestBtn post="/auth/login" bodyById={[ 'email' , 'password' ]} on:response="handle(event)">Log In</RequestBtn>
             </Form>
         </Card>
     </div>
