@@ -67,7 +67,7 @@
           const password = elpassword.value;
 
           utils
-            .fetch("/updateUser", { username, password, email })
+            .fetch("/user/update", { username, password, email })
             .catch(err => M.toast({ html: "something went wrong !" }));
         },
         uploadAvatar() {
