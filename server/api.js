@@ -11,20 +11,13 @@ const validate = require("./validate.js");
 
 const slug = require('limax')
 
-/* --------------------
-    TODO : slug the url
-   --------------------
-    slug: req.body.title.replace(/ /g,"-"),
-    en_slug: slug(req.body.en_title.toLowerCase(), { lowercase: true }),
-
-*/
 const cwd = process.cwd();
 
 function page(root) {
     return express.static(`${__dirname}/../www/${root}`)
 }
     // ------------
-    // guard api
+    // guard routes
     // ------------
 function access(level, redirect) {
     // level: 0 ban, 1 restricted, 2 user, 3 mod, 5 admin, 7 dev
@@ -51,7 +44,7 @@ module.exports = ({app, db}) => {
     */
     
     // ------------
-    // dev api
+    // dev routes
     // ------------
     app.get("/dev/ping", access(7), (req, res) => { // developer pong the name!
         return res.end("pong " + req.user.firstname);
@@ -85,7 +78,7 @@ module.exports = ({app, db}) => {
     });
     
     // ------------
-    // auth api
+    // auth routes
     // ------------
     app.post('/auth/login', passport.authenticate('local-login'), (req, res) => {
         return res.redirect("/panel");
@@ -97,14 +90,16 @@ module.exports = ({app, db}) => {
 
     
     // ------------
-    // user api
+    // user routes
     // ------------
     app.get('/user', access(1), (req, res) => {
         var user = {
+            id: req.user.id,
             access: req.user.access,
             firstname: req.user.firstname,
             lastname: req.user.lastname,
-            email: req.user.email
+            email: req.user.email,
+            avatar: req.user.avatar
         }
         setTimeout(e=>res.json({body: user, err:null}), 100)
     })
@@ -164,18 +159,18 @@ module.exports = ({app, db}) => {
 
     
     // ------------
-    // comment api
+    // comment routes
     // ------------
-    app.get('/getAllCommentsRelToAPost/:id', access(5), (req, res)=>{ // usage : recommended for client side
-        db.api.getAllCommentsRelToAPost(req.params.id, (err, rows)=>{
+    app.get('/comment/getAllRelToAPost/:id', access(5), (req, res)=>{ // usage : recommended for client side
+        db.api.comment.getAllRelToAPost(req.params.id, (err, rows)=>{
 
             if(rows) res.json({body: rows, err:null})
             if(err) res.status(404).end("Nothing Found !");
         })
     });
 
-    app.get('/getAllComments', access(5), (req, res)=>{
-        db.api.getAllComments((err, rows)=>{
+    app.get('/comment/getAll', access(5), (req, res)=>{
+        db.api.comment.getAll((err, rows)=>{
             if(rows) {
                 for ( var index=0; index<rows.length; index++ ) { // only dev can create new comment
                     req.user.access === 5 ? rows[index].actions = [false, true, true, true] : rows[index].actions = [true, true, true, true]
@@ -186,51 +181,53 @@ module.exports = ({app, db}) => {
         })
     });
 
-    app.delete('/deleteComment/:cuid', access(5), (req, res)=>{
-        db.api.deleteCommentByCuid(req.params.cuid, (err, resaff, fields)=>{
+    app.post('/comment/delete/:cuid', access(5), (req, res)=>{
+        db.api.comment.deleteByCuid(req.params.cuid, (err, resaff, fields)=>{
 
             if(resaff) res.json({body: resaff, err:null, fields: fields})
             if(err) res.status(404).end("Nothing Deleted !");
         })
     });
 
-    app.delete('/deleteComment/:id', access(5), (req, res)=>{
-        db.api.deleteCommentById(req.params.id, (err, resaff, fields)=>{
+    app.post('/comment/delete/:id', access(5), (req, res)=>{
+        db.api.comment.deleteById(req.params.id, (err, resaff, fields)=>{
 
             if(resaff) res.json({body: resaff, err:null, fields: fields})
             if(err) res.status(404).end("Nothing Deleted !");
         })
     });
     
-    app.post('/deleteAllComments', access(5), (req, res)=>{
-        db.api.deleteAllComments((err, resaff, fields)=>{
+    app.post('/comment/deleteAll', access(5), (req, res)=>{
+        db.api.comment.deleteAll((err, resaff, fields)=>{
             
             if(resaff) res.json({body: resaff, err:null, fields: fields})
             if(err) res.status(404).end("Nothing Deleted !");
         })
     });
 
-    app.post('/editComment', access(5), (req, res)=>{
-        // TODO : validate req.body
-        // TODO : db.api.editComment(validated req.body, (err, row))
-    });
+    app.post('/comment/edit', access(5), (req, res)=>{
+        // TODO validate req.body using validate.js
+    })
+
+    // add comment routes here ; validate using validate.js
+    // ....
 
 
 
 
-    // ---------
-    // mc_lc api
-    // ---------
-    app.get('/getAllMcLcRerlToAbroad/:id', access(5), (req, res)=>{
-        db.api.getAllMcLcRerlToAbroad(req.params.id, (err, rows)=>{
+    // ------------
+    // mc_lc routes
+    // ------------
+    app.get('/mc_lc/getAllRerlToAbroad/:id', access(5), (req, res)=>{
+        db.api.mc_lc.getAllRerlToAbroad(req.params.id, (err, rows)=>{
 
             if(rows) res.json({body: rows, err:null})
             if(err) res.status(404).end("Nothing Found !");
         });
     })
 
-    app.get('/getAllMcLc', access(5), (req, res)=>{
-        db.api.getAllMcLc((err, rows)=>{
+    app.get('/mc_lc/getAll', access(5), (req, res)=>{
+        db.api.mc_lc.getAll((err, rows)=>{
             if(rows) {
                 for ( var index=0; index<rows.length; index++ ) {
                     // for dev and admin all actions(create , delete , edit , block/unblock status) are set to true
@@ -242,34 +239,49 @@ module.exports = ({app, db}) => {
         })
     });
 
-    app.delete('/deleteMcLc/:cuid', access(5), (req, res)=>{
-        db.api.deleteMcLcByCuid(req.params.cuid, (err, resaff, fields)=>{
+    app.post('/mc_lc/delete/:cuid', access(5), (req, res)=>{
+        db.api.mc_lc.deleteByCuid(req.params.cuid, (err, resaff, fields)=>{
 
             if(resaff) res.json({body: resaff, err:null, fields: fields})
             if(err) res.status(404).end("Nothing Deleted !");
         })
     });
 
-    app.delete('/deleteMcLc/:id', access(5), (req, res)=>{
-        db.api.deleteMcLcById(req.params.id, (err, resaff, fields)=>{
+    app.post('/mc_lc/delete/:id', access(5), (req, res)=>{
+        db.api.mc_lc.deleteById(req.params.id, (err, resaff, fields)=>{
 
             if(resaff) res.json({body: resaff, err:null, fields: fields})
             if(err) res.status(404).end("Nothing Deleted !");
         })
     });
     
-    app.post('/deleteAllMcLc', access(5), (req, res)=>{
-        db.api.deleteAllMcLc((err, resaff, fields)=>{
+    app.post('/mc_lc/deleteAll', access(5), (req, res)=>{
+        db.api.mc_lc.deleteAll((err, resaff, fields)=>{
 
             if(resaff) res.json({body: resaff, err:null, fields: fields})
             if(err) res.status(404).end("Nothing Deleted !");
         })
     });
 
-    app.post('/editMcLc', access(5), (req, res)=>{
-        // TODO : validate req.body
-        // TODO : db.api.editMcLc(validated req.body, (err, row))
-    });
+    // edit mc_lc routes here ; validate using validate.js
+    // slug: req.body.slug.replace(/ /g,"-") | en_slug: slug(req.body.en_slug.toLowerCase(), { lowercase: true })
+    // ....
+
+    // add mc_lc routes here ; validate using validate.js
+    // slug: req.body.slug.replace(/ /g,"-") | en_slug: slug(req.body.en_slug.toLowerCase(), { lowercase: true })
+    // ....
+
+
+
+    // -------------
+    // abroad routes
+    // -------------
+
+
+
+    // -------------
+    // cert routes
+    // -------------
 
 
 
