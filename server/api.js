@@ -29,7 +29,7 @@ function access(level, redirect) {
     } :
     (req, res, next) => {
         if(!req.user) return res.status(401).end("Unauthorized !");
-        if(req.user.access < level) return res.status(403).end("Access Denied !");
+        if(req.user.access < level) return res.status(403).end("Forbidden !");
         next();
     }
 }
@@ -112,11 +112,11 @@ module.exports = ({app, db}) => {
             var result = [];
             for(var user of users) {
                 result.push({
-                    id: req.user.id,
-                    access: req.user.access,
-                    firstname: req.user.firstname,
-                    lastname: req.user.lastname,
-                    email: req.user.email
+                    id: user.id,
+                    access: user.access,
+                    firstname: user.firstname,
+                    lastname: user.lastname,
+                    email: user.email
                 })
             }
             return res.json({body: result, err:null});
@@ -134,7 +134,7 @@ module.exports = ({app, db}) => {
         res.status(200).end("OK")
     })
 
-    app.post('/user/add', access(3), (req, res) => { // TODO what access should it be ?
+    app.post('/user/add', access(2), (req, res) => { // TODO what access should it be ?
         console.log(req.body)
         db.api.user.add(req.body.email, req.body.password ,(err, user) => {
             if(err) {
@@ -158,12 +158,15 @@ module.exports = ({app, db}) => {
     })
 
     app.post('/user/remove', access(5), (req, res) => {
-        db.api.user.remove(req.body.id ,err => {
+        db.api.user.getById(req.body.id, (err, user) => {
+            if(user.access > req.user.access) return res.status(403).end("Forbidden !");
+            db.api.user.remove(req.body.id ,err => {
             if(err) {
                 dev.report(err);
                 return res.status(500).end("Internal Server Error !");
             }
             res.status(200).end("OK");
+            })
         })
     })
 
