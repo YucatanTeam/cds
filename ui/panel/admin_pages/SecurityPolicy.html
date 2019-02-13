@@ -53,7 +53,7 @@
       },
       methods: {
         logout() {
-          utils.fetch("/logout").catch(err => utils.toast("can't log out !"));
+          utils.fetch("/auth/logout",).catch(err => utils.toast("can't log out !"));
         },
         updateUser() {
           const elemail = document.getElementById("email");
