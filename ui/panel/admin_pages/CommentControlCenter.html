@@ -29,6 +29,16 @@
                     {#if objModal}
                         <p>{objModal.id}</p>
                     {/if}
+                    
+                    <!-- TODO doesn't work!!! -->
+                    <main>
+                        <div class="toolbar-container"></div>
+                            <div class="content-container">
+                                <div id="editor">
+                                 hi
+                                </div>
+                        </div>
+                    </main>
                 
                 </div>
                 <div class="modal-footer">
@@ -104,7 +114,7 @@ export default {
             instances.open();
         },
         save(obj){
-            console.log(`inside saving method.. got new body >>> ${obj}`) // TODO : bug!!!
+            console.log(`inside saving method.. got new body >>> ${obj}`)
             // TODO use utils.fetch() to send new obj to the server
             // TODO validate obj on client side and alert if needed
             // remember to validate the obj on server side also
