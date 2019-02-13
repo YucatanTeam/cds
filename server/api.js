@@ -98,12 +98,31 @@ module.exports = ({app, db}) => {
             access: req.user.access,
             firstname: req.user.firstname,
             lastname: req.user.lastname,
-            email: req.user.email,
-            avatar: req.user.avatar
+            email: req.user.email
         }
         setTimeout(e=>res.json({body: user, err:null}), 100)
     })
-    
+
+    app.get('/user/all', access(5), (req, res) => {
+        db.api.user.all((err, users) => {
+            if(err) {
+                dev.report(err);
+                return res.status(500).end("Internal Server Error !");
+            }
+            var result = [];
+            for(var user of users) {
+                result.push({
+                    id: req.user.id,
+                    access: req.user.access,
+                    firstname: req.user.firstname,
+                    lastname: req.user.lastname,
+                    email: req.user.email
+                })
+            }
+            return res.json({body: result, err:null});
+        })
+    })
+
     app.post('/user/update', access(2), (req, res) => {
         console.log(req.body)
         // var valid = true;
@@ -147,7 +166,7 @@ module.exports = ({app, db}) => {
                         fs.unlink(file0, dev.report);
                         return res.status(500).end("Internal Server Error !");
                     }
-                    return res.status(200).json({avatar});
+                    return res.status(200).end("OK");
                 });
             });
         });
