@@ -13,6 +13,11 @@ const slug = require('limax')
 
 const cwd = process.cwd();
 
+
+// TODO : for those routes who have CRUD ops should be in data table tag with actions story!! 
+
+
+
 function page(root) {
     return express.static(`${__dirname}/../www/${root}`)
 }
@@ -215,6 +220,7 @@ module.exports = ({app, db}) => {
     
     // ------------
     // comment routes
+    // TODO use dev.report
     // ------------
     app.get('/comment/getAllRelToAPost/:id', access(5), (req, res)=>{ // usage : recommended for client side
         db.api.comment.getAllRelToAPost(req.params.id, (err, rows)=>{
@@ -272,6 +278,7 @@ module.exports = ({app, db}) => {
 
     // ------------
     // mc_lc routes
+    // TODO use dev.report
     // ------------
     app.get('/mc_lc/getAllRerlToAbroad/:id', access(5), (req, res)=>{
         db.api.mc_lc.getAllRerlToAbroad(req.params.id, (err, rows)=>{
@@ -279,7 +286,7 @@ module.exports = ({app, db}) => {
             if(rows) res.json({body: rows, err:null})
             if(err) res.status(404).end("Nothing Found !");
         });
-    })
+    });
 
     app.get('/mc_lc/getAll', access(5), (req, res)=>{
         db.api.mc_lc.getAll((err, rows)=>{
@@ -330,14 +337,22 @@ module.exports = ({app, db}) => {
 
     // -------------
     // abroad routes
+    // TODO use dev.report
     // -------------
 
 
 
     // -------------
     // cert routes
+    // TODO use dev.report
     // -------------
+    app.get('/cert/getAll', access(5), (req, res)=>{
+        db.api.cert.getAll((err, rows)=>{
 
+            if(rows) res.json({body: rows, err:null})
+            if(err) res.status(404).end("Nothing Found !");
+        });
+    });
 
 
 

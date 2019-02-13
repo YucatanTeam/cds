@@ -7,8 +7,10 @@
 -->
 
 
-<!-- TODO ckeditor tag , timeago , tags tag , show some words of content not the whole in table -->
-<!-- TODO got a bug in modal for bojModal .... fix it! -->
+<!-- TODO :
+          save method(see its TODOs) , 
+          ckeditor , timeago , tags , 
+          show some words of content not the whole in table -->
 
 
 <h5>{message}</h5>
@@ -23,9 +25,11 @@
             <div id="{crudindex===1 ? "modaledit" : "modalcreate"}" class="modal">
                 <div class="modal-content">
                     <h4>{crudindex===1 ? "Edit" : "Create"}</h4>
-                    {#each Object.keys(objModal) as key}
-                        <p>{objModal[key]}</p>
-                    {/each}
+
+                    {#if objModal}
+                        <p>{objModal.id}</p>
+                    {/if}
+                
                 </div>
                 <div class="modal-footer">
                     <button class="modal-close waves-effect waves-green btn-flat" on:click="save(objModal)">{crudindex===1 ? "Update" : "Add"}</button>
@@ -54,11 +58,8 @@
                     // ==============================================================================================
                     {icon: "delete",tooltip: "delete", action(obj, component) {
 
-                           /* utils.fetch(`/comment/delete/${obj.cuid}`)
-                                    .then(response=>{
-                                        console.log(response.body)
-                                    });
-                            */
+                           //utils.fetch(`/comment/delete/${obj.cuid}`).then(r=>r.body);
+                            
                         }
                     }, 
                     // ==============================================================================================
@@ -90,23 +91,20 @@ export default {
         return {
             objModal: null,
             crudindex: 0, // 1 : edit , 0 : create
-            getcomments:
-                fetch("/comment/getAll")
-                .then(r=>{ if(r.status == 200) return r; else throw {code: r.status}})
-                .then(r=>r.json())
-                .then(j=>(j.body))
+            getcomments: utils.fetch("/comment/getAll").then(r=>r.body)
 
         }
     },
     methods:{
         open({obj, index}){
+            // console.log(obj) // it'll log successfully
             this.set({crudindex: index, objModal: obj})
             var elems = document.querySelector('.modal');
             var instances = M.Modal.init(elems, {});
             instances.open();
         },
         save(obj){
-            console.log("inside saving method..")
+            console.log(`inside saving method.. got new body >>> ${obj}`) // TODO : bug!!!
             // TODO use utils.fetch() to send new obj to the server
             // TODO validate obj on client side and alert if needed
             // remember to validate the obj on server side also
