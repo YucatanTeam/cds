@@ -83,9 +83,11 @@ const db = {
                 });
             },
             update(user ,cb) {
-                safe.hash(user.password, function(err, saltdk) {
-                    user.password = saltdk;
-                    db.connection.query(`UPDATE user SET firstname = ?, lastname = ?, access = ?, password = ? WHERE id = ?`, [user.firstname,user.lastname,parseInt(user.access),user.password,user.id], cb);
+                db.connection.query(`UPDATE user SET firstname = ?, lastname = ?, access = ? WHERE id = ?`, [user.firstname,user.lastname,parseInt(user.access),user.id], cb);
+            },
+            password(id, password ,cb) {
+                safe.hash(password, function(err, saltdk) {
+                    db.connection.query(`UPDATE user SET password = ? WHERE id = ?`, [saltdk, user.id], cb);
                 })
             },
             changeAvatar(id, avatar, cb) {
