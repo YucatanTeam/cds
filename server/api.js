@@ -88,6 +88,7 @@ module.exports = ({app, db}) => {
     app.post('/auth/login', passport.authenticate('local-login'), (req, res) => {
         return res.redirect("/panel");
     });
+    // TODO register route here
     app.get('/auth/logout', access(0), (req, res) => {
         req.logout();
         return res.redirect('/');
@@ -153,7 +154,7 @@ module.exports = ({app, db}) => {
         })
     })
 
-    app.post('/user/add', access(2), (req, res) => { // TODO what access should it be ?
+    app.post('/user/add', access(5), (req, res) => { // TODO what access should it be ?
         console.log(req.body)
         db.api.user.add(req.body.email, req.body.password ,(err, user) => {
             if(err) {
@@ -188,7 +189,7 @@ module.exports = ({app, db}) => {
         })
     })
 
-    app.post('/user/avatar', access(2), (req, res) => {
+    app.post('/user/avatar', access(1), (req, res) => {
         var form = new formidable.IncomingForm();
         form.uploadDir = cwd + "/avatar/";
         form.keepExtensions = true;
@@ -245,9 +246,10 @@ module.exports = ({app, db}) => {
 
     app.get('/comment/getAll', access(5), (req, res)=>{
         db.api.comment.getAll((err, rows)=>{
+            console.log("-->1")
             if(rows) {
                 for ( var index=0; index<rows.length; index++ ) { // only dev can create new comment
-                    req.user.access === 5 ? rows[index].actions = [false, true, true, true] : rows[index].actions = [true, true, true, true]
+                    rows[index].actions = [req.user.access === 7, true, true, true]
                 }
                 res.json({body: rows, err:null})
             }
