@@ -26,13 +26,33 @@
                 modal.user = obj;
                 modal.open();
             }},{icon: "remove_circle", tooltip: "ban", action(obj, table) {
-                utils.toast("ban");
+                utils.fetch("/user/access", {id: obj.id, access: 0})
+                .then(r=>{
+                    if(r.status == 200) utils.toast("Done");
+                    else utils.toast("something went wrong !");
+                })
+                .catch(err => utils.toast("something went wrong !"));
             }},{icon: "remove_red_eye", tooltip: "user", action(obj, table) {
-                utils.toast("user");
+                utils.fetch("/user/access", {id: obj.id, access: 2})
+                .then(r=>{
+                    if(r.status == 200) utils.toast("Done");
+                    else utils.toast("something went wrong !");
+                })
+                .catch(err => utils.toast("something went wrong !"));
             }},{icon: "edit", tooltip: "mod", action(obj, table) {
-                utils.toast("mod");
+                utils.fetch("/user/access", {id: obj.id, access: 3})
+                .then(r=>{
+                    if(r.status == 200) utils.toast("Done");
+                    else utils.toast("something went wrong !");
+                })
+                .catch(err => utils.toast("something went wrong !"));
             }},{icon: "verified_user", tooltip: "admin", action(obj, table) {
-                utils.toast("admin");
+                utils.fetch("/user/access", {id: obj.id, access: 5})
+                .then(r=>{
+                    if(r.status == 200) utils.toast("Done");
+                    else utils.toast("something went wrong !");
+                })
+                .catch(err => utils.toast("something went wrong !"));
             }},]}
             content={users} search={["id", "email", "firstname", "lastname"]}/>
         {:catch error}
@@ -69,7 +89,7 @@ export default {
                             //[delete, ban, user, mod, admin]
                             user.actions = [
                                 true, // delete
-                                user.access!=1, // ban
+                                user.access!=0, // ban
                                 user.access!=2, // user
                                 user.access!=3, // mod
                                 user.access!=5, // admin
