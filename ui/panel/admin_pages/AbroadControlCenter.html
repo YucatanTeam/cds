@@ -43,10 +43,7 @@
                         component.set({content})
                         */
                         // deleting mc_lc from our db on server side
-                        utils.fetch(`/mc_lc/delete/${obj.cuid}`)
-                                .then(response=>{
-                                    console.log(response.body)
-                                });
+                        //utils.fetch(`/mc_lc/delete/${obj.cuid}`).then(r=>r.body);
                     }
                   }, 
                   // ==============================================================================================
@@ -78,11 +75,7 @@
 export default {
     data(){
         return {
-            getmclc:
-                fetch("/mc_lc/getAll")
-                .then(r=>{ if(r.status == 200) return r; else throw {code: r.status}})
-                .then(r=>r.json())
-                .then(j=>j.body)
+            getmclc: utils.fetch("/mc_lc/getAll").then(r=>r.body)
         }
     },
     components: {

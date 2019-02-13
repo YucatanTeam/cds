@@ -4,11 +4,14 @@
 <hr>
 
 <div class="row">
-    {#await getcomments}
+    {#await getcert}
         <Loading small/>
-    {:then comments}
+    {:then certs}
 
-        <!-- ckeditor content -->
+
+        {#each certs as c}
+            <p>{c.content}</p>
+        {/each}
 
 
     {:catch err}
@@ -19,11 +22,7 @@
 export default {
     data(){
         return {
-            getcert:
-                fetch("/cert/get")
-                .then(r=>{ if(r.status == 200) return r; else throw {code: r.status}})
-                .then(r=>r.json())
-                .then(j=>j.body)
+            getcert: utils.fetch("/cert/getAll").then(r=>r.body)
         }
     },
     methods:{

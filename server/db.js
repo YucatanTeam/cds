@@ -107,16 +107,19 @@ const db = {
         },
         /* --------------------
             COMMENTS API
+            TODO :
+                https://stackoverflow.com/questions/7296846/how-to-implement-one-to-one-one-to-many-and-many-to-many-relationships-while-de
+                https://www.w3schools.com/sql/sql_join.asp
         */
         comment: {
             getAllRelToAPost(post_id, cb){
-                db.connection.query(`SELECT * FROM comment WHERE post_id = ?`, [post_id], (err, rows) => {
-                    if(rows.length >= 1) {
-                        return cb(err, rows);
-                    } else {
-                        return cb(err, false);
-                    }
-                });
+                // TODO use mysql join method
+            },
+            getById(id, cb){
+
+            },
+            getByCuid(cuid, cb){
+
             },
             getAll(cb){
                 db.connection.query(`SELECT * FROM comment`, [], (err, rows)=>{
@@ -169,16 +172,13 @@ const db = {
         },
         /* ---------------------------------------------
             MIGRATION CONSULTANCY & LANGUAGE COURSES API
+            TODO : 
+                https://stackoverflow.com/questions/7296846/how-to-implement-one-to-one-one-to-many-and-many-to-many-relationships-while-de
+                https://www.w3schools.com/sql/sql_join.asp
         */
         mc_lc:{
             getAllRerlToAbroad(abroad_id, cb){
-                db.connection.query(`SELECT * FROM mc_lc WHERE abroad_id = ?`, [abroad_id], (err, rows) => {
-                    if(rows.length >= 1) {
-                        return cb(err, rows);
-                    } else {
-                        return cb(err, false);
-                    }
-                });  
+                 
             },
             getById(id, cb){
 
@@ -244,7 +244,7 @@ const db = {
             add(abroad, cb){
 
             },
-            all(cb){
+            getAll(cb){
 
             },
             getById(id, cb){
@@ -277,7 +277,19 @@ const db = {
             CERT API
         */
        cert:{
-            get(cb){
+            getAll(cb){
+                db.connection.query(`SELECT * FROM cert`, [], (err, rows)=>{
+                    if(rows.length >= 1) {
+                        return cb(err, rows);
+                    } else {
+                        return cb(err, false);
+                    }
+                });
+            },
+            getById(id, cb){
+
+            },
+            getByCuid(cuid, cb){
 
             },
             delete(id, cb){
