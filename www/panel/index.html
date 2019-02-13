@@ -2,20 +2,37 @@
 
 <html lang="en">
 <head>
-    <meta name="robots" content="noindex,nofollow" /> <!-- TODO gist.github.com/lancejpollard/1978404 -->
+    <meta name="robots" content="index,follow" /> <!-- TODO gist.github.com/lancejpollard/1978404 -->
     <meta charset="UTF-8">
     <link href="/public/css/icon.css" rel="stylesheet">
-    <link rel="shortcut icon" href="/public/img/cds.ico" />
     <link type="text/css" rel="stylesheet" href="/public/css/materialize.min.css"  media="screen,projection"/>
+    <link type="text/css" href="/public/ckeditor/sample/css/sample.css" rel="stylesheet" media="screen,projection" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel='stylesheet' href='/panel/global.css'>
-	<link rel='stylesheet' href='/panel/bundle.css'>
+    <link rel='stylesheet' href='/global.css'>
+	<link rel='stylesheet' href='/bundle.css'>
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
 </head>
 <body>
     
 	<script src='/public/js/materialize.min.js'></script>
-	<script src='/panel/bundle.js'></script>
+    <script src="/public/ckeditor/ckeditor.js"></script>
+	<script src='/bundle.js'></script>
+    <script>
+        DecoupledEditor
+		.create( document.querySelector( '#editor' ), {
+			toolbar: [ 'heading', '|', 'bold', 'italic', 'link' ]
+		} )
+		.then( editor => {
+			const toolbarContainer = document.querySelector( 'main .toolbar-container' );
+
+			toolbarContainer.prepend( editor.ui.view.toolbar.element );
+
+			window.editor = editor;
+		} )
+		.catch( err => {
+			console.error( err.stack );
+		} );
+    </script>
 </body>
 </html>
