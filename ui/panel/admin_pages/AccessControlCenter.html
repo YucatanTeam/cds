@@ -28,28 +28,41 @@
             }},{icon: "remove_circle", tooltip: "ban", action(obj, table) {
                 utils.fetch("/user/access", {id: obj.id, access: 0})
                 .then(r=>{
-                    if(r.status == 200) utils.toast("Done");
+                    if(r.status == 200) {
+                        utils.toast("Done");
+                        location.reload();
+                    }
                     else utils.toast("something went wrong !");
                 })
                 .catch(err => utils.toast("something went wrong !"));
+                
             }},{icon: "remove_red_eye", tooltip: "user", action(obj, table) {
                 utils.fetch("/user/access", {id: obj.id, access: 2})
                 .then(r=>{
-                    if(r.status == 200) utils.toast("Done");
+                    if(r.status == 200) {
+                        utils.toast("Done");
+                        location.reload();
+                    }
                     else utils.toast("something went wrong !");
                 })
                 .catch(err => utils.toast("something went wrong !"));
             }},{icon: "edit", tooltip: "mod", action(obj, table) {
                 utils.fetch("/user/access", {id: obj.id, access: 3})
                 .then(r=>{
-                    if(r.status == 200) utils.toast("Done");
+                    if(r.status == 200) {
+                        utils.toast("Done");
+                        location.reload();
+                    }
                     else utils.toast("something went wrong !");
                 })
                 .catch(err => utils.toast("something went wrong !"));
             }},{icon: "verified_user", tooltip: "admin", action(obj, table) {
                 utils.fetch("/user/access", {id: obj.id, access: 5})
                 .then(r=>{
-                    if(r.status == 200) utils.toast("Done");
+                    if(r.status == 200) {
+                        utils.toast("Done");
+                        location.reload();
+                    }
                     else utils.toast("something went wrong !");
                 })
                 .catch(err => utils.toast("something went wrong !"));
@@ -63,7 +76,7 @@
 <div class="row">
 	<Card col="s12 m10 offset-m1 l10 offset-l1">
 		<h4>Add a User</h4>
-		<Form>
+		<Form response={{}}>
             <Input col="s12" label="Email" id="email" type="email"/>
             <Input col="s12" label="First name" id="firstname" type="text"/>
             <Input col="s12" label="Last name" id="lastname" type="text"/>
@@ -77,9 +90,10 @@
 export default {
     data() {
         return {
+            location,
             utils: window.utils,confirmModal() {
-            return M.Modal.getInstance(document.getElementById('confirm'));
-        },
+                return M.Modal.getInstance(document.getElementById('confirm'));
+            },
             getusers: utils.fetch("/user/all")
                 .then(response => {
                     var users = response.body;
