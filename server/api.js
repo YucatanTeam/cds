@@ -150,7 +150,6 @@ module.exports = ({app, db}) => {
             }
             user.firstname = req.body.firstname;
             user.lastname = req.body.lastname;
-            user.password = req.body.password;
             user.access = 2;
             db.api.user.update(user, err => {
                 if(err) {
