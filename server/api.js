@@ -34,7 +34,7 @@ function access(level, redirect) {
     } :
     (req, res, next) => {
         if(!req.user) return res.status(401).end("Unauthorized !");
-        if(req.user.access < level) return res.status(403).end("Access Denied !");
+        if(req.user.access < level) return res.status(403).end("Forbidden !");
         next();
     }
 }
@@ -103,12 +103,31 @@ module.exports = ({app, db}) => {
             access: req.user.access,
             firstname: req.user.firstname,
             lastname: req.user.lastname,
-            email: req.user.email,
-            avatar: req.user.avatar
+            email: req.user.email
         }
         setTimeout(e=>res.json({body: user, err:null}), 100)
     })
-    
+
+    app.get('/user/all', access(5), (req, res) => {
+        db.api.user.all((err, users) => {
+            if(err) {
+                dev.report(err);
+                return res.status(500).end("Internal Server Error !");
+            }
+            var result = [];
+            for(var user of users) {
+                result.push({
+                    id: user.id,
+                    access: user.access,
+                    firstname: user.firstname,
+                    lastname: user.lastname,
+                    email: user.email
+                })
+            }
+            return res.json({body: result, err:null});
+        })
+    })
+
     app.post('/user/update', access(2), (req, res) => {
         console.log(req.body)
         // var valid = true;
@@ -118,6 +137,55 @@ module.exports = ({app, db}) => {
         // valid = req.body.email ? validate.email(req.body.email) : valid;
         // TODO db.api.user.update(validReqBody)
         res.status(200).end("OK")
+    })
+    
+    app.post('/user/access', access(5), (req, res) => {
+        db.api.user.getById(req.body.id, (err, user) => {
+            if(user.access > req.user.access) return res.status(403).end("Forbidden !");
+            user.access = req.body.access;
+            db.api.user.update(user ,err => {
+            if(err) {
+                dev.report(err);
+                return res.status(500).end("Internal Server Error !");
+            }
+            res.status(200).end("OK");
+            })
+        })
+    })
+
+    app.post('/user/add', access(2), (req, res) => { // TODO what access should it be ?
+        console.log(req.body)
+        db.api.user.add(req.body.email, req.body.password ,(err, user) => {
+            if(err) {
+                dev.report(err);
+                return res.status(500).end("Internal Server Error !");
+            } else if(!user) {
+                return res.status(409).end("Conflict !"); // email existed
+            }
+            user.firstname = req.body.firstname;
+            user.lastname = req.body.lastname;
+            user.access = 2;
+            db.api.user.update(user, err => {
+                if(err) {
+                    dev.report(err);
+                    return res.status(500).end("Internal Server Error !");
+                }
+                return res.status(200).end("OK");
+            })
+        })
+    })
+
+    app.post('/user/remove', access(5), (req, res) => {
+        db.api.user.getById(req.body.id, (err, user) => {
+            if(user.access > req.user.access) return res.status(403).end("Forbidden !");
+            db.api.user.remove(req.body.id ,err => {
+            if(err) {
+                dev.report(err);
+                return res.status(500).end("Internal Server Error !");
+            }
+            res.status(200).end("OK");
+            })
+        })
     })
 
     app.post('/user/avatar', access(2), (req, res) => {
@@ -152,7 +220,7 @@ module.exports = ({app, db}) => {
                         fs.unlink(file0, dev.report);
                         return res.status(500).end("Internal Server Error !");
                     }
-                    return res.status(200).json({avatar});
+                    return res.status(200).end("OK");
                 });
             });
         });
