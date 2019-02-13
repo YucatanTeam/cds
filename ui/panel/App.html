@@ -20,7 +20,8 @@
 			<li><a class="truncate" href="#/ConsultancyServices"><I>live_help</I>Consultancy Services</a></li>
 			<li><a class="truncate" href="#/MagazineControlCenter"><I>import_contacts</I>Magazine Control Center</a></li>
 			<li><a class="truncate" href="#/CommentControlCenter"><I>comment</I>Comment Control Center</a></li>
-			<li><a class="truncate" href="#/Modules"><I>bubble_chart</I>Modules</a></li>
+			<li><a class="truncate" href="#/TelegramBot"><I>send</I>Telegram Bot</a></li>
+			<li><a class="truncate" href="#/LiveChat"><I>chat</I>Live Chat</a></li>
 			<li><a class="truncate" href="#/SecurityPolicy"><I>security</I>Security Policy</a></li>
 			<li><a class="truncate" href="#/SeoSetup"><I>search</I>Seo Setup</a></li>
 			<li><a class="truncate" href="#/StudentControlCenter"><I>assignment_ind</I>Student Control Center</a></li>
@@ -49,7 +50,8 @@
 	import CertificateControlCenter from "./admin_pages/CertificateControlCenter.html";
 	import ConsultancyServices from "./admin_pages/ConsultancyServices.html";
 	import MagazineControlCenter from "./admin_pages/MagazineControlCenter.html";
-	import Modules from "./admin_pages/Modules.html";
+	import TelegramBot from "./admin_pages/TelegramBot.html";
+	import LiveChat from "./admin_pages/LiveChat.html";
 	import SeoSetup from "./admin_pages/SeoSetup.html";
 	import StudentControlCenter from "./admin_pages/StudentControlCenter.html";
 	import CommentControlCenter  from "./admin_pages/CommentControlCenter.html";
@@ -145,15 +147,16 @@
 					}),
 				title: "CDS-PANEL",
 				routes: {
-				'/SecurityPolicy': [SecurityPolicy, {message: 'Hello From Security Policy ;) You can setup your personal info here.'}],
+				'/SecurityPolicy': [SecurityPolicy, {}],
 				'/CandoServices': [CandoServices, {message: 'Hello From Cando Services ;) You can setup CANDO services here.'}],
-				'/AccessControlCenter': [AccessControlCenter, {message: 'Hello From Access Control Center ;) You can setup the access control list here.'}],
+				'/AccessControlCenter': [AccessControlCenter, {}],
 				'/AbroadControlCenter': [AbroadControlCenter, {message: 'Hello From Abroad Control Center ;) You can setup all abroad issues here.'}],
 				'/AnswerQuestionControlCenter': [AnswerQuestionControlCenter, {message: 'Hello From Answer Question Control Center ;) Feel free to setup what you want.'}],
 				'/CertificateControlCenter': [CertificateControlCenter, {message: 'Hello From Certificate Control Center ;) You can setup CANDO certificate issues here.'}],
 				'/ConsultancyServices': [ConsultancyServices, {message: 'Hello From Consultansy Services ;) You can setup all consultancy issues here.'}],
 				'/MagazineControlCenter': [MagazineControlCenter, {message: 'Hello From Magazine Control Center ;) You can setup all CANDO posts and NEWS here.'}],
-				'/Modules': [Modules, {message: 'Hello From Modules ;) You can setup a module here.'}],
+				'/TelegramBot': [TelegramBot, {message: 'Hello From TelegramBot.'}],
+				'/LiveChat': [LiveChat, {message: 'Hello From LiveChat.'}],
 				'/SeoSetup': [SeoSetup, {message: 'Hello From Seo Setup ;) Feel free and setup your seo.'}],
 				'/StudentControlCenter': [StudentControlCenter, {message: 'Hello From Student Control Center ;) Here you can control all CANDO students, Feel free and setup what you want. '}],
 				'/CommentControlCenter': [CommentControlCenter, {message: 'Hello From Comment Control Center ;) You can setup CANDO comments here.'}],
