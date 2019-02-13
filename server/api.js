@@ -134,6 +134,39 @@ module.exports = ({app, db}) => {
         res.status(200).end("OK")
     })
 
+    app.post('/user/add', access(3), (req, res) => { // TODO what access should it be ?
+        console.log(req.body)
+        db.api.user.add(req.body.email, req.body.password ,(err, user) => {
+            if(err) {
+                dev.report(err);
+                return res.status(500).end("Internal Server Error !");
+            } else if(!user) {
+                return res.status(409).end("Conflict !"); // email existed
+            }
+            user.firstname = req.body.firstname;
+            user.lastname = req.body.lastname;
+            user.password = req.body.password;
+            user.access = 2;
+            db.api.user.update(user, err => {
+                if(err) {
+                    dev.report(err);
+                    return res.status(500).end("Internal Server Error !");
+                }
+                return res.status(200).end("OK");
+            })
+        })
+    })
+
+    app.post('/user/remove', access(5), (req, res) => {
+        db.api.user.remove(req.body.id ,err => {
+            if(err) {
+                dev.report(err);
+                return res.status(500).end("Internal Server Error !");
+            }
+            res.status(200).end("OK");
+        })
+    })
+
     app.post('/user/avatar', access(2), (req, res) => {
         var form = new formidable.IncomingForm();
         form.uploadDir = cwd + "/avatar/";
