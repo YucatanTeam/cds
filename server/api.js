@@ -138,6 +138,20 @@ module.exports = ({app, db}) => {
         // TODO db.api.user.update(validReqBody)
         res.status(200).end("OK")
     })
+    
+    app.post('/user/access', access(5), (req, res) => {
+        db.api.user.getById(req.body.id, (err, user) => {
+            if(user.access > req.user.access) return res.status(403).end("Forbidden !");
+            user.access = req.body.access;
+            db.api.user.update(user ,err => {
+            if(err) {
+                dev.report(err);
+                return res.status(500).end("Internal Server Error !");
+            }
+            res.status(200).end("OK");
+            })
+        })
+    })
 
     app.post('/user/add', access(2), (req, res) => { // TODO what access should it be ?
         console.log(req.body)
