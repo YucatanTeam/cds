@@ -1,9 +1,9 @@
 <div class="row">
-	<Card image="/public/img/privacy.png" col="s12 m10 offset-m1 l8 offset-l2">
+	<Card image="/user/avatar" col="s12 m10 offset-m1 l8 offset-l2">
 		<h4>Hello {user.firstname ? user.firstname : ""} !</h4>
 		<p><span class="red-text"><I>format_quote</I></span> Here you can use <span class="red-text">WHO AM I</span> button
 			to check your identity!</p><br>
-		<Modal id="whoami" buttons={[function Agree(c) {console.log(c)}]}>
+		<Modal id="who am i" buttons={[function Agree(c) {console.log(c)}]}>
 			<h4>You are</h4>
 			<p>{user.firstname} {user.lastname}</p>
 		</Modal>
@@ -11,7 +11,7 @@
 	</Card>
 </div>
 <div class="row">
-	<Card image="/user/avatar" col="s12 m10 offset-m1 l8 offset-l2">
+	<Card col="s12 m10 offset-m1 l8 offset-l2">
 		<h4>Your account.</h4>
 		<p><span class="red-text"><I>format_quote</I></span> Feel free and make some changes to your info.<br>
 			Password must contain at least one lowercase alphabetical character,<br>
