@@ -1,2 +1,101 @@
+<div class="row">
+    <Modal id="confirm" nobtn
+    buttons={[
+        function Delete(modal) {
+            utils.fetch("/user/remove", {id: confirmModal().user.id})
+            .then(r=>{
+                if(r.status == 200) utils.toast("Done");
+                else utils.toast("something went wrong !");
+            })
+            .catch(err => utils.toast("something went wrong !"))
+        },
+        function No(modal) {
+            modal.close();
+        }]}>
+        <h4>Confirm Delete</h4>
+        <p>Do you really want to delete the user ?</p>
+        <!-- <p>Do you really want to delete <span class="green-text">{getActionUserFromModalElement()}</span> ?</p> -->
+    </Modal>
+	<Card image="/public/img/privacy.png" col="s12 m10 offset-m1 l10 offset-l1">
+		<h4>Users</h4>
+        {#await getusers}
+            <Loading/>
+        {:then users}
+		    <Table highlight rows={5} actions={[{icon: "delete", tooltip: "delete", action(obj, table) {
+                const modal = confirmModal();
+                modal.user = obj;
+                modal.open();
+            }},{icon: "remove_circle", tooltip: "ban", action(obj, table) {
+                utils.toast("ban");
+            }},{icon: "remove_red_eye", tooltip: "user", action(obj, table) {
+                utils.toast("user");
+            }},{icon: "edit", tooltip: "mod", action(obj, table) {
+                utils.toast("mod");
+            }},{icon: "verified_user", tooltip: "admin", action(obj, table) {
+                utils.toast("admin");
+            }},]}
+            content={users} search={["id", "email", "firstname", "lastname"]}/>
+        {:catch error}
+            <p>error {error}</p>
+        {/await}
+	</Card>
+</div>
+<div class="row">
+	<Card col="s12 m10 offset-m1 l10 offset-l1">
+		<h4>Add a User</h4>
+		<Form>
+            <Input col="s12" label="Email" id="email" type="email"/>
+            <Input col="s12" label="First name" id="firstname" type="text"/>
+            <Input col="s12" label="Last name" id="lastname" type="text"/>
+            <Input col="s12" label="Password" id="password" type="password" validate helper data-empty="Password is required" />
+            <RequestBtn post="/user/add" bodyById={[ 'email' , 'password', "firstname", "lastname" ]} on:response="added(event)">Add</RequestBtn>
+        </Form>
+	</Card>
+</div>
 
-<h5>{message}</h5>
+<script>
+export default {
+    data() {
+        return {
+            utils: window.utils,confirmModal() {
+            return M.Modal.getInstance(document.getElementById('confirm'));
+        },
+            getusers: utils.fetch("/user/all")
+                .then(response => {
+                    var users = response.body;
+                    var rows = [];
+                    for(var user of users) {
+                        if(cdsuser.access >= user.access) {
+                            //[delete, ban, user, mod, admin]
+                            user.actions = [
+                                true, // delete
+                                user.access!=1, // ban
+                                user.access!=2, // user
+                                user.access!=3, // mod
+                                user.access!=5, // admin
+                            ];
+                            delete user.access;
+                            rows.push(user);
+                        }
+                    }
+                    return rows;
+                })
+                .catch(err => utils.toast("something went wrong !")),
+        };
+    },
+    methods: {
+        added() {
+            utils.toast("Done");
+        }
+    },
+    components: {
+        Table: "../../tags/Table.html",
+        Loading: "../../tags/Loading.html",
+        Card: "../../tags/Card.html",
+        Modal: "../../tags/Modal.html",
+        Form: "../../tags/Form.html",
+        Input: "../../tags/Input.html",
+        RequestBtn: "../../tags/RequestBtn.html",
+    }
+}
+</script>
