@@ -14,9 +14,6 @@ const slug = require('limax')
 const cwd = process.cwd();
 
 
-// TODO : for those routes who have CRUD ops should be in data table tag with actions story!! 
-
-
 
 function page(root) {
     return express.static(`${__dirname}/../www/${root}`)
@@ -239,19 +236,28 @@ module.exports = ({app, db}) => {
         db.api.comment.getAllRelToAPost(req.params.id, (err, rows)=>{
 
             if(rows) res.json({body: rows, err:null})
-            if(err) res.status(404).end("Nothing Found !");
+            if(err) {
+                dev.report(err);
+                res.status(404).end("Nothing Found !");
+            }
         })
     });
 
     app.get('/comment/getAll', access(5), (req, res)=>{
         db.api.comment.getAll((err, rows)=>{
             if(rows) {
-                for ( var index=0; index<rows.length; index++ ) { // only dev can create new comment
+                for ( var index=0; index<rows.length; index++ ) {
+                    // only dev can create new comment
                     req.user.access === 5 ? rows[index].actions = [false, true, true, true] : rows[index].actions = [true, true, true, true]
+                    // for mod only edit is set to true
+                    req.user.access === 3 ? rows[index].actions = [false, false, true, false] : rows[index].actions = [true, true, true, true]
                 }
                 res.json({body: rows, err:null})
             }
-            if(err) res.status(404).end("Nothing Found !");
+            if(err) {
+                dev.report(err);
+                res.status(404).end("Nothing Found !");
+            }
         })
     });
 
@@ -259,7 +265,10 @@ module.exports = ({app, db}) => {
         db.api.comment.deleteByCuid(req.params.cuid, (err, resaff, fields)=>{
 
             if(resaff) res.json({body: resaff, err:null, fields: fields})
-            if(err) res.status(404).end("Nothing Deleted !");
+            if(err) {
+                dev.report(err);
+                res.status(404).end("Nothing Found !");
+            }
         })
     });
 
@@ -267,7 +276,10 @@ module.exports = ({app, db}) => {
         db.api.comment.deleteById(req.params.id, (err, resaff, fields)=>{
 
             if(resaff) res.json({body: resaff, err:null, fields: fields})
-            if(err) res.status(404).end("Nothing Deleted !");
+            if(err) {
+                dev.report(err);
+                res.status(404).end("Nothing Found !");
+            }
         })
     });
     
@@ -275,7 +287,10 @@ module.exports = ({app, db}) => {
         db.api.comment.deleteAll((err, resaff, fields)=>{
             
             if(resaff) res.json({body: resaff, err:null, fields: fields})
-            if(err) res.status(404).end("Nothing Deleted !");
+            if(err) {
+                dev.report(err);
+                res.status(404).end("Nothing Found !");
+            }
         })
     });
 
@@ -297,7 +312,10 @@ module.exports = ({app, db}) => {
         db.api.mc_lc.getAllRerlToAbroad(req.params.id, (err, rows)=>{
 
             if(rows) res.json({body: rows, err:null})
-            if(err) res.status(404).end("Nothing Found !");
+            if(err) {
+                dev.report(err);
+                res.status(404).end("Nothing Found !");
+            }
         });
     });
 
@@ -306,11 +324,15 @@ module.exports = ({app, db}) => {
             if(rows) {
                 for ( var index=0; index<rows.length; index++ ) {
                     // for dev and admin all actions(create , delete , edit , block/unblock status) are set to true
-                    rows[index].actions = [true, true, true, true]
+                    // for mod only edit is set to true
+                    req.user.access === 3 ? rows[index].actions = [false, false, true, false] : rows[index].actions = [true, true, true, true]
                 }
                 res.json({body: rows, err:null})
             }
-            if(err) res.status(404).end("Nothing Found !");
+            if(err) {
+                dev.report(err);
+                res.status(404).end("Nothing Found !");
+            }
         })
     });
 
@@ -318,7 +340,10 @@ module.exports = ({app, db}) => {
         db.api.mc_lc.deleteByCuid(req.params.cuid, (err, resaff, fields)=>{
 
             if(resaff) res.json({body: resaff, err:null, fields: fields})
-            if(err) res.status(404).end("Nothing Deleted !");
+            if(err) {
+                dev.report(err);
+                res.status(404).end("Nothing Found !");
+            }
         })
     });
 
@@ -326,7 +351,10 @@ module.exports = ({app, db}) => {
         db.api.mc_lc.deleteById(req.params.id, (err, resaff, fields)=>{
 
             if(resaff) res.json({body: resaff, err:null, fields: fields})
-            if(err) res.status(404).end("Nothing Deleted !");
+            if(err) {
+                dev.report(err);
+                res.status(404).end("Nothing Found !");
+            }
         })
     });
     
@@ -334,7 +362,10 @@ module.exports = ({app, db}) => {
         db.api.mc_lc.deleteAll((err, resaff, fields)=>{
 
             if(resaff) res.json({body: resaff, err:null, fields: fields})
-            if(err) res.status(404).end("Nothing Deleted !");
+            if(err) {
+                dev.report(err);
+                res.status(404).end("Nothing Found !");
+            }
         })
     });
 
@@ -348,10 +379,15 @@ module.exports = ({app, db}) => {
 
 
 
+
+
     // -------------
     // abroad routes
     // TODO use dev.report
     // -------------
+
+
+
 
 
 
@@ -363,10 +399,16 @@ module.exports = ({app, db}) => {
         db.api.cert.getAll((err, rows)=>{
 
             if(rows) res.json({body: rows, err:null})
-            if(err) res.status(404).end("Nothing Found !");
+            if(err) {
+                dev.report(err);
+                res.status(404).end("Nothing Found !");
+            }
         });
     });
 
+    app.post('/cert/edit', access(5), (req, res)=>{
+        // TODO validate req.body using validate.js
+    })
 
 
 
