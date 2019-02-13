@@ -7,37 +7,20 @@
 
 <div class="row">
 	<Sidenav background="/public/img/cds.svg" fixed>
-		
 		{#await getuser}
 			<Loading small/>
 		{:then user}
-			<li><a class="truncate" href="#/AbroadControlCenter"><I>language</I>Abroad Control Center</a></li>
-			<li><a class="truncate" href="#/AccessControlCenter"><I>accessibility</I>Access Control Center</a></li>
-			<li><a class="truncate" href="#/AnswerQuestionControlCenter"><I>question_answer</I>FAQ Control Center</a></li>
-			<li><a class="truncate" href="#/SandBox"><I>devices</I>Sand Box</a></li>
-			<li><a class="truncate" href="#/CandoServices"><I>store</I>Cando Services</a></li>
-			<li><a class="truncate" href="#/CertificateControlCenter"><I>fingerprint</I>Certificate Control Center</a></li>
-			<li><a class="truncate" href="#/ConsultancyServices"><I>live_help</I>Consultancy Services</a></li>
-			<li><a class="truncate" href="#/MagazineControlCenter"><I>import_contacts</I>Magazine Control Center</a></li>
-			<li><a class="truncate" href="#/CommentControlCenter"><I>comment</I>Comment Control Center</a></li>
-			<li><a class="truncate" href="#/TelegramBot"><I>send</I>Telegram Bot</a></li>
-			<li><a class="truncate" href="#/LiveChat"><I>chat</I>Live Chat</a></li>
-			<li><a class="truncate" href="#/SecurityPolicy"><I>security</I>Security Policy</a></li>
-			<li><a class="truncate" href="#/SeoSetup"><I>search</I>Seo Setup</a></li>
-			<li><a class="truncate" href="#/StudentControlCenter"><I>assignment_ind</I>Student Control Center</a></li>
-			<li><a class="truncate" href="#/DatabaseControlCenter"><I>storage</I>Database Control Center</a></li>
+			{#each Object.keys(routes) as r}
+				{#if routes[r].access <= user.access}
+					<li><a class="truncate" href="#!" on:click=load(r)><I>{routes[r].icon}</I>{r}</a></li>
+				{/if}
+			{/each}
 		{:catch err}
 			<p>Error {err.code}</p>
 		{/await}
 	</Sidenav>
 	<div class="col offset-l3">
-		<div class="container">
-			<Router routes={routes}>
-				<div class="error">
-					This page was not found.
-				</div>
-			</Router>
-		</div>
+		<div class="container" id="workspace"></div>
 	</div>
 </div>
 
@@ -141,6 +124,7 @@
 		},
 	  	data() {
 			return {
+				currentPage: null,
 				getuser:
 					utils.fetch("/user")
 					.then(response => {
@@ -149,25 +133,39 @@
 					}),
 				title: "CDS-PANEL",
 				routes: {
-				'/SecurityPolicy': [SecurityPolicy, {}],
-				'/CandoServices': [CandoServices, {message: 'Hello From Cando Services ;) You can setup CANDO services here.'}],
-				'/AccessControlCenter': [AccessControlCenter, {}],
-				'/AbroadControlCenter': [AbroadControlCenter, {message: 'Hello From Abroad Control Center ;) You can setup all abroad issues here.'}],
-				'/AnswerQuestionControlCenter': [AnswerQuestionControlCenter, {message: 'Hello From Answer Question Control Center ;) Feel free to setup what you want.'}],
-				'/CertificateControlCenter': [CertificateControlCenter, {message: 'Hello From Certificate Control Center ;) You can setup CANDO certificate issues here.'}],
-				'/ConsultancyServices': [ConsultancyServices, {message: 'Hello From Consultansy Services ;) You can setup all consultancy issues here.'}],
-				'/MagazineControlCenter': [MagazineControlCenter, {message: 'Hello From Magazine Control Center ;) You can setup all CANDO posts and NEWS here.'}],
-				'/TelegramBot': [TelegramBot, {message: 'Hello From TelegramBot.'}],
-				'/LiveChat': [LiveChat, {message: 'Hello From LiveChat.'}],
-				'/SeoSetup': [SeoSetup, {message: 'Hello From Seo Setup ;) Feel free and setup your seo.'}],
-				'/StudentControlCenter': [StudentControlCenter, {message: 'Hello From Student Control Center ;) Here you can control all CANDO students, Feel free and setup what you want. '}],
-				'/CommentControlCenter': [CommentControlCenter, {message: 'Hello From Comment Control Center ;) You can setup CANDO comments here.'}],
-				'/DatabaseControlCenter': [DatabaseControlCenter, {message: 'Hello From Database Control Center ;) Feel free and setup cds DB.'}]
+					"SecurityPolicy":				{access: 5, icon: "security", page: SecurityPolicy},
+					"Cando Services":				{access: 5, icon: "store", page: CandoServices},
+					"Access Control Center":		{access: 5, icon: "accessibility", page: AccessControlCenter},
+					"Abroad Control Center":		{access: 5, icon: "language", page: AbroadControlCenter},
+					"FAQ Controll Center":			{access: 5, icon: "question_answer", page: AnswerQuestionControlCenter},
+					"Certificate Control Center":	{access: 5, icon: "fingerprint", page: CertificateControlCenter},
+					"Consultancy Services":			{access: 5, icon: "live_help", page: ConsultancyServices},
+					"Magazine Control Center":		{access: 5, icon: "import_contacts", page: MagazineControlCenter},
+					"Telegram Bot":					{access: 5, icon: "send", page: TelegramBot},
+					"Live Chat":					{access: 5, icon: "chat", page: LiveChat},
+					"Seo Setup":					{access: 5, icon: "search", page: SeoSetup},
+					"Student Control Center":		{access: 5, icon: "assignment_ind", page: StudentControlCenter},
+					"Comment Control Center":		{access: 5, icon: "comment", page: CommentControlCenter},
+					"Database Control Center":		{access: 5, icon: "storage", page: DatabaseControlCenter},
 				}
 			};
 		},
+		methods: {
+			load(page) {
+				const {currentPage, routes} = this.get();
+				if(cdsuser.access >= routes[page].access) {
+					currentPage && currentPage.destroy();
+					const newPage = new routes[page].page({
+						target: document.getElementById("workspace"),
+						data: {
+							message: 'hello from new page loader' // pass data here
+						}
+					});
+					this.set({currentPage: newPage});
+				}
+			}
+		},
 		components: {
-			Router: "svelte-app-router",
 			Sidenav: "../tags/Sidenav.html",
 			I: '../tags/Icon.html',
 			Loading: '../tags/Loading.html'
