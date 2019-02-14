@@ -1,14 +1,7 @@
 
-<!-- 
-    actions :
-        is a list of bool pushed at the end of each row on server side 
-        there are 4 actions are available  :
-            CREATE , DELETE , EDIT , BLOCK/UNBLOCK STATUS        
--->
-
 
 <!-- TODO :
-          get inspiration from AccessControlCenter , timeago , tags , bind rows 
+          timeago , tags , bind rows 
           show some words of content not the whole in table -->
 
 
@@ -24,18 +17,25 @@
             <div id="{crudindex===1 ? "modaledit" : "modalcreate"}" class="modal">
                 <div class="modal-content">
                     <h4>{crudindex===1 ? "Edit" : "Create"}</h4>
-
-                    {#if objModal}
-                        <p>{objModal.id}</p>
-                    {/if}
-
+                        <div class="row">
+                            {#if objModal}
+                                <Card col="s12 m10 offset-m1 l10 offset-l1">
+                                    <Form response={{}}>
+                                        <Input col="s12" label="Email" id="email" type="email" value={ objModal ? objModal.email : ""}/>
+                                        <Input col="s12" label="name" id="name" type="text" value={ objModal ? objModal.name : ""}/>
+                                        <textarea id="content" class="materialize-textarea">{ objModal ? objModal.content : ""}</textarea>
+                                        <label for="content">Textarea</label>
+                                    </Form>
+                                </Card>
+                            {/if}
+                        </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="modal-close waves-effect waves-green btn-flat" on:click="save(objModal)">{crudindex===1 ? "Update" : "Add"}</button>
+                    <button on:response="added(event)" class="modal-close waves-effect waves-green btn-flat" on:click="save(objModal)">{crudindex===1 ? "Update" : "Add"}</button>
                 </div>
             </div>
 
-        <Table indexed highlight rows={1}
+        <Table highlight rows={6}
             on:modal="open(event)"
             content={comments}
             search={["name", "content", "email", "cuid", "id", "post_id"]}
@@ -73,7 +73,8 @@
                     // BLOCK/UNBLOCK STATUS
                     // ==============================================================================================
                         {icon: "block",tooltip: "block", action(obj, component) {
-                            
+
+                                // TODO utils.reload + utils.toast
                             
                         }
                     }, 
@@ -90,11 +91,30 @@ export default {
         return {
             objModal: null,
             crudindex: 0, // 1 : edit , 0 : create
-            getcomments: utils.fetch("/comment/getAll").then(r=>r.body)
-
+            getcomments: utils.fetch("/comment/getAll")
+            .then(response => {
+                    var comments = response.body;
+                    var rows = [];
+                    for(var cmnt of comments) {
+                            // [ CREATE , DELETE , EDIT , BLOCK/UNBLOCK STATUS ]
+                            // only dev can create new comment
+                            cdsuser.access === 3 ? cmnt.actions = [false, false, true, false] : cmnt.actions = [cdsuser.access === 7, true, true, true]
+                            rows.push(cmnt);
+                    }
+                    return rows;
+                })
+                .catch(err => utils.toast("something went wrong !")),
         }
     },
     methods:{
+        added(res){
+            if(res.err){
+                return utils.toast("something went wrong !")
+            } else{
+                utils.toast("Done")
+                utils.reload()
+            }
+        },
         open({obj, index}){
             // console.log(obj) // it'll log successfully
             this.set({crudindex: index, objModal: obj})
@@ -105,13 +125,16 @@ export default {
         save(obj){
             console.log(`inside saving method.. got new body >>> ${obj}`)
             // TODO use utils.fetch() to send new obj to the server
-            // TODO validate obj on client side and alert if needed
+            // TODO validate obj on client side and toast it if needed
             // remember to validate the obj on server side also
         }
     },
     components: {
         Loading: "../../tags/Loading.html",
         Table: "../../tags/Table.html",
+        Card: "../../tags/Card.html",
+        Form: "../../tags/Form.html",
+        Input: "../../tags/Input.html"
     }
 }
 </script>
