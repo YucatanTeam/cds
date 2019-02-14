@@ -1,12 +1,4 @@
 
-
-<!-- TODO :
-          timeago , tags , bind rows 
-          show some words of content not the whole in table -->
-
-
-<h5>{message}</h5>
-<hr>
 <!-- set actions and bind content  -->
 <div class="row">
     {#await getcomments}
@@ -14,11 +6,16 @@
     {:then comments}
 
             <!-- ======== THIS MODAL WILL TRIGGER ON edit & create ACTION OF EACH ROW ======== -->
-            <div id="{crudindex===1 ? "modaledit" : "modalcreate"}" class="modal">
+            <div id="{crudindex===1 ? "modaledit" :  crudindex===0 ? "modalcreate" : "modaldelete"}" class="modal">
                 <div class="modal-content">
-                    <h4>{crudindex===1 ? "Edit" : "Create"}</h4>
-                        <div class="row">
-                            {#if objModal}
+                    <h4>{crudindex===1 ? "Edit" : crudindex===0 ? "Create" : ""}</h4>
+                        
+                        {#if crudindex === 2}
+                            <h4>Confirm Delete</h4>
+                            <p>Do you really want to delete the comment #{objModal.id} ?</p>
+                        
+                        {:else}
+                            <div class="row">
                                 <Card col="s12 m10 offset-m1 l10 offset-l1">
                                     <Form response={{}}>
                                         <Input col="s12" label="Email" id="email" type="email" value={ objModal ? objModal.email : ""}/>
@@ -27,17 +24,18 @@
                                         <label for="content">Textarea</label>
                                     </Form>
                                 </Card>
-                            {/if}
-                        </div>
+                            </div>
+                        {/if}
                 </div>
                 <div class="modal-footer">
-                    <button on:response="added(event)" class="modal-close waves-effect waves-green btn-flat" on:click="save(objModal)">{crudindex===1 ? "Update" : "Add"}</button>
+                    <button class="modal-close waves-effect waves-green btn-flat" on:click="action(objModal)">{crudindex===1 ? "Update" : crudindex===0 ? "Add" : "Delete"}</button>
                 </div>
             </div>
 
+    <!-- TODO add timeago -->
         <Table highlight rows={6}
             on:modal="open(event)"
-            content={comments}
+            content={comments} 
             search={["name", "content", "email", "cuid", "id", "post_id"]}
             actions={[
                                             /* ------------------------------------------
@@ -56,8 +54,8 @@
                     // DELETE
                     // ==============================================================================================
                     {icon: "delete",tooltip: "delete", action(obj, component) {
-
-                           //utils.fetch(`/comment/delete/${obj.cuid}`).then(r=>r.body);
+                            var index = 2
+                           component.fire("modal", {obj, index}) 
                             
                         }
                     }, 
@@ -72,9 +70,26 @@
                     // ==============================================================================================
                     // BLOCK/UNBLOCK STATUS
                     // ==============================================================================================
-                        {icon: "block",tooltip: "block", action(obj, component) {
+                    {icon: "block",tooltip: "block", action(obj, component) {
 
-                                // TODO utils.reload + utils.toast
+                            
+                        }
+                    },
+                    // ==============================================================================================
+                    // DELETE ALL COMMENTS
+                    // ==============================================================================================
+                    {icon: "delete_forever",tooltip: "delete all", action(obj, component) {
+
+                            // TODO delete all comments !!    
+                            
+                        }
+                    },
+                    // ==============================================================================================
+                    // SHOW RELATED POST
+                    // ==============================================================================================
+                    {icon: "import_contacts",tooltip: "show related post", action(obj, component) {
+
+                            // TODO show the post info in modal !!
                             
                         }
                     }, 
@@ -90,7 +105,7 @@ export default {
     data(){
         return {
             objModal: null,
-            crudindex: 0, // 1 : edit , 0 : create
+            crudindex: 0, // 1 : edit , 0 : create , 2 : delete
             getcomments: utils.fetch("/comment/getAll")
             .then(response => {
                     var comments = response.body;
@@ -98,7 +113,15 @@ export default {
                     for(var cmnt of comments) {
                             // [ CREATE , DELETE , EDIT , BLOCK/UNBLOCK STATUS ]
                             // only dev can create new comment
-                            cdsuser.access === 3 ? cmnt.actions = [false, false, true, false] : cmnt.actions = [cdsuser.access === 7, true, true, true]
+                            cmnt.actions = [
+                                [7].includes(cdsuser.access), 
+                                [5, 7].includes(cdsuser.access), 
+                                [3, 5, 7].includes(cdsuser.access), 
+                                [5, 7].includes(cdsuser.access),
+                                [3, 5, 7].includes(cdsuser.access),
+                                [3, 5, 7].includes(cdsuser.access),
+
+                            ]
                             rows.push(cmnt);
                     }
                     return rows;
@@ -107,26 +130,34 @@ export default {
         }
     },
     methods:{
-        added(res){
-            if(res.err){
-                return utils.toast("something went wrong !")
-            } else{
-                utils.toast("Done")
-                utils.reload()
-            }
-        },
         open({obj, index}){
-            // console.log(obj) // it'll log successfully
             this.set({crudindex: index, objModal: obj})
             var elems = document.querySelector('.modal');
             var instances = M.Modal.init(elems, {});
             instances.open();
         },
-        save(obj){
-            console.log(`inside saving method.. got new body >>> ${obj}`)
-            // TODO use utils.fetch() to send new obj to the server
-            // TODO validate obj on client side and toast it if needed
-            // remember to validate the obj on server side also
+        action(obj){
+            var {crudindex} = this.get()
+            if(crudindex === 1 || crudindex === 0){
+                utils.fetch("/comment/edit", obj).then((res)=>{
+                    if(res.status!=200){
+                        return utils.toast("something went wrong !")
+                    } else{
+                        utils.toast("Done")
+                        utils.reload()
+                    }
+               })
+            } else{
+                utils.fetch("/comment/delete/cu", obj.cuid).then((res)=>{
+                    if(res.status!=200){
+                        return utils.toast("something went wrong !")
+                    } else{
+                        utils.toast("Done")
+                        utils.reload()
+                    }
+               })
+            }
+            
         }
     },
     components: {
