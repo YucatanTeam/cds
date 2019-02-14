@@ -290,10 +290,13 @@ module.exports = ({app, db}) => {
 
     app.post('/comment/edit', access(5), (req, res)=>{
         // TODO validate req.body using validate.js
+        console.log(req.body)
     })
 
-    // add comment routes here ; validate using validate.js
-    // ....
+    app.post('/comment/add', access(5), (req, res)=>{
+        // TODO validate req.body using validate.js
+        console.log(req.body)
+    })
 
 
 
@@ -315,7 +318,7 @@ module.exports = ({app, db}) => {
 
     app.get('/mc_lc/getAll', access(5), (req, res)=>{
         db.api.mc_lc.getAll((err, rows)=>{
-            
+
             if(rows) res.json({body: rows, err:null})
             if(err) {
                 dev.report(err);
