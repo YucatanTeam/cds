@@ -4,10 +4,13 @@
         function Delete(modal) {
             utils.fetch("/user/remove", {id: confirmModal().user.id})
             .then(r=>{
-                if(r.status == 200) utils.toast("Done");
+                if(r.status == 200) {
+                    utils.toast("Done");
+                    utils.reload();
+                }
                 else utils.toast("something went wrong !");
             })
-            .catch(err => utils.toast("something went wrong !"))
+            .catch(err => utils.toast("something went wrong !"));
         },
         function No(modal) {
             modal.close();
@@ -30,7 +33,7 @@
                 .then(r=>{
                     if(r.status == 200) {
                         utils.toast("Done");
-                        location.reload();
+                        utils.reload();
                     }
                     else utils.toast("something went wrong !");
                 })
@@ -41,7 +44,7 @@
                 .then(r=>{
                     if(r.status == 200) {
                         utils.toast("Done");
-                        location.reload();
+                        utils.reload();
                     }
                     else utils.toast("something went wrong !");
                 })
@@ -51,7 +54,7 @@
                 .then(r=>{
                     if(r.status == 200) {
                         utils.toast("Done");
-                        location.reload();
+                        utils.reload();
                     }
                     else utils.toast("something went wrong !");
                 })
@@ -61,7 +64,7 @@
                 .then(r=>{
                     if(r.status == 200) {
                         utils.toast("Done");
-                        location.reload();
+                        utils.reload();
                     }
                     else utils.toast("something went wrong !");
                 })
@@ -118,8 +121,13 @@ export default {
         };
     },
     methods: {
-        added() {
-            utils.toast("Done");
+        added(res) {
+            if(res.err) {
+                utils.toast("something went wrong !");
+            } else {
+                utils.toast("Done");
+                utils.reload();
+            }
         }
     },
     components: {

@@ -113,6 +113,9 @@
 		},
 		toast(html) {
 			M.toast({ html });
+		},
+		reload() {
+			page.reload();
 		}
 	};
 
@@ -120,6 +123,7 @@
 	  	oncreate() {
 			M.AutoInit();
 			window.utils = utils;
+			window.page = this;
 		},
 	  	data() {
 			return {
@@ -151,7 +155,7 @@
 		methods: {
 			load(page) {
 				const {currentPage, routes} = this.get();
-				if(cdsuser.access >= routes[page].access) {
+				if(routes[page].access.includes(cdsuser.access)) {
 					currentPage && currentPage.destroy();
 					const newPage = new routes[page].page({
 						target: document.getElementById("workspace"),
@@ -161,6 +165,17 @@
 					});
 					this.set({currentPage: newPage});
 				}
+			},
+			reload() {
+				const {currentPage, routes} = this.get();
+				currentPage && currentPage.destroy();
+				const newPage = new currentPage.constructor({
+					target: document.getElementById("workspace"),
+					data: {
+						message: 'hello from new page loader' // pass data here
+					}
+				});
+				this.set({currentPage: newPage});
 			}
 		},
 		components: {
