@@ -246,13 +246,8 @@ module.exports = ({app, db}) => {
 
     app.get('/comment/getAll', access(5), (req, res)=>{
         db.api.comment.getAll((err, rows)=>{
-            console.log("-->1")
-            if(rows) {
-                for ( var index=0; index<rows.length; index++ ) { // only dev can create new comment
-                    rows[index].actions = [req.user.access === 7, true, true, true]
-                }
-                res.json({body: rows, err:null})
-            }
+            
+            if(rows) res.json({body: rows, err:null})
             if(err) {
                 dev.report(err);
                 res.status(404).end("Nothing Found !");
@@ -320,14 +315,8 @@ module.exports = ({app, db}) => {
 
     app.get('/mc_lc/getAll', access(5), (req, res)=>{
         db.api.mc_lc.getAll((err, rows)=>{
-            if(rows) {
-                for ( var index=0; index<rows.length; index++ ) {
-                    // for dev and admin all actions(create , delete , edit , block/unblock status) are set to true
-                    // for mod only edit is set to true
-                    req.user.access === 3 ? rows[index].actions = [false, false, true, false] : rows[index].actions = [true, true, true, true]
-                }
-                res.json({body: rows, err:null})
-            }
+            
+            if(rows) res.json({body: rows, err:null})
             if(err) {
                 dev.report(err);
                 res.status(404).end("Nothing Found !");
