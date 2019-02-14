@@ -11,7 +11,7 @@
 			<Loading small/>
 		{:then user}
 			{#each Object.keys(routes) as r}
-				{#if routes[r].access <= user.access}
+				{#if routes[r].access.includes(user.access)}
 					<li><a class="truncate" href="#!" on:click=load(r)><I>{routes[r].icon}</I>{r}</a></li>
 				{/if}
 			{/each}
@@ -133,20 +133,20 @@
 					}),
 				title: "CDS-PANEL",
 				routes: {
-					"SecurityPolicy":				{access: 5, icon: "security", page: SecurityPolicy},
-					"Cando Services":				{access: 5, icon: "store", page: CandoServices},
-					"Access Control Center":		{access: 5, icon: "accessibility", page: AccessControlCenter},
-					"Abroad Control Center":		{access: 5, icon: "language", page: AbroadControlCenter},
-					"FAQ Controll Center":			{access: 5, icon: "question_answer", page: AnswerQuestionControlCenter},
-					"Certificate Control Center":	{access: 5, icon: "fingerprint", page: CertificateControlCenter},
-					"Consultancy Services":			{access: 5, icon: "live_help", page: ConsultancyServices},
-					"Magazine Control Center":		{access: 5, icon: "import_contacts", page: MagazineControlCenter},
-					"Telegram Bot":					{access: 5, icon: "send", page: TelegramBot},
-					"Live Chat":					{access: 5, icon: "chat", page: LiveChat},
-					"Seo Setup":					{access: 5, icon: "search", page: SeoSetup},
-					"Student Control Center":		{access: 5, icon: "assignment_ind", page: StudentControlCenter},
-					"Comment Control Center":		{access: 5, icon: "comment", page: CommentControlCenter},
-					"Database Control Center":		{access: 5, icon: "storage", page: DatabaseControlCenter},
+					"SecurityPolicy":				{access: [2, 3, 5, 7], icon: "security", page: SecurityPolicy},
+					"Cando Services":				{access: [5, 7], icon: "store", page: CandoServices},
+					"Access Control Center":		{access: [5, 7], icon: "accessibility", page: AccessControlCenter},
+					"Abroad Control Center":		{access: [5, 7], icon: "language", page: AbroadControlCenter},
+					"FAQ Controll Center":			{access: [5, 7], icon: "question_answer", page: AnswerQuestionControlCenter},
+					"Certificate Control Center":	{access: [5, 7], icon: "fingerprint", page: CertificateControlCenter},
+					"Consultancy Services":			{access: [5, 7], icon: "live_help", page: ConsultancyServices},
+					"Magazine Control Center":		{access: [5, 7], icon: "import_contacts", page: MagazineControlCenter},
+					"Telegram Bot":					{access: [5, 7], icon: "send", page: TelegramBot},
+					"Live Chat":					{access: [5, 7], icon: "chat", page: LiveChat},
+					"Seo Setup":					{access: [5, 7], icon: "search", page: SeoSetup},
+					"Student Control Center":		{access: [5, 7], icon: "assignment_ind", page: StudentControlCenter},
+					"Comment Control Center":		{access: [5, 7], icon: "comment", page: CommentControlCenter},
+					"Database Control Center":		{access: [5, 7], icon: "storage", page: DatabaseControlCenter},
 				}
 			};
 		},
