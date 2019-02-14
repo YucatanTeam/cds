@@ -41,7 +41,7 @@ module.exports = ({app, db}) => {
     const dev = require('./dev.js')({app, db});
 
     /*
-        use res.status(code).end() to send errors to client
+        use res.status(code).end("http message") to send errors to client
         use res.json({body: ...}) to send data to client
     */
     
@@ -127,14 +127,38 @@ module.exports = ({app, db}) => {
     })
 
     app.post('/user/update', access(2), (req, res) => {
-        console.log(req.body)
-        // var valid = true;
-        // valid = req.body.password ? validate.password(req.body.password) : valid;
 
-        // valid = req.body.username ? validate.username(req.body.username) : valid;
-        // valid = req.body.email ? validate.email(req.body.email) : valid;
-        // TODO db.api.user.update(validReqBody)
-        res.status(200).end("OK")
+        for(var i in req.body) {
+            if(req.body[i] == null) delete req.body[i];
+        }
+        for(var i in req.body) {
+            if(!validate[i](req.body[i])) return res.status(400).end("Bad Request !");
+        }
+        var newuser = {
+            id: req.user.id,
+            access: req.user.access,
+            firstname: req.body.firstname ? req.body.firstname : req.user.firstname,
+            lastname: req.body.lastname ? req.body.lastname : req.user.lastname,
+            email: req.body.email ? req.body.email : req.user.email,
+            password: req.body.password ? req.body.password : null
+        }
+        db.api.user.update(newuser, err => {
+            if(err) {
+                dev.report(err);
+                return res.status(500).end("Internal Server Error !");
+            } else if(newuser.password) {
+                db.api.user.password(newuser.id, newuser.password, err => {
+                    if(err) {
+                        dev.repprt(err);
+                        return res.status(500).end("Internal Server Error !");
+                    } else {
+                        return res.status(200).end("OK");
+                    }
+                });
+            } else {
+                return res.status(200).end("OK");
+            }
+        })
     })
     
     app.post('/user/access', access(5), (req, res) => {
@@ -142,17 +166,16 @@ module.exports = ({app, db}) => {
             if(user.access > req.user.access) return res.status(403).end("Forbidden !");
             user.access = req.body.access;
             db.api.user.update(user ,err => {
-            if(err) {
-                dev.report(err);
-                return res.status(500).end("Internal Server Error !");
-            }
-            res.status(200).end("OK");
+                if(err) {
+                    dev.report(err);
+                    return res.status(500).end("Internal Server Error !");
+                }
+                res.status(200).end("OK");
             })
         })
     })
 
     app.post('/user/add', access(5), (req, res) => { // TODO what access should it be ?
-        console.log(req.body)
         db.api.user.add(req.body.email, req.body.password ,(err, user) => {
             if(err) {
                 dev.report(err);
