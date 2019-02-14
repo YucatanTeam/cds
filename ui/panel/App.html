@@ -114,6 +114,9 @@
 		},
 		toast(html) {
 			M.toast({ html });
+		},
+		reload() {
+			page.reload();
 		}
 	};
 
@@ -121,6 +124,7 @@
 	  	oncreate() {
 			M.AutoInit();
 			window.utils = utils;
+			window.page = this;
 		},
 	  	data() {
 			return {
@@ -163,6 +167,17 @@
 					});
 					this.set({currentPage: newPage});
 				}
+			},
+			reload() {
+				const {currentPage, routes} = this.get();
+				currentPage && currentPage.destroy();
+				const newPage = new currentPage.constructor({
+					target: document.getElementById("workspace"),
+					data: {
+						message: 'hello from new page loader' // pass data here
+					}
+				});
+				this.set({currentPage: newPage});
 			}
 		},
 		components: {
