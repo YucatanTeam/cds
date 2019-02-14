@@ -260,7 +260,7 @@ module.exports = ({app, db}) => {
         })
     });
 
-    app.post('/comment/delete/:cuid', access(5), (req, res)=>{
+    app.post('/comment/delete/cu/:cuid', access(5), (req, res)=>{
         db.api.comment.deleteByCuid(req.params.cuid, (err, resaff, fields)=>{
 
             if(resaff) res.json({body: resaff, err:null, fields: fields})
@@ -335,7 +335,7 @@ module.exports = ({app, db}) => {
         })
     });
 
-    app.post('/mc_lc/delete/:cuid', access(5), (req, res)=>{
+    app.post('/mc_lc/delete/cu/:cuid', access(5), (req, res)=>{
         db.api.mc_lc.deleteByCuid(req.params.cuid, (err, resaff, fields)=>{
 
             if(resaff) res.json({body: resaff, err:null, fields: fields})
