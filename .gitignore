@@ -3,3 +3,5 @@ package-lock.json
 www/*/*.js
 www/*/*.css
 www/*/*.map
+avatar/
+!avatar/.avatar
