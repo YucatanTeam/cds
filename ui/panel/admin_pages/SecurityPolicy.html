@@ -19,6 +19,8 @@
 			one special character and must be eight characters or longer.<br></p>
 		<Form bind:response=changeInfo>
 			<Input id="email" label="email" type="email" validate col="s9" />
+			<Input id="firstname" label="first name" type="text" validate col="s9" />
+			<Input id="lastname" label="last name" type="text" validate col="s9" />
 			<Input id="password" label="password" type="password" validate col="s9" />
 			<Input id="confirm" label="confirm" type="password" validate col="s9" />
 			<button class="btn waves-effect waves-light yellow white-text col s4" on:click=updateUser()>update</button>
@@ -57,17 +59,28 @@
         },
         updateUser() {
           const elemail = document.getElementById("email");
+          const elfirst = document.getElementById("firstname");
+          const ellast = document.getElementById("lastname");
           const elpassword = document.getElementById("password");
           const elconfirm = document.getElementById("confirm");
 
-          // TODO validate inputs
-          // and alert if needed
-
-          const email = elemail.value;
-          const password = elpassword.value;
-
+          const email = elemail.value ? elemail.value : null;
+          const firstname = elfirst.value ? elfirst.value : null;
+          const lastname = ellast.value ? ellast.value : null;
+          var password = elpassword.value == elconfirm.value ? elpassword.value : {err: true};
+          if(password.err) {
+            utils.toast("passwords don't match");
+            return;
+          };
+          password = password ? password : null;
           utils
-            .fetch("/user/update", { username, password, email })
+            .fetch("/user/update", { email, firstname, lastname, password })
+            .then(res => {
+                if(res.status != 200)
+                    throw "not ok";
+                else
+                   utils.toast("Done")
+            })
             .catch(err => utils.toast("something went wrong !"));
         },
         uploadAvatar() {
