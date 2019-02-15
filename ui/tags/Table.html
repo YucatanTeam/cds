@@ -69,7 +69,7 @@
                                     {/each}
                                 </td>
                             {:else}
-                                <td>{row[key]}</td>
+                                <td>{row[key].length > 10 ? row[key].slice(0, 10)+"..." : row[key]}</td>
                             {/if}
                         </td>
                     {/each}
