@@ -1,6 +1,5 @@
 
 const safe = require('./safe.js');
-
 const db = {
     connection: null,
     api: {
@@ -105,22 +104,41 @@ const db = {
         },
         /* --------------------
             COMMENTS API
-            TODO :
-                https://stackoverflow.com/questions/7296846/how-to-implement-one-to-one-one-to-many-and-many-to-many-relationships-while-de
-                https://www.w3schools.com/sql/sql_join.asp
         */
         comment: {
             getAllRelToAPost(post_id, cb){
-                // TODO use mysql join method
+                db.connection.query(`SELECT * FROM COMMENT WHERE post_id = ?`, [post_id], (err, rows)=>{
+                    if(rows.length >= 1){
+                        return cb(err, rows);
+                    } else{
+                        return cb(err, false);
+                    }
+                })
             },
             getById(id, cb){
+                db.connection.query(`SELECT * FROM COMMENT WHERE id = ?`, [id], (err, rows)=>{
+                    if(rows.length === 1){
+                        return cb(err, rows);
+                    } else{
+                        return cb(err, false);
+                    }
+                })
 
             },
             getByCuid(cuid, cb){
-
+                db.connection.query(`SELECT * FROM COMMENT WHERE cuid = ?`, [cuid], (err, rows)=>{
+                    if(rows.length === 1){
+                        return cb(err, rows);
+                    } else{
+                        return cb(err, false);
+                    }
+                })
             },
             getAll(cb){
-                db.connection.query(`SELECT * FROM comment`, [], (err, rows)=>{
+                db.connection.query(`SELECT comment.id, comment.post_id, comment.content, comment.name, comment.email, comment.status, 
+                                            comment.cuid, comment.created_at, comment.updated_at, 
+                                            post.slug FROM comment 
+                                            INNER JOIN post ON comment.post_id=post.id`, [], (err, rows)=>{
                     if(rows.length >= 1) {
                         return cb(err, rows);
                     } else {
@@ -129,50 +147,30 @@ const db = {
                 });
             },
             deleteByCuid(cuid, cb){
-                db.connection.query(`DELETE FROM comment WHERE cuid = ?`, [cuid], (err, results, fields)=>{
-                    if(results){ // found one !
-                        return cb(err, results.affectedRows, fields)
-                    } else{ // delete nothing!
-                        return cb(err, false, false)
-                    }
-                });
+                db.connection.query(`DELETE FROM comment WHERE cuid = ?`, [cuid], cb ? cb : e=>e);
             },
             deleteById(id, cb){
-                db.connection.query(`DELETE FROM comment WHERE id = ?`, [id], (err, results, fields)=>{
-                    if(results){ // found one !
-                        return cb(err, results.affectedRows, fields)
-                    } else{ // delete nothing!
-                        return cb(err, false, false)
-                    }
-                });
+                db.connection.query(`DELETE FROM comment WHERE id = ?`, [id], cb ? cb : e=>e);
             },
             deleteAll(cb){
-                db.connection.query(`DELETE * FROM comment`, [], (err, results, fields)=>{
-                    if(results){ // found one !
-                        return cb(err, results.affectedRows, fields)
-                    } else{ // delete nothing!
-                        return cb(err, false, false)
-                    }
-                });
+                db.connection.query(`DELETE * FROM comment`, [], cb ? cb : e=>e);
             },
-            block(cuid, cb){
-                db.connection.query(`UPDATE comment SET status = 0 WHERE cuid = ?`, [cuid], cb ? cb : e=>e);
+            block(id, cb){
+                db.connection.query(`UPDATE comment SET status = 0 WHERE id = ?`, [id], cb ? cb : e=>e);
             },
-            unblock(cuid, cb){
-                db.connection.query(`UPDATE comment SET status = 1 WHERE cuid = ?`, [cuid], cb ? cb : e=>e);
+            unblock(id, cb){
+                db.connection.query(`UPDATE comment SET status = 1 WHERE id = ?`, [id], cb ? cb : e=>e);
             },
             add(comment, cb){
-
+                db.connection.query(`INSERT INTO comment(post_id, content, name, email, cuid) 
+                                    VALUES(?, ?, ?, ?, ?)`, [comment.post_id, comment.content, comment.name, comment.email, comment.cuid], cb ? cb : e=>e)
             },
             update(comment, cb){
-
+                db.connection.query(`UPDATE comment SET content = ?, name = ?, email = ? WHERE id = ?`, [comment.content,comment.name,comment.email,comment.id], cb);
             },
         },
         /* ---------------------------------------------
             MIGRATION CONSULTANCY & LANGUAGE COURSES API
-            TODO : 
-                https://stackoverflow.com/questions/7296846/how-to-implement-one-to-one-one-to-many-and-many-to-many-relationships-while-de
-                https://www.w3schools.com/sql/sql_join.asp
         */
         mc_lc:{
             getAllRerlToAbroad(abroad_id, cb){
