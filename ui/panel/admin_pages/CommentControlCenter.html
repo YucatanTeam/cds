@@ -6,36 +6,46 @@
     {:then comments}
 
             <!-- ======== THIS MODAL WILL TRIGGER ON edit & create ACTION OF EACH ROW ======== -->
-            <div id="{crudindex===1 ? "modaledit" :  crudindex===0 ? "modalcreate" : "modaldelete"}" class="modal">
+            <div id="{crudindex===1 ? "modaledit" :  crudindex===0 ? "modalcreate" : crudindex===4 ? "modalblock" : crudindex===5 ? "modalunblock" : "modaldelete"}" class="modal">
                 <div class="modal-content">
                     <h4>{crudindex===1 ? "Edit" : crudindex===0 ? "Create" : ""}</h4>
                         
                         {#if crudindex === 2}
                             <h4>Confirm Delete</h4>
                             <p>Do you really want to delete the comment #{objModal.id} ?</p>
+
+                        {:elseif crudindex === 4}
+                            <h4>Confirm Block</h4>
+                            <p>Do you really want to block the comment #{objModal.id} ?</p>
+
+                        {:elseif crudindex === 5}
+                            <h4>Confirm Unblock</h4>
+                            <p>Do you really want to unblock the comment #{objModal.id} ?</p>
                         
                         {:else}
                             <div class="row">
                                 <Card col="s12 m10 offset-m1 l10 offset-l1">
-                                    <Form response={{}}>
-                                        <Input col="s12" label="Email" id="email" type="email" value={ objModal ? objModal.email : ""}/>
-                                        <Input col="s12" label="name" id="name" type="text" value={ objModal ? objModal.name : ""}/>
-                                        <textarea id="content" class="materialize-textarea">{ objModal ? objModal.content : ""}</textarea>
-                                        <label for="content">Textarea</label>
-                                    </Form>
+                                    {#if objModal}
+                                      <a href="#!">{objModal.slug}</a>
+                                        <Form response={{}}>
+                                            <Input col="s12" label="Email" id="email" type="email" value={ crudindex === 1 ? objModal.email : ""}/>
+                                            <Input col="s12" label="name" id="name" type="text" value={ crudindex === 1 ? objModal.name : ""}/>
+                                            <textarea id="content" class="materialize-textarea">{ crudindex === 1 ? objModal.content : ""}</textarea>
+                                            <label for="content">Content</label>
+                                        </Form>
+                                    {/if}
                                 </Card>
                             </div>
                         {/if}
                 </div>
                 <div class="modal-footer">
-                    <button class="modal-close waves-effect waves-green btn-flat" on:click="action(objModal)">{crudindex===1 ? "Update" : crudindex===0 ? "Add" : "Delete"}</button>
+                    <button class="modal-close waves-effect waves-green btn-flat" on:click="action(objModal.id, objModal.post_id)">{crudindex===1 ? "Update" : crudindex===0 ? "Add" : crudindex===2 ? "Delete" : crudindex===4? "Block" : "Unblock"}</button>
                 </div>
             </div>
 
-    <!-- TODO add timeago -->
-        <Table highlight rows={6}
+        <Table highlight rows={5}
             on:modal="open(event)"
-            content={comments} 
+            content={comments}
             search={["name", "content", "email", "cuid", "id", "post_id"]}
             actions={[
                                             /* ------------------------------------------
@@ -43,7 +53,7 @@
                                             ------------------------------------------
                                             */
                     // ==============================================================================================
-                    // CREATE : only for dev ( must chek on server side using user access inside comment api routes )
+                    // CREATE : only for dev
                     // ==============================================================================================
                     {icon: "fiber_new",tooltip: "create", action(obj, component) {
                             var index = 0
@@ -68,31 +78,21 @@
                         }
                     }, 
                     // ==============================================================================================
-                    // BLOCK/UNBLOCK STATUS
+                    // BLOCK STATUS
                     // ==============================================================================================
                     {icon: "block",tooltip: "block", action(obj, component) {
-
-                            
+                                var index = 4
+                                component.fire("modal", {obj, index})
                         }
                     },
                     // ==============================================================================================
-                    // DELETE ALL COMMENTS
+                    // UNBLOCK STATUS
                     // ==============================================================================================
-                    {icon: "delete_forever",tooltip: "delete all", action(obj, component) {
-
-                            // TODO delete all comments !!    
-                            
+                    {icon: "beenhere",tooltip: "unblock", action(obj, component) {
+                                var index = 5
+                                component.fire("modal", {obj, index})
                         }
-                    },
-                    // ==============================================================================================
-                    // SHOW RELATED POST
-                    // ==============================================================================================
-                    {icon: "import_contacts",tooltip: "show related post", action(obj, component) {
-
-                            // TODO show the post info in modal !!
-                            
-                        }
-                    }, 
+                    } 
                 ]}
         />
     {:catch err}
@@ -105,21 +105,19 @@ export default {
     data(){
         return {
             objModal: null,
-            crudindex: 0, // 1 : edit , 0 : create , 2 : delete
+            crudindex: 0, // 1 : edit , 0 : create , 2 : delete , 4 : block , 5 : unblock
             getcomments: utils.fetch("/comment/getAll")
             .then(response => {
                     var comments = response.body;
                     var rows = [];
                     for(var cmnt of comments) {
-                            // [ CREATE , DELETE , EDIT , BLOCK/UNBLOCK STATUS ]
-                            // only dev can create new comment
+                            // [ CREATE , DELETE , EDIT , BLOCK , UNBLOCK ]
                             cmnt.actions = [
-                                [7].includes(cdsuser.access), 
+                                [7].includes(cdsuser.access), // only dev can create new comment
                                 [5, 7].includes(cdsuser.access), 
-                                [3, 5, 7].includes(cdsuser.access), 
-                                [5, 7].includes(cdsuser.access),
-                                [3, 5, 7].includes(cdsuser.access),
-                                [3, 5, 7].includes(cdsuser.access),
+                                [3, 5, 7].includes(cdsuser.access), // dev , admin and mod can edit the comment 
+                                [5, 7].includes(cdsuser.access) && cmnt.status === 1,
+                                [5, 7].includes(cdsuser.access) && cmnt.status === 0,
 
                             ]
                             rows.push(cmnt);
@@ -136,26 +134,71 @@ export default {
             var instances = M.Modal.init(elems, {});
             instances.open();
         },
-        action(obj){
+        action(id, post_id){
+            
             var {crudindex} = this.get()
-            if(crudindex === 1 || crudindex === 0){
-                utils.fetch("/comment/edit", obj).then((res)=>{
+            // get down the road with crudindex!!!
+            if(crudindex === 1){
+                const elname = document.getElementById("name");
+                const elemail = document.getElementById("email");
+                const elcontent = document.getElementById("content");
+
+                const name = elname.value ? elname.value : null;
+                const email = elemail.value ? elemail.value : null;
+                const content = elcontent.value ? elcontent.value : null;
+                
+                utils.fetch("/comment/edit", {name, email, content, id}).then((res)=>{
                     if(res.status!=200){
-                        return utils.toast("something went wrong !")
+                        utils.toast("something went wrong !")
                     } else{
                         utils.toast("Done")
                         utils.reload()
                     }
-               })
+               }).catch(err => utils.toast("something went wrong !"));
+            } else if(crudindex === 0){
+                const elname = document.getElementById("name");
+                const elemail = document.getElementById("email");
+                const elcontent = document.getElementById("content");
+
+                const name = elname.value ? elname.value : null;
+                const email = elemail.value ? elemail.value : null;
+                const content = elcontent.value ? elcontent.value : null;
+
+                utils.fetch("/comment/add", {name, email, content, id, post_id}).then((res)=>{
+                    if(res.status!=200){
+                        utils.toast("something went wrong !")
+                    } else{
+                        utils.toast("Done")
+                        utils.reload()
+                    }
+               }).catch(err => utils.toast("something went wrong !"));
+            } else if(crudindex === 4){
+                utils.fetch(`/comment/block/${id}`, {}).then((res)=>{
+                    if(res.status!=200){
+                        utils.toast("something went wrong !")
+                    } else{
+                        utils.toast("Done")
+                        utils.reload()
+                    }
+                }).catch(err => utils.toast("something went wrong !"));
+            } else if(crudindex === 5){
+                utils.fetch(`/comment/unblock/${id}`, {}).then((res)=>{
+                    if(res.status!=200){
+                        utils.toast("something went wrong !")
+                    } else{
+                        utils.toast("Done")
+                        utils.reload()
+                    }
+                }).catch(err => utils.toast("something went wrong !"));
             } else{
-                utils.fetch("/comment/delete/cu", obj.cuid).then((res)=>{
+                utils.fetch(`/comment/delete/${id}`, {}).then((res)=>{
                     if(res.status!=200){
-                        return utils.toast("something went wrong !")
+                        utils.toast("something went wrong !")
                     } else{
                         utils.toast("Done")
                         utils.reload()
                     }
-               })
+               }).catch(err => utils.toast("something went wrong !"));
             }
             
         }
