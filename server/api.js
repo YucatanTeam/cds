@@ -1,5 +1,5 @@
 const fs = require("fs");
-
+const cuid = require("cuid"); // use this to create a cuid in insertaion ops
 require('svelte/ssr/register'); // for svelte server side rendering
 const express = require('express')
 const passport = require('passport');
@@ -254,15 +254,14 @@ module.exports = ({app, db}) => {
     
     // ------------
     // comment routes
-    // TODO use dev.report
     // ------------
     app.get('/comment/getAllRelToAPost/:id', access(5), (req, res)=>{ // usage : recommended for client side
         db.api.comment.getAllRelToAPost(req.params.id, (err, rows)=>{
 
-            if(rows) res.json({body: rows, err:null})
+            if(rows) return res.json({body: rows, err:null})
             if(err) {
                 dev.report(err);
-                res.status(404).end("Nothing Found !");
+                return res.status(404).end("Nothing Found !");
             }
         })
     });
@@ -270,55 +269,113 @@ module.exports = ({app, db}) => {
     app.get('/comment/getAll', access(5), (req, res)=>{
         db.api.comment.getAll((err, rows)=>{
             
-            if(rows) res.json({body: rows, err:null})
+            if(rows) return res.json({body: rows, err:null})
             if(err) {
                 dev.report(err);
-                res.status(404).end("Nothing Found !");
+                return res.status(404).end("Nothing Found !");
             }
         })
     });
 
     app.post('/comment/delete/cu/:cuid', access(5), (req, res)=>{
-        db.api.comment.deleteByCuid(req.params.cuid, (err, resaff, fields)=>{
+        db.api.comment.deleteByCuid(req.params.cuid, (err, rows)=>{
 
-            if(resaff) res.json({body: resaff, err:null, fields: fields})
             if(err) {
                 dev.report(err);
-                res.status(404).end("Nothing Found !");
-            }
+                return res.status(404).end("Nothing Found !");
+            } else return res.status(200).end("OK");
         })
     });
 
     app.post('/comment/delete/:id', access(5), (req, res)=>{
-        db.api.comment.deleteById(req.params.id, (err, resaff, fields)=>{
+        db.api.comment.deleteById(req.params.id, (err, rows)=>{
 
-            if(resaff) res.json({body: resaff, err:null, fields: fields})
             if(err) {
                 dev.report(err);
-                res.status(404).end("Nothing Found !");
-            }
+                return res.status(404).end("Nothing Found !");
+            } else return res.status(200).end("OK");
         })
     });
     
     app.post('/comment/deleteAll', access(5), (req, res)=>{
-        db.api.comment.deleteAll((err, resaff, fields)=>{
+        db.api.comment.deleteAll((err, rows)=>{
             
-            if(resaff) res.json({body: resaff, err:null, fields: fields})
             if(err) {
                 dev.report(err);
-                res.status(404).end("Nothing Found !");
-            }
+                return res.status(404).end("Nothing Found !");
+            } else return res.status(200).end("OK");
+        })
+    });
+
+    app.post('/comment/block/:id', access(5), (req, res)=>{
+        db.api.comment.block(req.params.id, (err, row)=>{
+
+            if(err) {
+                dev.report(err);
+                return res.status(404).end("Nothing Found !");
+            } else return res.status(200).end("OK");
+        })
+    });
+
+    app.post('/comment/unblock/:id', access(5), (req, res)=>{
+        db.api.comment.unblock(req.params.id, (err, row)=>{
+
+            if(err) {
+                dev.report(err);
+                return res.status(404).end("Nothing Found !");
+            } else return res.status(200).end("OK");
         })
     });
 
     app.post('/comment/edit', access(5), (req, res)=>{
-        // TODO validate req.body using validate.js
-        console.log(req.body)
+        for(var i in req.body) {
+            if(req.body[i] == null) delete req.body[i]
+        }
+        db.api.comment.getById(req.body.id, (err, cmnt)=>{
+            if(err) {
+                dev.report(err);
+                return res.status(404).end("Nothing Found !");
+            }
+            var newcomment = { // TODO : validate and sanitize here
+                id : req.body.id ? req.body.id : cmnt.id,
+                content : req.body.content ? req.body.content : cmnt.content,
+                name : req.body.name ? req.body.name : cmnt.name,
+                email : req.body.email ? req.body.email : cmnt.email
+            }
+
+            db.api.comment.update(newcomment, (err, row)=>{
+                if(err) {
+                    dev.report(err);
+                    return res.status(500).end("Internal Server Error !");
+                } else return res.status(200).end("OK");
+            })
+
+        })
     })
 
     app.post('/comment/add', access(5), (req, res)=>{
-        // TODO validate req.body using validate.js
-        console.log(req.body)
+        for(var i in req.body){
+            if(req.body[i] == null) {
+                delete req.body[i] 
+                return res.status(411).end("Length Required !");
+            } 
+        }
+            
+            var newcomment = { // TODO : validate and sanitize here
+                cuid: cuid(),
+                content : req.body.content,
+                name : req.body.name,
+                email : req.body.email,
+                post_id : req.body.post_id
+            }
+        
+        db.api.comment.add(newcomment, (err, row)=>{
+            if(err) {
+                dev.report(err);
+                return res.status(500).end("Internal Server Error !");
+            } else return res.status(200).end("OK");
+        })
+            
     })
 
 
@@ -326,15 +383,14 @@ module.exports = ({app, db}) => {
 
     // ------------
     // mc_lc routes
-    // TODO use dev.report
     // ------------
     app.get('/mc_lc/getAllRerlToAbroad/:id', access(5), (req, res)=>{
         db.api.mc_lc.getAllRerlToAbroad(req.params.id, (err, rows)=>{
 
-            if(rows) res.json({body: rows, err:null})
+            if(rows) return res.json({body: rows, err:null})
             if(err) {
                 dev.report(err);
-                res.status(404).end("Nothing Found !");
+                return res.status(404).end("Nothing Found !");
             }
         });
     });
@@ -342,10 +398,10 @@ module.exports = ({app, db}) => {
     app.get('/mc_lc/getAll', access(5), (req, res)=>{
         db.api.mc_lc.getAll((err, rows)=>{
 
-            if(rows) res.json({body: rows, err:null})
+            if(rows) return res.json({body: rows, err:null})
             if(err) {
                 dev.report(err);
-                res.status(404).end("Nothing Found !");
+                return res.status(404).end("Nothing Found !");
             }
         })
     });
@@ -353,10 +409,10 @@ module.exports = ({app, db}) => {
     app.post('/mc_lc/delete/cu/:cuid', access(5), (req, res)=>{
         db.api.mc_lc.deleteByCuid(req.params.cuid, (err, resaff, fields)=>{
 
-            if(resaff) res.json({body: resaff, err:null, fields: fields})
+            if(resaff) return res.json({body: resaff, err:null, fields: fields})
             if(err) {
                 dev.report(err);
-                res.status(404).end("Nothing Found !");
+                return res.status(404).end("Nothing Found !");
             }
         })
     });
@@ -364,10 +420,10 @@ module.exports = ({app, db}) => {
     app.post('/mc_lc/delete/:id', access(5), (req, res)=>{
         db.api.mc_lc.deleteById(req.params.id, (err, resaff, fields)=>{
 
-            if(resaff) res.json({body: resaff, err:null, fields: fields})
+            if(resaff) return res.json({body: resaff, err:null, fields: fields})
             if(err) {
                 dev.report(err);
-                res.status(404).end("Nothing Found !");
+                return res.status(404).end("Nothing Found !");
             }
         })
     });
@@ -375,10 +431,10 @@ module.exports = ({app, db}) => {
     app.post('/mc_lc/deleteAll', access(5), (req, res)=>{
         db.api.mc_lc.deleteAll((err, resaff, fields)=>{
 
-            if(resaff) res.json({body: resaff, err:null, fields: fields})
+            if(resaff) return res.json({body: resaff, err:null, fields: fields})
             if(err) {
                 dev.report(err);
-                res.status(404).end("Nothing Found !");
+                return res.status(404).end("Nothing Found !");
             }
         })
     });
@@ -397,7 +453,6 @@ module.exports = ({app, db}) => {
 
     // -------------
     // abroad routes
-    // TODO use dev.report
     // -------------
 
 
@@ -407,15 +462,14 @@ module.exports = ({app, db}) => {
 
     // -------------
     // cert routes
-    // TODO use dev.report
     // -------------
     app.get('/cert/getAll', access(5), (req, res)=>{
         db.api.cert.getAll((err, rows)=>{
 
-            if(rows) res.json({body: rows, err:null})
+            if(rows) return res.json({body: rows, err:null})
             if(err) {
                 dev.report(err);
-                res.status(404).end("Nothing Found !");
+                return res.status(404).end("Nothing Found !");
             }
         });
     });
