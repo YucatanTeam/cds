@@ -26,7 +26,9 @@
                             <div class="row">
                                 <Card col="s12 m10 offset-m1 l10 offset-l1">
                                     {#if objModal}
+                                    <!-- TODO : complete this when post implemented ! add some style. -->
                                       <a href="#!">{objModal.slug}</a>
+                                       <hr>
                                         <Form response={{}}>
                                             <Input col="s12" label="Email" id="email" type="email" value={ crudindex === 1 ? objModal.email : ""}/>
                                             <Input col="s12" label="name" id="name" type="text" value={ crudindex === 1 ? objModal.name : ""}/>
@@ -120,6 +122,10 @@ export default {
                                 [5, 7].includes(cdsuser.access) && cmnt.status === 0,
 
                             ]
+                            // cmnt.created_at = moment(cmnt.created_at.slice(0,10).replace(/-/g,"")).fromNow()
+                            // cmnt.updated_at = moment(cmnt.updated_at.slice(0,10).replace(/-/g,"")).fromNow()
+                            cmnt.created_at = moment(cmnt.created_at).fromNow()
+                            cmnt.updated_at = moment(cmnt.updated_at).fromNow()
                             rows.push(cmnt);
                     }
                     return rows;
