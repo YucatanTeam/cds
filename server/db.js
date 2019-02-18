@@ -170,9 +170,9 @@ const db = {
             },
         },
         /* ---------------------------------------------
-            MIGRATION CONSULTANCY & LANGUAGE COURSES API
+            BODY AND TAB API
         */
-        mc_lc:{
+        body:{
             getAllRerlToAbroad(abroad_id, cb){
                  
             },
@@ -229,79 +229,8 @@ const db = {
             },
             update(mclc, cb){
                 
-            }
-
-            
+            }  
         },
-        /* -----------------
-            ABROAD API
-        */
-        abroad:{
-            add(abroad, cb){
-
-            },
-            getAll(cb){
-
-            },
-            getById(id, cb){
-
-            },
-            getByCuid(cuid, cb){
-
-            },
-            deleteAll(cb){
-
-            },
-            deleteByCuid(cuid, cb){
-
-            },
-            deleteById(id, cb){
-
-            },
-            block(cuid, cb){
-                db.connection.query(`UPDATE abroad SET status = 0 WHERE cuid = ?`, [cuid], cb ? cb : e=>e);
-            },
-            unblock(cuid, cb){
-                db.connection.query(`UPDATE abroad SET status = 1 WHERE cuid = ?`, [cuid], cb ? cb : e=>e);
-            },
-            update(abroad, cb){
-
-            }
-
-        },
-        /* -----------------
-            CERT API
-        */
-       cert:{
-            getAll(cb){
-                db.connection.query(`SELECT * FROM cert`, [], (err, rows)=>{
-                    if(rows.length >= 1) {
-                        return cb(err, rows);
-                    } else {
-                        return cb(err, false);
-                    }
-                });
-            },
-            getById(id, cb){
-
-            },
-            getByCuid(cuid, cb){
-
-            },
-            delete(id, cb){
-
-            },
-            update(id, cb){
-
-            },
-            block(cuid, cb){
-                db.connection.query(`UPDATE cert SET status = 0 WHERE cuid = ?`, [cuid], cb ? cb : e=>e);
-            },
-            unblock(cuid, cb){
-                db.connection.query(`UPDATE cert SET status = 1 WHERE cuid = ?`, [cuid], cb ? cb : e=>e);
-            },
-       },
-
     }
 }
 
