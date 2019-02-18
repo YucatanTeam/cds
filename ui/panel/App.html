@@ -2,9 +2,6 @@
 	<title>{title}</title>
 </svelte:head>
 
-<!-- TODO fix sidenav bug ; it's very big can't see other route link!!! -->
-<!-- TODO we have to implement different links and routes contents based on user access -->
-
 <div class="row">
 	<Sidenav background="/public/img/cds.svg" fixed>
 		{#await getuser}
@@ -26,11 +23,9 @@
 
 <script>
 	import SecurityPolicy from "./admin_pages/SecurityPolicy.html";
-	import CandoServices from "./admin_pages/CandoServices.html";
 	import AccessControlCenter from "./admin_pages/AccessControlCenter.html";
-	import AbroadControlCenter from "./admin_pages/AbroadControlCenter.html";
+	import BodyContentControlCenter from "./admin_pages/BodyContentControlCenter.html";
 	import AnswerQuestionControlCenter from "./admin_pages/AnswerQuestionControlCenter.html";
-	import CertificateControlCenter from "./admin_pages/CertificateControlCenter.html";
 	import ConsultancyServices from "./admin_pages/ConsultancyServices.html";
 	import MagazineControlCenter from "./admin_pages/MagazineControlCenter.html";
 	import TelegramBot from "./admin_pages/TelegramBot.html";
@@ -38,6 +33,7 @@
 	import StudentControlCenter from "./admin_pages/StudentControlCenter.html";
 	import CommentControlCenter  from "./admin_pages/CommentControlCenter.html";
 	import DatabaseControlCenter from "./dev_pages/DatabaseControlCenter.html";
+	import BankPortal from "./admin_pages/BankPortal.html";
 
 	const utils = {
 		// to follow redirect after a fetch
@@ -136,18 +132,17 @@
 					}),
 				title: "CDS-PANEL",
 				routes: {
-					"SecurityPolicy":				{access: [2, 3, 5, 7], icon: "security", page: SecurityPolicy},
-					"Cando Services":				{access: [], icon: "store", page: CandoServices},
+					"Security Policy":				{access: [2, 3, 5, 7], icon: "security", page: SecurityPolicy},
 					"Access Control Center":		{access: [5, 7], icon: "account_circle", page: AccessControlCenter},
-					"Abroad Control Center":		{access: [5, 7], icon: "language", page: AbroadControlCenter},
-					"FAQ Controll Center":			{access: [], icon: "question_answer", page: AnswerQuestionControlCenter},
-					"Certificate Control Center":	{access: [], icon: "fingerprint", page: CertificateControlCenter},
-					"Consultancy Services":			{access: [], icon: "live_help", page: ConsultancyServices},
+					"Body Content Control Center":	{access: [5, 7], icon: "sort", page: BodyContentControlCenter},
 					"Magazine Control Center":		{access: [], icon: "import_contacts", page: MagazineControlCenter},
+					"Comment Control Center":		{access: [5, 7], icon: "comment", page: CommentControlCenter},
+					"FAQ Control Center":			{access: [], icon: "question_answer", page: AnswerQuestionControlCenter},
+					"Consultancy Services":			{access: [], icon: "live_help", page: ConsultancyServices},
 					"Telegram Bot":					{access: [], icon: "send", page: TelegramBot},
 					"Live Chat":					{access: [], icon: "chat", page: LiveChat},
 					"Student Control Center":		{access: [], icon: "assignment_ind", page: StudentControlCenter},
-					"Comment Control Center":		{access: [5, 7], icon: "comment", page: CommentControlCenter},
+					"Bank Portal":					{access: [], icon: "account_balance", page: DatabaseControlCenter},
 					"Database Control Center":		{access: [], icon: "storage", page: DatabaseControlCenter},
 				}
 			};

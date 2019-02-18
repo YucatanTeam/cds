@@ -5,7 +5,7 @@
         <Loading small/>
     {:then comments}
 
-            <!-- ======== THIS MODAL WILL TRIGGER ON edit & create ACTION OF EACH ROW ======== -->
+            <!-- ======== THIS MODAL WILL TRIGGER ON EACH ACTION ======== -->
             <div id="{crudindex===1 ? "modaledit" :  crudindex===0 ? "modalcreate" : crudindex===4 ? "modalblock" : crudindex===5 ? "modalunblock" : "modaldelete"}" class="modal">
                 <div class="modal-content">
                     <h4>{crudindex===1 ? "Edit" : crudindex===0 ? "Create" : ""}</h4>
@@ -26,7 +26,7 @@
                             <div class="row">
                                 <Card col="s12 m10 offset-m1 l10 offset-l1">
                                     {#if objModal}
-                                    <!-- TODO : complete this when post implemented ! add some style. -->
+                                    <!-- TODO : complete this when post page implemented ! add some style. -->
                                       <a href="#!">{objModal.slug}</a>
                                        <hr>
                                         <Form response={{}}>

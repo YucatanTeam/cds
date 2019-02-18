@@ -1,0 +1,46 @@
+
+<!-- TODO : migration consultancy - language courses - 
+            cando services - cando certificate - 
+            cando contact us and footer -->
+
+<!-- TODO : // BIG PROBLEM // ckeditor -->
+
+<!-- TODO : use utils.followRedirect() -->
+
+<div class="row">
+    {#await getbodycontent}
+        <Loading small/>
+    {:then body}
+
+
+        {#each body as b}
+            <p>{b.content}</p>
+        {/each}
+
+
+    {:catch err}
+        <p>Error {err.code}</p>
+    {/await}
+</div>
+<script>
+export default {
+    data(){
+        return {
+            getbodycontent: utils.fetch("")
+            .then(r=>r.body)
+            .catch(err => utils.toast("something went wrong !")),
+        }
+    },
+    methods:{
+
+    },
+    components:{
+        Loading: "../../tags/Loading.html",
+        Table: "../../tags/Table.html",
+        Card: "../../tags/Card.html",
+        Form: "../../tags/Form.html",
+        Input: "../../tags/Input.html"
+    }
+
+}
+</script>
