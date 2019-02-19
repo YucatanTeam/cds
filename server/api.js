@@ -255,7 +255,7 @@ module.exports = ({app, db}) => {
     // --------------
     // comment routes
     // --------------
-    app.get('/comment/getAllRelToAPost/:id', access(5), (req, res)=>{ // usage : recommended for client side
+    app.get('/comment/getAllRelToAPost/:id', (req, res)=>{
         db.api.comment.getAllRelToAPost(req.params.id, (err, rows)=>{
 
             if(rows) return res.json({body: rows, err:null})
@@ -266,7 +266,7 @@ module.exports = ({app, db}) => {
         })
     });
 
-    app.get('/comment/getAll', access(5), (req, res)=>{
+    app.get('/comment/getAll', access(3), (req, res)=>{
         db.api.comment.getAll((err, rows)=>{
             
             if(rows) return res.json({body: rows, err:null})
@@ -277,7 +277,7 @@ module.exports = ({app, db}) => {
         })
     });
 
-    app.post('/comment/delete/cu/:cuid', access(5), (req, res)=>{
+    app.post('/comment/delete/cu/:cuid', access(3), (req, res)=>{
         db.api.comment.deleteByCuid(req.params.cuid, (err, rows)=>{
 
             if(err) {
@@ -287,7 +287,7 @@ module.exports = ({app, db}) => {
         })
     });
 
-    app.post('/comment/delete/:id', access(5), (req, res)=>{
+    app.post('/comment/delete/:id', access(3), (req, res)=>{
         db.api.comment.deleteById(req.params.id, (err, rows)=>{
 
             if(err) {
@@ -297,7 +297,7 @@ module.exports = ({app, db}) => {
         })
     });
     
-    app.post('/comment/deleteAll', access(5), (req, res)=>{
+    app.post('/comment/deleteAll', access(3), (req, res)=>{
         db.api.comment.deleteAll((err, rows)=>{
             
             if(err) {
@@ -307,7 +307,7 @@ module.exports = ({app, db}) => {
         })
     });
 
-    app.post('/comment/block/:id', access(5), (req, res)=>{
+    app.post('/comment/block/:id', access(3), (req, res)=>{
         db.api.comment.block(req.params.id, (err, row)=>{
 
             if(err) {
@@ -317,7 +317,7 @@ module.exports = ({app, db}) => {
         })
     });
 
-    app.post('/comment/unblock/:id', access(5), (req, res)=>{
+    app.post('/comment/unblock/:id', access(3), (req, res)=>{
         db.api.comment.unblock(req.params.id, (err, row)=>{
 
             if(err) {
@@ -327,7 +327,7 @@ module.exports = ({app, db}) => {
         })
     });
 
-    app.post('/comment/edit', access(5), (req, res)=>{
+    app.post('/comment/edit', access(3), (req, res)=>{
         for(var i in req.body) {
             if(req.body[i] == null) delete req.body[i]
         }
@@ -353,7 +353,7 @@ module.exports = ({app, db}) => {
         })
     })
 
-    app.post('/comment/add', access(5), (req, res)=>{
+    app.post('/comment/add', access(3), (req, res)=>{
         for(var i in req.body){
             if(req.body[i] == null) {
                 delete req.body[i] 

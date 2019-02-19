@@ -2,6 +2,9 @@
 	<title>{title}</title>
 </svelte:head>
 
+
+<!-- TODO : implement logout btn ! -->
+
 <div class="row">
 	<Sidenav background="/public/img/cds.svg" fixed>
 		{#await getuser}
@@ -134,9 +137,9 @@
 				routes: {
 					"Security Policy":				{access: [2, 3, 5, 7], icon: "security", page: SecurityPolicy},
 					"Access Control Center":		{access: [5, 7], icon: "account_circle", page: AccessControlCenter},
-					"Body Content Control Center":	{access: [5, 7], icon: "sort", page: BodyContentControlCenter},
+					"Body Content Control Center":	{access: [3, 5, 7], icon: "sort", page: BodyContentControlCenter},
 					"Magazine Control Center":		{access: [], icon: "import_contacts", page: MagazineControlCenter},
-					"Comment Control Center":		{access: [5, 7], icon: "comment", page: CommentControlCenter},
+					"Comment Control Center":		{access: [3, 5, 7], icon: "comment", page: CommentControlCenter},
 					"FAQ Control Center":			{access: [], icon: "question_answer", page: AnswerQuestionControlCenter},
 					"Consultancy Forms":			{access: [], icon: "live_help", page: ConsultancyForms},
 					"Telegram Bot":					{access: [], icon: "send", page: TelegramBot},
