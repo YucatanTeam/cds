@@ -25,6 +25,7 @@
 </div>
 
 <script>
+	import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
 	import SecurityPolicy from "./admin_pages/SecurityPolicy.html";
 	import AccessControlCenter from "./admin_pages/AccessControlCenter.html";
 	import BodyContentControlCenter from "./admin_pages/BodyContentControlCenter.html";
@@ -123,6 +124,15 @@
 			M.AutoInit();
 			window.utils = utils;
 			window.page = this;
+			DecoupledEditor
+					.create( document.querySelector( '#editor' ) )
+					.then( editor => {
+						const toolbarContainer = document.getElementById( '#toolbar-container' );
+						toolbarContainer.appendChild( editor.ui.view.toolbar.element );
+					})
+					.catch( error => {
+						console.error( error );
+					});
 		},
 	  	data() {
 			return {
@@ -151,6 +161,8 @@
 			};
 		},
 		methods: {
+			// to understand the process of load method see following link
+			// https://svelte.technology/guide#understanding-svelte-components
 			load(page) {
 				const {currentPage, routes} = this.get();
 				if(routes[page].access.includes(cdsuser.access)) {
