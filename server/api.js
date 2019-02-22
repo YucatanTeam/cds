@@ -387,8 +387,106 @@ module.exports = ({app, db}) => {
     // slug: req.body.slug.replace(/ /g,"-") 
     // en_slug: slug(req.body.en_slug.toLowerCase(), { lowercase: true })
 
+    app.get('/body/getAll', access(3), (req, res)=>{
+        db.api.body.getAll((err, rows)=>{
+            
+            if(rows) return res.json({body: rows, err:null})
+            if(err) {
+                dev.report(err);
+                return res.status(404).end("Nothing Found !");
+            }
+        })
+    });
+
+    app.post('/body/add', access(3), (req, res)=>{
 
 
+
+
+    });
+    
+    app.post('/body/edit', access(3), (req, res)=>{
+
+
+
+        
+    });
+
+
+    app.post('/body/block/:id', access(3), (req, res)=>{
+        db.api.body.block(req.params.id, (err, row)=>{
+
+            if(err) {
+                dev.report(err);
+                return res.status(404).end("Nothing Found !");
+            } else return res.status(200).end("OK");
+        })
+    });
+    
+    
+    app.post('/body/unblock/:id', access(3), (req, res)=>{
+        db.api.body.unblock(req.params.id, (err, row)=>{
+            
+            if(err) {
+                dev.report(err);
+                return res.status(404).end("Nothing Found !");
+            } else return res.status(200).end("OK");
+        })
+    });
+    
+    app.post('/body/delete/:id', access(3), (req, res)=>{
+        db.api.body.deleteById(req.params.id, (err, rows)=>{
+
+            if(err) {
+                dev.report(err);
+                return res.status(404).end("Nothing Found !");
+            } else return res.status(200).end("OK");
+        })
+    });
+    
+    app.post('/tab/block/:id', access(3), (req, res)=>{
+        db.api.tab.block(req.params.id, (err, row)=>{
+
+            if(err) {
+                dev.report(err);
+                return res.status(404).end("Nothing Found !");
+            } else return res.status(200).end("OK");
+        })
+    });
+    
+    app.post('/tab/unblock/:id', access(3), (req, res)=>{
+        db.api.tab.unblock(req.params.id, (err, row)=>{
+
+            if(err) {
+                dev.report(err);
+                return res.status(404).end("Nothing Found !");
+            } else return res.status(200).end("OK");
+        })
+    });
+
+    app.post('/tab/delete/:id', access(3), (req, res)=>{
+        db.api.tab.deleteById(req.params.id, (err, rows)=>{
+
+            if(err) {
+                dev.report(err);
+                return res.status(404).end("Nothing Found !");
+            } else return res.status(200).end("OK");
+        })
+    });
+
+    app.post('/tab/add', access(3), (req, res)=>{
+
+
+
+
+    });
+    
+    app.post('/tab/edit', access(3), (req, res)=>{
+
+
+
+        
+    });
 
 
 

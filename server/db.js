@@ -169,67 +169,104 @@ const db = {
                 db.connection.query(`UPDATE comment SET content = ?, name = ?, email = ? WHERE id = ?`, [comment.content,comment.name,comment.email,comment.id], cb);
             },
         },
-        /* ---------------------------------------------
-            BODY AND TAB API
+        /* ----------
+            BODY API
         */
         body:{
-            getAllRerlToAbroad(abroad_id, cb){
-                 
+            block(id, cb){
+                db.connection.query(`UPDATE body SET status = 0 WHERE id = ?`, [id], cb ? cb : e=>e);
             },
-            getById(id, cb){
-
+            unblock(id, cb){
+                db.connection.query(`UPDATE body SET status = 1 WHERE id = ?`, [id], cb ? cb : e=>e);
             },
-            getByCuid(cuid, cb){
-
+            deleteById(id, cb){
+                db.connection.query(`DELETE FROM body WHERE id = ?`, [id], cb ? cb : e=>e);
+            },
+            deleteByCuid(cuid, cb){
+                db.connection.query(`DELETE FROM body WHERE cuid = ?`, [cuid], cb ? cb : e=>e);
             },
             getAll(cb){
-                db.connection.query(`SELECT * FROM mc_lc`, [], (err, rows)=>{
+                db.connection.query(`SELECT body.id, body.cuid, body.tab_id, body.content, body.en_content, body.slug, body.en_slug, 
+                body.tags, body.en_tags, body.status as bodySTATUS, tab.status as tabSTATUS, body.created_at, body.updated_at,  
+                tab.country_name, tab.country_en_name, tab.title, tab.en_title
+                FROM body 
+                INNER JOIN tab ON body.tab_id=tab.id`, [], (err, rows)=>{
                     if(rows.length >= 1) {
                         return cb(err, rows);
                     } else {
                         return cb(err, false);
                     }
                 });
-            },
-            block(cuid, cb){
-                db.connection.query(`UPDATE mc_lc SET status = 0 WHERE cuid = ?`, [cuid], cb ? cb : e=>e);
-            },
-            unblock(cuid, cb){
-                db.connection.query(`UPDATE mc_lc SET status = 1 WHERE cuid = ?`, [cuid], cb ? cb : e=>e);
-            },
-            deleteByCuid(cuid, cb){
-                db.connection.query(`DELETE FROM mc_lc WHERE cuid = ?`, [cuid], (err, results, fields)=>{
-                    if(results){ // found one !
-                        return cb(err, results.affectedRows, fields)
-                    } else{ // delete nothing!
-                        return cb(err, false, false)
-                    }
-                });
-            },
-            deleteById(id, cb){
-                db.connection.query(`DELETE FROM mc_lc WHERE id = ?`, [id], (err, results, fields)=>{
-                    if(results){ // found one !
-                        return cb(err, results.affectedRows, fields)
-                    } else{ // delete nothing!
-                        return cb(err, false, false)
-                    }
-                });
-            },
+            }, 
             deleteAll(cb){
-                db.connection.query(`DELETE * FROM mc_lc`, [], (err, results, fields)=>{
-                    if(results){ // found one !
-                        return cb(err, results.affectedRows, fields)
-                    } else{ // delete nothing!
-                        return cb(err, false, false)
-                    }
-                });
+                db.connection.query(`DELETE * FROM body`, [], cb ? cb : e=>e);
             },
-            add(mclc, cb){
+            getById(id, cb){
+        
+            },
+            getByCuid(cuid, cb){
+        
+            },
+            add(body, cb){
 
             },
-            update(mclc, cb){
-                
-            }  
+            update(body, cb){
+               
+            },
+        },
+        /* ----------
+        BODY API
+        */
+       tab:{
+            block(id, cb){
+                db.connection.query(`UPDATE tab SET status = 0 WHERE id = ?`, [id], [], (err, rows)=>{
+                    if(rows) {
+                        db.connection.query(`UPDATE body SET status = 0 WHERE id = ?`, [id], [], (err, rows)=>{
+                            if(rows){
+                                return cb(err, rows);
+                            } else{
+                                return cb(err, false);
+                            }
+                        })
+                    }
+                });
+            },
+            unblock(id, cb){
+                db.connection.query(`UPDATE tab SET status = 1 WHERE id = ?`, [id], [], (err, rows)=>{
+                    if(rows) {
+                        db.connection.query(`UPDATE body SET status = 1 WHERE id = ?`, [id], [], (err, rows)=>{
+                            if(rows){
+                                return cb(err, rows);
+                            } else{
+                                return cb(err, false);
+                            }
+                        })
+                    }
+                });
+            },
+            deleteById(id, cb){ 
+                // allows you to delete data from child table
+                // automatically when you delete the data from the parent table.
+                // so when we delete a tab from table the corresponding 
+                // records in the child table will automatically be deleted.
+                db.connection.query(`DELETE FROM tab WHERE id = ?`, [id], cb ? cb : e=>e);
+            },
+            deleteAll(cb){
+                // it'll delete all data from child table to
+                db.connection.query(`DELETE * FROM tab`, [], cb ? cb : e=>e);
+            },
+            getById(id, cb){
+        
+            },
+            getByCuid(cuid, cb){
+        
+            },
+            add(body, cb){
+
+            },
+            update(body, cb){
+               
+            },
         },
     }
 }
