@@ -1,5 +1,5 @@
 <div class="input-field {col ? "col" : "" } {col}">
-	<input id={id} type={type} class={validate ? "validate" : ""} value={value}/><!--data-length={length}-->
+	<input id={id} type={type} class={validate ? "validate" : ""} value={value} disabled={disabled ? true : false}/><!--data-length={length}-->
 	{#if label}
         <label for={id}>{label}</label>
     {/if}
@@ -15,6 +15,7 @@ export default {
             validate: false,
             helper: false,
             value: '',
+            disabled: false,
             type: 'text',
             label: null,
             id: '',
