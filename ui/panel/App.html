@@ -28,7 +28,6 @@
 	import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
 	import SecurityPolicy from "./admin_pages/SecurityPolicy.html";
 	import AccessControlCenter from "./admin_pages/AccessControlCenter.html";
-	import BodyContentControlCenter from "./admin_pages/BodyContentControlCenter.html";
 	import AnswerQuestionControlCenter from "./admin_pages/AnswerQuestionControlCenter.html";
 	import ConsultancyForms from "./admin_pages/ConsultancyForms.html";
 	import MagazineControlCenter from "./admin_pages/MagazineControlCenter.html";
@@ -147,7 +146,6 @@
 				routes: {
 					"Security Policy":				{access: [2, 3, 5, 7], icon: "security", page: SecurityPolicy},
 					"Access Control Center":		{access: [5, 7], icon: "account_circle", page: AccessControlCenter},
-					"Body Content Control Center":	{access: [3, 5, 7], icon: "sort", page: BodyContentControlCenter},
 					"Magazine Control Center":		{access: [], icon: "import_contacts", page: MagazineControlCenter},
 					"Comment Control Center":		{access: [3, 5, 7], icon: "comment", page: CommentControlCenter},
 					"FAQ Control Center":			{access: [], icon: "question_answer", page: AnswerQuestionControlCenter},

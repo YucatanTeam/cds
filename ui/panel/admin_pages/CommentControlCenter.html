@@ -29,6 +29,9 @@
                                     <!-- TODO : complete this when post page implemented ! add some style. -->
                                       <a href="#!">{objModal.slug}</a>
                                         <Form response={{}}>
+                                            <Input col="s12" label="cuid" id="cuid" type="text" value={ crudindex === 1 ? objModal.cuid : "" } disabled/>
+                                            <Input col="s12" label="created_at" id="created_at" type="text" value={ crudindex === 1 ? objModal.created_at : "" } disabled/>
+                                            <Input col="s12" label="updated_at" id="updated_at" type="text" value={ crudindex === 1 ? objModal.updated_at : "" } disabled/>
                                             <Input col="s12" label="Email" id="email" type="email" value={ crudindex === 1 ? objModal.email : ""}/>
                                             <Input col="s12" label="name" id="name" type="text" value={ crudindex === 1 ? objModal.name : ""}/>
                                             <textarea id="content" class="materialize-textarea">{ crudindex === 1 ? objModal.content : ""}</textarea>
@@ -42,7 +45,7 @@
                 <div class="modal-footer">
                     <button class="modal-close waves-effect waves-green btn-flat" on:click="action(objModal.id, objModal.post_id)">{crudindex===1 ? "Update" : crudindex===0 ? "Add" : crudindex===2 ? "Delete" : crudindex===4? "Block" : "Unblock"}</button>
                 </div>
-            </div>
+            </div> <!-- ======== END - MODAL ======== -->
 
         <Table highlight rows={5}
             on:modal="open(event)"
@@ -121,10 +124,18 @@ export default {
                                 [5, 7].includes(cdsuser.access) && cmnt.status === 0,
 
                             ]
-                            // cmnt.created_at = moment(cmnt.created_at.slice(0,10).replace(/-/g,"")).fromNow()
-                            // cmnt.updated_at = moment(cmnt.updated_at.slice(0,10).replace(/-/g,"")).fromNow()
-                            cmnt.created_at = moment(cmnt.created_at).fromNow()
-                            cmnt.updated_at = moment(cmnt.updated_at).fromNow()
+
+                            var cdate = cmnt.created_at.split("T")[0]
+                            var ctime = cmnt.created_at.split("T")[1].slice(0,8)
+                            cmnt.created_at = cdate + " at " + ctime 
+
+                            var udate = cmnt.updated_at.split("T")[0]
+                            var utime = cmnt.updated_at.split("T")[1].slice(0,8)
+                            cmnt.updated_at = udate + " at " + utime 
+                            
+                            // cmnt.created_at = moment(cmnt.created_at).fromNow()
+                            // cmnt.updated_at = moment(cmnt.updated_at).fromNow()
+                            
                             rows.push(cmnt);
                     }
                     return rows;

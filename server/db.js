@@ -107,7 +107,7 @@ const db = {
         */
         comment: {
             getAllRelToAPost(post_id, cb){
-                db.connection.query(`SELECT * FROM COMMENT WHERE post_id = ?`, [post_id], (err, rows)=>{
+                db.connection.query(`SELECT * FROM COMMENT WHERE post_id = ? ORDER BY created_at DESC;`, [post_id], (err, rows)=>{
                     if(rows.length >= 1){
                         return cb(err, rows);
                     } else{
@@ -138,7 +138,7 @@ const db = {
                 db.connection.query(`SELECT comment.id, comment.post_id, comment.content, comment.name, comment.email, comment.status, 
                                             comment.cuid, comment.created_at, comment.updated_at, 
                                             post.slug FROM comment 
-                                            INNER JOIN post ON comment.post_id=post.id`, [], (err, rows)=>{
+                                            INNER JOIN post ON comment.post_id=post.id ORDER BY comment.created_at DESC;`, [], (err, rows)=>{
                     if(rows.length >= 1) {
                         return cb(err, rows);
                     } else {
@@ -186,16 +186,29 @@ const db = {
                 db.connection.query(`DELETE FROM body WHERE cuid = ?`, [cuid], cb ? cb : e=>e);
             },
             getAll(cb){
-                db.connection.query(`SELECT body.id, body.cuid, body.tab_id, body.content, body.en_content, body.slug, body.en_slug, 
-                body.tags, body.en_tags, body.status as bodySTATUS, tab.status as tabSTATUS, body.created_at, body.updated_at,  
+                db.connection.query(`SELECT body.id, body.cuid, body.tab_id, body.content, 
+                body.en_content, body.slug, body.en_slug, body.status as bodySTATUS, 
+                tab.status as tabSTATUS, body.created_at, body.updated_at,  
                 tab.country_name, tab.country_en_name, tab.title, tab.en_title
                 FROM body 
-                INNER JOIN tab ON body.tab_id=tab.id`, [], (err, rows)=>{
-                    if(rows.length >= 1) {
-                        return cb(err, rows);
-                    } else {
-                        return cb(err, false);
-                    }
+                INNER JOIN tab ON body.tab_id=tab.id ORDER BY body.created_at DESC;`, [], (err, bodyrows)=>{
+                    if(bodyrows) {
+                        var rws = []
+                        for(var br of bodyrows){
+                            db.connection.query(`SELECT tag, en_tag FROM body_tag WHERE body_id = ?`, [br.id], (err, tagrows)=>{
+                                if(tagrows){
+                                    br.tags = []
+                                    br.en_tags = []
+                                    for(var tg of tagrows){
+                                        br.tags.push(tg.tag)
+                                        br.en_tags.push(tg.en_tag)
+                                    }
+                                    rws.push(br)
+                                } else return cb(err, false);
+                            });
+                        }
+                        return cb(err, rws);
+                    } else return cb(err, false);
                 });
             }, 
             deleteAll(cb){
@@ -215,10 +228,19 @@ const db = {
             },
         },
         /* ----------
-        BODY API
+            TAB API
         */
        tab:{
-            block(id, cb){
+            getAll(cb){
+                db.connection.query(`SELECT * FROM tab ORDER BY created_at DESC;`, [], (err, rows)=>{
+                    if(rows){
+                        return cb(err, rows);
+                    } else {
+                        return cb(err, false);
+                    }
+                });
+            },
+            block(id, cb){ // when a tab is blocked its content will blocked too!
                 db.connection.query(`UPDATE tab SET status = 0 WHERE id = ?`, [id], [], (err, rows)=>{
                     if(rows) {
                         db.connection.query(`UPDATE body SET status = 0 WHERE id = ?`, [id], [], (err, rows)=>{
@@ -228,10 +250,10 @@ const db = {
                                 return cb(err, false);
                             }
                         })
-                    }
+                    } else return cb(err, false);
                 });
             },
-            unblock(id, cb){
+            unblock(id, cb){ // when a tab is unblocked its content will unblocked too!
                 db.connection.query(`UPDATE tab SET status = 1 WHERE id = ?`, [id], [], (err, rows)=>{
                     if(rows) {
                         db.connection.query(`UPDATE body SET status = 1 WHERE id = ?`, [id], [], (err, rows)=>{
@@ -241,7 +263,7 @@ const db = {
                                 return cb(err, false);
                             }
                         })
-                    }
+                    } else return cb(err, false);
                 });
             },
             deleteById(id, cb){ 
