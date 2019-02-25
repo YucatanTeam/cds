@@ -103,7 +103,7 @@ module.exports = ({app, db}) => {
             lastname: req.user.lastname,
             email: req.user.email
         }
-        setTimeout(e=>res.json({body: user, err:null}), 100)
+        setTimeout(e=>res.json({body: user, err:null}), 100) // TODO remove setTimeout
     })
 
     app.get('/user/all', access(5), (req, res) => {

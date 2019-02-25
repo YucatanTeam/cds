@@ -50,7 +50,7 @@ function exit() {
     }, 1000);
 }
 
-// DEBUG not tested
+// TODO DEBUG not tested
 
 /*
 process.on('SIGTERM', () => {
