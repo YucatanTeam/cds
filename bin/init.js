@@ -10,7 +10,7 @@ const safe = require('../server/safe.js');
 const DB_HOST = process.env.DB_HOST || 'localhost';
 const DB_PORT = process.env.DB_PORT || null;
 const DB_USER = process.env.DB_USER || 'root';
-const DB_PASS = process.env.DB_PASS || 'Qwe%$[rty]*@;123'; // wildonion password
+const DB_PASS = process.env.DB_PASS || 'Qwe%$[rty]*@;123';
 const DB_NAME = process.env.DB_NAME || 'cds';
 
 
@@ -37,8 +37,6 @@ connection.connect(err => {
     en_title TEXT NOT NULL,
     content TEXT NOT NULL,
     en_content TEXT NOT NULL,
-    tags JSON NOT NULL,
-    en_tags JSON NOT NULL,
     status TINYINT NOT NULL DEFAULT 0,
     slug TEXT NOT NULL,
     en_slug TEXT NOT NULL,
@@ -47,18 +45,36 @@ connection.connect(err => {
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     cover blob NULL)ENGINE=INNODB;` ,[] ,(err, rows) => {
         if(err) errlog(err, rows)
-        else connection.query(`INSERT INTO post(title, en_title, content, en_content, tags, en_tags, slug, en_slug, cuid) VALUES(
+        else connection.query(`INSERT INTO post(title, en_title, content, en_content, slug, en_slug, cuid) VALUES(
             'اوین پست',
             'first post',
             'این اولین پست است',
             'this is the first post',
-            JSON_ARRAY('ویزا', 'کانادا'),
-            JSON_ARRAY('visa', 'canada'),
             'اولین-پست',
             'first-post',
             ?
         );` ,[cuid()] ,errlog);
     });
+    connection.query(`CREATE TABLE IF NOT EXISTS post_tag(
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        post_id INT,
+        tag TEXT NOT NULL,
+        en_tag TEXT NOT NULL,
+        cuid VARCHAR(100) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        INDEX post_ind (post_id),
+        FOREIGN KEY (post_id)
+        REFERENCES post(id)
+        ON DELETE CASCADE)ENGINE=INNODB;`, [], (err, rows)=>{
+            if(err) errlog(err, rows)
+            else connection.query(`INSERT INTO post_tag(post_id, tag, en_tag, cuid) VALUES ( 
+                            1, 
+                            "کانادا", 
+                            "canada", 
+                            ?
+                            );`, [cuid()], errlog)
+        });
     
     // ============================================= COMMENT INIT SETUP ===============================================================
     // comment table
@@ -79,7 +95,7 @@ connection.connect(err => {
         ON DELETE CASCADE)ENGINE=INNODB;` ,[] ,(err, rows) => {
             if(err) errlog(err, rows)
             else connection.query(`INSERT INTO comment(post_id, content, name, email, cuid) VALUES(
-                '1',
+                1,
                 'این پست عالی است!',
                 'wilonion',
                 'ea_pain@yahoo.com',
@@ -87,29 +103,11 @@ connection.connect(err => {
             );` ,[cuid()] ,errlog)
         });
 
-    // ================================ ABROAD CONTROL CENTER INIT SETUP ============================================================================
-    // SCHEME-EXPLANATION :
-    //      some tabs have the same structure like migration consultancy
-    //      and language courses; so our job is to organize them in such 
-    //      a way that there are no two tabs be in conflict(avoid repeating) 
-    //      together. in order to do that we need to normalize our db like following:
-    //      because these tabs are in common with their structure like slug, tags and content
-    //      so we have to create a mc_lc table to store all posts about these tabs;
-    //      something we should know is that, these tabs have their own title and abroad country,
-    //      some of their posts are in common with country name and title with each other but their slug and content are different. 
-    //      so again to normalize our db we should create a table called abroad to store our abroad countries
-    //      and their related tabs title. finally we'll put the abroad primary key as a foreign key
-    //      reference in our mc_lc table.
-    // ...
-    
-
-    // abroad table
-    // all abroad countries and their tab title !
-    // ...
-    connection.query(`CREATE TABLE IF NOT EXISTS abroad (
+    // ================================ CANDO BODY AND THEIR RELATED tabs INIT SETUP ============================================================================
+    connection.query(`CREATE TABLE IF NOT EXISTS tab (
         id INT AUTO_INCREMENT PRIMARY KEY,
-        country_name TEXT NOT NULL,
-        country_en_name TEXT NOT NULL,
+        country_name TEXT DEFAULT NULL,
+        country_en_name TEXT DEFAULT NULL,
         title TEXT NOT NULL,
         en_title TEXT NOT NULL,
         cuid VARCHAR(100) NOT NULL,
@@ -118,7 +116,7 @@ connection.connect(err => {
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP    
     )ENGINE=INNODB;` ,[] ,(err, rows) =>{
         if(err) errlog(err, rows)
-        else connection.query(`INSERT INTO abroad(country_name, country_en_name, title, en_title, cuid) VALUES(
+        else connection.query(`INSERT INTO tab(country_name, country_en_name, title, en_title, cuid) VALUES(
             'کانادا',
             'canada',
             'مهاجرت به کانادا',
@@ -127,66 +125,50 @@ connection.connect(err => {
         );` ,[cuid()] ,errlog)
     });
 
-    // migration consultancy and language courses table content
-    // all langs courses tabs(contents) related to an abroad !
-    // all migration consultancy tabs(contents) related to an abroad !
-    // ...
-    connection.query(`CREATE TABLE IF NOT EXISTS mc_lc (
+    connection.query(`CREATE TABLE IF NOT EXISTS body (
         id INT AUTO_INCREMENT PRIMARY KEY,
-        abroad_id INT,
+        tab_id INT,
         slug TEXT NOT NULL,
         en_slug TEXT NOT NULL,
         content TEXT NOT NULL,
         en_content TEXT NOT NULL,
-        tags JSON NOT NULL,
-        en_tags JSON NOT NULL,
         status TINYINT NOT NULL DEFAULT 0,
         cuid VARCHAR(100) NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        INDEX abroad_ind (abroad_id),
-        FOREIGN KEY (abroad_id)
-            REFERENCES abroad(id)
+        INDEX tab_ind (tab_id),
+        FOREIGN KEY (tab_id)
+            REFERENCES tab(id)
                 ON DELETE CASCADE)ENGINE=INNODB;` ,[] ,(err, rows) =>{
         if(err) errlog(err, rows)
-        else connection.query(`INSERT INTO mc_lc(abroad_id, slug, en_slug, content, en_content, tags, en_tags, cuid) VALUES(
-            '1',
+        else connection.query(`INSERT INTO body(tab_id, slug, en_slug, content, en_content, cuid) VALUES(
+            1,
             'نظام-آموزشی-کانادا',
             'Canadian-Education-System',
             'نظام تحصيلي در سرتاسر كانادا از استاندارد بسيار بالائي برخوردار مي‌باشد.',
             'ckeditor content goes here ...',
-            JSON_ARRAY('نظام آموزشی', 'کانادا'),
-            JSON_ARRAY('education system', 'canada'),
             ?
         );`, [cuid()], errlog)
     });
-
-    // ========================================= CANDO-CERTIFICATE INIT SETUP ===================================================================
-    // cert table
-    // ...
-    connection.query(`CREATE TABLE IF NOT EXISTS cert (
-        id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-        content TEXT NOT NULL,
-        en_content TEXT NOT NULL,
-        tags JSON NOT NULL,
-        en_tags JSON NOT NULL,
-        slug TEXT NOT NULL,
-        en_slug TEXT NOT NULL,
+    connection.query(`CREATE TABLE IF NOT EXISTS body_tag(
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        body_id INT,
+        tag TEXT NOT NULL,
+        en_tag TEXT NOT NULL,
         cuid VARCHAR(100) NOT NULL,
-        status TINYINT NOT NULL DEFAULT 0,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-        )ENGINE=INNODB;` ,[] , (err, rows)=>{
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        INDEX body_ind (body_id),
+        FOREIGN KEY (body_id)
+        REFERENCES body(id)
+        ON DELETE CASCADE)ENGINE=INNODB;`, [], (err, rows)=>{
             if(err) errlog(err, rows)
-                else connection.query(`INSERT INTO cert(content, en_content, tags, en_tags, slug, en_slug, cuid) VALUES(
-                    'گواه نوشت کندو باعث افتخار است',
-                    'ckeditor content goes here ...',
-                    JSON_ARRAY('گواه نوشت', 'کندو'),
-                    JSON_ARRAY('education system', 'canada'),
-                    'گواه-نوشت-کندو',
-                    'Cando-Certificate',
-                    ?
-                );`, [cuid()], errlog)
+            else connection.query(`INSERT INTO body_tag(body_id, tag, en_tag, cuid) VALUES ( 
+                            1, 
+                            "کانادا", 
+                            "canada", 
+                            ?
+                            );`, [cuid()], errlog)
         });
 
     // ========================================= USER INIT SETUP ===================================================================

@@ -94,8 +94,7 @@ export default {
     data() {
         return {
             location,
-            utils: window.utils,
-            confirmModal() {
+            utils: window.utils,confirmModal() {
                 return M.Modal.getInstance(document.getElementById('confirm'));
             },
             getusers: utils.fetch("/user/all")

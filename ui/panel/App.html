@@ -2,8 +2,8 @@
 	<title>{title}</title>
 </svelte:head>
 
-<!-- TODO fix sidenav bug ; it's very big can't see other route link!!! -->
-<!-- TODO we have to implement different links and routes contents based on user access -->
+
+<!-- TODO : implement logout btn ! -->
 
 <div class="row">
 	<Sidenav background="/public/img/cds.svg" fixed>
@@ -25,20 +25,18 @@
 </div>
 
 <script>
+	import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
 	import SecurityPolicy from "./admin_pages/SecurityPolicy.html";
-	import CandoServices from "./admin_pages/CandoServices.html";
 	import AccessControlCenter from "./admin_pages/AccessControlCenter.html";
-	import AbroadControlCenter from "./admin_pages/AbroadControlCenter.html";
 	import AnswerQuestionControlCenter from "./admin_pages/AnswerQuestionControlCenter.html";
-	import CertificateControlCenter from "./admin_pages/CertificateControlCenter.html";
-	import ConsultancyServices from "./admin_pages/ConsultancyServices.html";
+	import ConsultancyForms from "./admin_pages/ConsultancyForms.html";
 	import MagazineControlCenter from "./admin_pages/MagazineControlCenter.html";
 	import TelegramBot from "./admin_pages/TelegramBot.html";
 	import LiveChat from "./admin_pages/LiveChat.html";
-	import SeoSetup from "./admin_pages/SeoSetup.html";
 	import StudentControlCenter from "./admin_pages/StudentControlCenter.html";
 	import CommentControlCenter  from "./admin_pages/CommentControlCenter.html";
 	import DatabaseControlCenter from "./dev_pages/DatabaseControlCenter.html";
+	import PortalControlCenter from "./admin_pages/PortalControlCenter.html";
 
 	const utils = {
 		// to follow redirect after a fetch
@@ -125,6 +123,15 @@
 			M.AutoInit();
 			window.utils = utils;
 			window.page = this;
+			DecoupledEditor
+					.create( document.querySelector( '#editor' ) )
+					.then( editor => {
+						const toolbarContainer = document.getElementById( '#toolbar-container' );
+						toolbarContainer.appendChild( editor.ui.view.toolbar.element );
+					})
+					.catch( error => {
+						console.error( error );
+					});
 		},
 	  	data() {
 			return {
@@ -137,24 +144,23 @@
 					}),
 				title: "CDS-PANEL",
 				routes: {
-					"SecurityPolicy":				{access: [2, 3, 5, 7], icon: "security", page: SecurityPolicy},
-					"Cando Services":				{access: [], icon: "store", page: CandoServices},
-					"Access Control Center":		{access: [5, 7], icon: "accessibility", page: AccessControlCenter},
-					"Abroad Control Center":		{access: [3, 5, 7], icon: "language", page: AbroadControlCenter},
-					"FAQ Controll Center":			{access: [], icon: "question_answer", page: AnswerQuestionControlCenter},
-					"Certificate Control Center":	{access: [], icon: "fingerprint", page: CertificateControlCenter},
-					"Consultancy Services":			{access: [], icon: "live_help", page: ConsultancyServices},
+					"Security Policy":				{access: [2, 3, 5, 7], icon: "security", page: SecurityPolicy},
+					"Access Control Center":		{access: [5, 7], icon: "account_circle", page: AccessControlCenter},
 					"Magazine Control Center":		{access: [], icon: "import_contacts", page: MagazineControlCenter},
+					"Comment Control Center":		{access: [3, 5, 7], icon: "comment", page: CommentControlCenter},
+					"FAQ Control Center":			{access: [], icon: "question_answer", page: AnswerQuestionControlCenter},
+					"Consultancy Forms":			{access: [], icon: "live_help", page: ConsultancyForms},
 					"Telegram Bot":					{access: [], icon: "send", page: TelegramBot},
 					"Live Chat":					{access: [], icon: "chat", page: LiveChat},
-					"Seo Setup":					{access: [], icon: "search", page: SeoSetup},
 					"Student Control Center":		{access: [], icon: "assignment_ind", page: StudentControlCenter},
-					"Comment Control Center":		{access: [3, 5, 7], icon: "comment", page: CommentControlCenter},
+					"Portal Control Center":		{access: [], icon: "account_balance", page: PortalControlCenter},
 					"Database Control Center":		{access: [], icon: "storage", page: DatabaseControlCenter},
 				}
 			};
 		},
 		methods: {
+			// to understand the process of load method see following link
+			// https://svelte.technology/guide#understanding-svelte-components
 			load(page) {
 				const {currentPage, routes} = this.get();
 				if(routes[page].access.includes(cdsuser.access)) {
@@ -162,7 +168,7 @@
 					const newPage = new routes[page].page({
 						target: document.getElementById("workspace"),
 						data: {
-							message: 'hello from new page loader' // pass data here
+							message: '' // pass data here
 						}
 					});
 					this.set({currentPage: newPage});
@@ -174,7 +180,7 @@
 				const newPage = new currentPage.constructor({
 					target: document.getElementById("workspace"),
 					data: {
-						message: 'hello from new page loader' // pass data here
+						message: '' // pass data here
 					}
 				});
 				this.set({currentPage: newPage});
