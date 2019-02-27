@@ -1,9 +1,11 @@
-<Editor id="ckeditor" initial="this is the initial text"/>
+<Editor id="ckeditor" initial="this is the initial text" bind:editor/>
 
 <script>
 export default {
     data() {
-        return {}
+        return {
+            editor: null,
+        }
     },
     components: {
         Editor: "../../tags/Editor.html",
