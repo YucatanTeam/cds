@@ -190,24 +190,21 @@ connection.connect(err => {
         });
     });
 
-    // ========================================= USER INIT SETUP ===================================================================
-    // cv table
+    // ========================================= APPLY INIT SETUP ===================================================================
+    // apply table
     // ...
-    connection.query(`CREATE TABLE IF NOT EXISTS user (
+    connection.query(`CREATE TABLE IF NOT EXISTS apply (
         id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
         user_id,
         cuid VARCHAR(100) NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        INDEX body_ind (body_id),
-        FOREIGN KEY (body_id)
-        REFERENCES body(id)
+        INDEX user_ind (user_id),
+        FOREIGN KEY (user_id)
+        REFERENCES user(id)
         ON DELETE CASCADE)ENGINE=INNODB;` ,[] ,(err, rows)=>{
             if(err) errlog(err, rows)
-            // add account dev@cds.or.ir:dev with dev access (7)
-            else safe.hash("dev",(err, password) => {
-                connection.query(`INSERT INTO user(id, email, password, access, firstname, lastname) VALUES(1, 'dev@cds.org.ir', ?, 7, 'dev', 'eloper')` ,[password] ,errlog);
-            });
+            else connection.query(`INSERT INTO apply() VALUES()` ,[cuid()] ,errlog);
         });
 
     // ========================================= DEV INIT SETUP ===================================================================

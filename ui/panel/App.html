@@ -40,9 +40,7 @@
 	import ContentControllCenter from "./admin_pages/ContentControlCenter.html";
 	import UIControllCenter from "./admin_pages/UIControllCenter.html";
 	import ApplyProcess from "./user_pages/ApplyProcess.html";
-	import CVProcess from "./user_pages/CVProcess.html";
 	import ReservingConsultancyTime from "./user_pages/ReservingConsultancyTime.html";
-	import SOPProcess from "./user_pages/SOPProcess.html";
 	import Transactions from "./user_pages/Transactions.html";
 
 
@@ -132,18 +130,6 @@
 			M.AutoInit();
 			window.utils = utils;
 			window.page = this;
-<<<<<<< HEAD
-			DecoupledEditor
-					.create( document.querySelector( '#editor' ) )
-					.then( editor => {
-						const toolbarContainer = document.getElementById( 'toolbar-container' );
-						toolbarContainer.appendChild( editor.ui.view.toolbar.element );
-					})
-					.catch( error => {
-						console.error( error );
-					});
-=======
->>>>>>> 74458df776090c667698368d262386b6a62bd66f
 		},
 	  	data() {
 			return {
@@ -170,8 +156,6 @@
 					"Content Center":				{access: [3, 5, 7], icon: "subject", page: ContentControllCenter},
 					"UI Control Center":			{access: [], icon: "web", page: UIControllCenter},
 					"پروسه اپلای" : 		    	{access: [2], icon: "airplanemode_active", page: ApplyProcess},
-					"پروسه نگارش رزومه" : 		   {access: [2], icon: "description", page: CVProcess},
-					"sop" : 						{access: [2], icon: "assignment", page: SOPProcess},
 					"تراکنش ها"	:				   {access: [2], icon: "receipt", page: Transactions},	
 					"دریافت زمان مشاوره" : 		   {access: [2], icon: "event", page: ReservingConsultancyTime},		
 				}
