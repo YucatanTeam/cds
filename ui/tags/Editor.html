@@ -1,0 +1,33 @@
+<div id="{id}-toolbar-container"></div>
+
+<div id="{id}">
+    <p>{initial}</p>
+</div>
+
+<script>
+import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
+
+export default {
+    data() {
+        return {
+            initial: "",
+            id: "editor",
+            editor: null,
+        }
+    },
+    oncreate() {
+        const self = this;
+        const { id } = self.get();
+        DecoupledEditor
+            .create( document.querySelector( `#${id}` ) )
+            .then( editor => {
+                const toolbarContainer = document.getElementById( `${id}-toolbar-container` );
+                toolbarContainer.appendChild( editor.ui.view.toolbar.element );
+                self.set({ editor });
+            })
+            .catch( error => {
+                console.error( error );
+            });
+    }
+}
+</script>
