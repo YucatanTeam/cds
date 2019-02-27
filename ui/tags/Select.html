@@ -1,0 +1,31 @@
+<select id={id} on:change=select()>
+    <option value="" disabled selected>{text}</option>
+    {#each options as option, idx}
+        <option value="{idx}">{option.name}</option>
+    {/each}
+</select>
+<label>{label}</label>
+
+<script>
+export default {
+    data() {
+        return {
+            id: "select",
+            options: [],
+            label: "select",
+            text: "select",
+        }
+    },
+    oncreate() {
+        var elems = document.querySelectorAll('select');
+        var instances = M.FormSelect.init(elems, {});
+    },
+    methods: {
+        select() {
+            const { id, options } = this.get();
+            var s = document.getElementById(id);
+            this.fire("select", options[s.value]);
+        }
+    }
+}
+</script>
