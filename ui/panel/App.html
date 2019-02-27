@@ -132,7 +132,7 @@
 			DecoupledEditor
 					.create( document.querySelector( '#editor' ) )
 					.then( editor => {
-						const toolbarContainer = document.getElementById( '#toolbar-container' );
+						const toolbarContainer = document.getElementById( 'toolbar-container' );
 						toolbarContainer.appendChild( editor.ui.view.toolbar.element );
 					})
 					.catch( error => {
@@ -161,11 +161,11 @@
 					"Student Control Center":		{access: [], icon: "assignment_ind", page: StudentControlCenter},
 					"Portal Control Center":		{access: [], icon: "account_balance", page: PortalControlCenter},
 					"Database Control Center":		{access: [], icon: "storage", page: DatabaseControlCenter},
-					"مشاهده پروسه اپلای" : 		    {access: [2], icon: "storage", page: ApplyProcess},
-					"پروسه نگارش رزومه" : 		    {access: [2], icon: "storage", page: CVProcess},
-					"پروسه نگارش sop" : 			{access: [2], icon: "storage", page: SOPProcess},
-					"تراکنش ها"	:					{access: [2], icon: "storage", page: Transactions},	
-					"دریافت زمان مشاوره" : 			{access: [2], icon: "storage", page: ReservingConsultancyTime},		
+					"پروسه اپلای" : 		    	{access: [2], icon: "airplanemode_active", page: ApplyProcess},
+					"پروسه نگارش رزومه" : 		   {access: [2], icon: "description", page: CVProcess},
+					"sop" : 						{access: [2], icon: "assignment", page: SOPProcess},
+					"تراکنش ها"	:				   {access: [2], icon: "receipt", page: Transactions},	
+					"دریافت زمان مشاوره" : 		   {access: [2], icon: "event", page: ReservingConsultancyTime},		
 				}
 			};
 		},
