@@ -37,6 +37,12 @@
 	import CommentControlCenter  from "./admin_pages/CommentControlCenter.html";
 	import DatabaseControlCenter from "./dev_pages/DatabaseControlCenter.html";
 	import PortalControlCenter from "./admin_pages/PortalControlCenter.html";
+	import ApplyProcess from "./user_pages/ApplyProcess.html";
+	import CVProcess from "./user_pages/CVProcess.html";
+	import ReservingConsultancyTime from "./user_pages/ReservingConsultancyTime.html";
+	import SOPProcess from "./user_pages/SOPProcess.html";
+	import Transactions from "./user_pages/Transactions.html";
+
 
 	const utils = {
 		// to follow redirect after a fetch
@@ -146,7 +152,7 @@
 				routes: {
 					"Security Policy":				{access: [2, 3, 5, 7], icon: "security", page: SecurityPolicy},
 					"Access Control Center":		{access: [5, 7], icon: "account_circle", page: AccessControlCenter},
-					"Magazine Control Center":		{access: [], icon: "import_contacts", page: MagazineControlCenter},
+					"Magazine Control Center":		{access: [3, 5, 7], icon: "import_contacts", page: MagazineControlCenter},
 					"Comment Control Center":		{access: [3, 5, 7], icon: "comment", page: CommentControlCenter},
 					"FAQ Control Center":			{access: [], icon: "question_answer", page: AnswerQuestionControlCenter},
 					"Consultancy Forms":			{access: [], icon: "live_help", page: ConsultancyForms},
@@ -155,6 +161,11 @@
 					"Student Control Center":		{access: [], icon: "assignment_ind", page: StudentControlCenter},
 					"Portal Control Center":		{access: [], icon: "account_balance", page: PortalControlCenter},
 					"Database Control Center":		{access: [], icon: "storage", page: DatabaseControlCenter},
+					"مشاهده پروسه اپلای" : 		    {access: [2], icon: "storage", page: ApplyProcess},
+					"پروسه نگارش رزومه" : 		    {access: [2], icon: "storage", page: CVProcess},
+					"پروسه نگارش sop" : 			{access: [2], icon: "storage", page: SOPProcess},
+					"تراکنش ها"	:					{access: [2], icon: "storage", page: Transactions},	
+					"دریافت زمان مشاوره" : 			{access: [2], icon: "storage", page: ReservingConsultancyTime},		
 				}
 			};
 		},

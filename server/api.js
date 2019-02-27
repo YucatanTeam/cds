@@ -14,6 +14,9 @@ const slug = require('limax')
 const cwd = process.cwd();
 
 
+// slug: req.body.slug.replace(/ /g,"-") 
+// en_slug: slug(req.body.en_slug.toLowerCase(), { lowercase: true })
+
 
 function page(root) {
     return express.static(`${__dirname}/../www/${root}`)
@@ -379,13 +382,18 @@ module.exports = ({app, db}) => {
     })
 
 
-    // --------------------
-    // body and tab routes
-    // --------------------
 
-    // TODO : validate using validate.js
-    // slug: req.body.slug.replace(/ /g,"-") 
-    // en_slug: slug(req.body.en_slug.toLowerCase(), { lowercase: true })
+
+
+
+
+
+
+
+
+
+
+
 
 
 
