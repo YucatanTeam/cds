@@ -37,6 +37,8 @@
 	import CommentControlCenter  from "./admin_pages/CommentControlCenter.html";
 	import DatabaseControlCenter from "./dev_pages/DatabaseControlCenter.html";
 	import PortalControlCenter from "./admin_pages/PortalControlCenter.html";
+	import ContentControllCenter from "./admin_pages/ContentControlCenter.html";
+	import UIControllCenter from "./admin_pages/UIControllCenter.html";
 	import ApplyProcess from "./user_pages/ApplyProcess.html";
 	import CVProcess from "./user_pages/CVProcess.html";
 	import ReservingConsultancyTime from "./user_pages/ReservingConsultancyTime.html";
@@ -45,6 +47,7 @@
 
 
 	const utils = {
+		DecoupledEditor,
 		// to follow redirect after a fetch
 		followRedirect(response) {
 			if(response.redirected) {
@@ -129,6 +132,7 @@
 			M.AutoInit();
 			window.utils = utils;
 			window.page = this;
+<<<<<<< HEAD
 			DecoupledEditor
 					.create( document.querySelector( '#editor' ) )
 					.then( editor => {
@@ -138,6 +142,8 @@
 					.catch( error => {
 						console.error( error );
 					});
+=======
+>>>>>>> 74458df776090c667698368d262386b6a62bd66f
 		},
 	  	data() {
 			return {
@@ -161,6 +167,8 @@
 					"Student Control Center":		{access: [], icon: "assignment_ind", page: StudentControlCenter},
 					"Portal Control Center":		{access: [], icon: "account_balance", page: PortalControlCenter},
 					"Database Control Center":		{access: [], icon: "storage", page: DatabaseControlCenter},
+					"Content Center":				{access: [3, 5, 7], icon: "subject", page: ContentControllCenter},
+					"UI Control Center":			{access: [], icon: "web", page: UIControllCenter},
 					"پروسه اپلای" : 		    	{access: [2], icon: "airplanemode_active", page: ApplyProcess},
 					"پروسه نگارش رزومه" : 		   {access: [2], icon: "description", page: CVProcess},
 					"sop" : 						{access: [2], icon: "assignment", page: SOPProcess},
