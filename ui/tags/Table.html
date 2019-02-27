@@ -1,5 +1,5 @@
 <!-- 
-    TODO sort by column name and make tooltip for each action
+    TODO sort by column name
     
     content : array of objects:
         each object will be rendered as a row
@@ -62,7 +62,7 @@
                                 <td>
                                     {#each actions as action, ai}
                                         {#if row[key][ai] === true}
-                                            <a class="waves-effect" on:click=call_action(ai,i)><I>{action.icon}</I></a>
+                                            <a class="waves-effect tooltipped" data-position="top" data-tooltip="{action.tooltip}" on:click=call_action(ai,i)><I>{action.icon}</I></a>
                                         {:else}
                                             <span><I>{action.icon}</I></span>
                                         {/if}
@@ -97,6 +97,10 @@ export default {
             content: [],
             actions: []
         }
+    },
+    oncreate() {
+        var elems = document.querySelectorAll('.tooltipped');
+        var instances = M.Tooltip.init(elems, {});
     },
     methods: {
         call_action(ai, i) {

@@ -1,4 +1,11 @@
 <Editor id="ckeditor" initial="this is the initial text" bind:editor/>
+<Select id="routes" label="routes" text="select a route" options={[
+    {name: "0"},
+    {name: "1"},
+    {name: "2"}]}
+    
+    on:select=loadRoute(event)/>
+
 
 <script>
 export default {
@@ -7,8 +14,21 @@ export default {
             editor: null,
         }
     },
+    methods: {
+        loadRoute(option) {
+            console.log(option)
+        }
+    },
     components: {
         Editor: "../../tags/Editor.html",
+        Select: "../../tags/Select.html",
+        Table: "../../tags/Table.html",
+        Loading: "../../tags/Loading.html",
+        Card: "../../tags/Card.html",
+        Modal: "../../tags/Modal.html",
+        Form: "../../tags/Form.html",
+        Input: "../../tags/Input.html",
+        RequestBtn: "../../tags/RequestBtn.html",
     }
 }
 </script>
