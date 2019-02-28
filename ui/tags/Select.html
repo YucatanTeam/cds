@@ -1,11 +1,12 @@
-<select id={id} on:change=select()>
-    <option value="" disabled selected>{text}</option>
-    {#each options as option, idx}
-        <option value="{idx}">{option.name}</option>
-    {/each}
-</select>
-<label>{label}</label>
-
+<div>
+    <select id={id} on:change=select()>
+        <option value="" disabled selected>{text}</option>
+        {#each options as option, idx}
+            <option value="{idx}">{option.name}</option>
+        {/each}
+    </select>
+    <label>{label}</label>
+</div>
 <script>
 export default {
     data() {
