@@ -381,8 +381,49 @@ module.exports = ({app, db}) => {
             
     })
 
+    // ----------------------
+    // student control routes
+    // ----------------------
+    app.get('/student-control/getAll', access(3), (req, res)=>{
+        db.api.studentcontrol.getAll((err, rows)=>{
+            
+            if(rows) return res.json({body: rows, err:null})
+            if(err) {
+                dev.report(err);
+                return res.status(404).end("Nothing Found !");
+            }
+        })
+    });
 
+    app.post('/student-control/block/:id', access(3), (req, res) =>{
+        db.api.studentcontrol.block(req.params.id, (err, row)=>{
 
+            if(err) {
+                dev.report(err);
+                return res.status(404).end("Nothing Found !");
+            } else return res.status(200).end("OK");
+        })
+    });
+
+    app.post('/student-control/unblock/:id', access(3), (req, res)=>{
+        db.api.studentcontrol.unblock(req.params.id, (err, row)=>{
+
+            if(err) {
+                dev.report(err);
+                return res.status(404).end("Nothing Found !");
+            } else return res.status(200).end("OK");
+        })
+    });
+
+    app.post('/studentcontrol/delete/:id', access(3), (req, res)=>{
+        db.api.studentcontrol.deleteById(req.params.id, (err, rows)=>{
+
+            if(err) {
+                dev.report(err);
+                return res.status(404).end("Nothing Found !");
+            } else return res.status(200).end("OK");
+        })
+    });
 
 
 

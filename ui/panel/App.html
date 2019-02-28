@@ -39,6 +39,7 @@
 	import PortalControlCenter from "./admin_pages/PortalControlCenter.html";
 	import ContentControllCenter from "./admin_pages/ContentControlCenter.html";
 	import UIControllCenter from "./admin_pages/UIControllCenter.html";
+	import ConsultationSchedule from "./admin_pages/ConsultationSchedule.html";
 	import ApplyProcess from "./user_pages/ApplyProcess.html";
 	import ReservingConsultancyTime from "./user_pages/ReservingConsultancyTime.html";
 	import Transactions from "./user_pages/Transactions.html";
@@ -147,10 +148,11 @@
 					"Magazine Control Center":		{access: [3, 5, 7], icon: "import_contacts", page: MagazineControlCenter},
 					"Comment Control Center":		{access: [3, 5, 7], icon: "comment", page: CommentControlCenter},
 					"FAQ Control Center":			{access: [], icon: "question_answer", page: AnswerQuestionControlCenter},
-					"Consultancy Forms":			{access: [], icon: "live_help", page: ConsultancyForms},
+					"Consultation Schedule":		{access: [3, 5, 7], icon: "event", page: ConsultationSchedule},
+					"Consultancy Forms":			{access: [3, 5, 7], icon: "live_help", page: ConsultancyForms},
 					"Telegram Bot":					{access: [], icon: "send", page: TelegramBot},
 					"Live Chat":					{access: [], icon: "chat", page: LiveChat},
-					"Student Control Center":		{access: [], icon: "assignment_ind", page: StudentControlCenter},
+					"Student Control Center":		{access: [3, 5, 7], icon: "assignment_ind", page: StudentControlCenter},
 					"Portal Control Center":		{access: [], icon: "account_balance", page: PortalControlCenter},
 					"Database Control Center":		{access: [], icon: "storage", page: DatabaseControlCenter},
 					"Content Center":				{access: [3, 5, 7], icon: "subject", page: ContentControllCenter},

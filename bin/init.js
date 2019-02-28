@@ -76,9 +76,9 @@ connection.connect(err => {
                             );`, [cuid()], errlog)
         });
     
-    // ============================================= COMMENT INIT SETUP ===============================================================
-    // comment table
-    // ...
+    // // ============================================= COMMENT INIT SETUP ===============================================================
+    // // comment table
+    // // ...
     connection.query(`CREATE TABLE IF NOT EXISTS comment (
     id INT AUTO_INCREMENT PRIMARY KEY, 
     post_id INT,
@@ -103,7 +103,7 @@ connection.connect(err => {
             );` ,[cuid()] ,errlog)
         });
 
-    // ================================ CANDO BODY AND THEIR RELATED tabs INIT SETUP ============================================================================
+    // // ================================ CANDO BODY AND THEIR RELATED tabs INIT SETUP ============================================================================
     connection.query(`CREATE TABLE IF NOT EXISTS tab (
         id INT AUTO_INCREMENT PRIMARY KEY,
         country_name TEXT DEFAULT NULL,
@@ -195,8 +195,18 @@ connection.connect(err => {
     // ...
     connection.query(`CREATE TABLE IF NOT EXISTS apply (
         id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-        user_id,
+        user_id INT,
+        description TEXT DEFAULT NULL,
+        country TEXT DEFAULT NULL,
+        university TEXT DEFAULT NULL,
+        education_language TEXT NOT NULL,
+        field TEXT DEFAULT NULL,
+        cv TEXT DEFAULT NULL, 
+        sop TEXT DEFAULT NULL,
+        rc TEXT DEFAULT NULL,
+        reg_date TEXT DEFAULT NULL,
         cuid VARCHAR(100) NOT NULL,
+        status TINYINT NOT NULL DEFAULT 0,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         INDEX user_ind (user_id),
@@ -204,12 +214,24 @@ connection.connect(err => {
         REFERENCES user(id)
         ON DELETE CASCADE)ENGINE=INNODB;` ,[] ,(err, rows)=>{
             if(err) errlog(err, rows)
-            else connection.query(`INSERT INTO apply() VALUES()` ,[cuid()] ,errlog);
+            else connection.query(`INSERT INTO apply(user_id, description, country, university, education_language, field, cv, sop, rc, reg_date, cuid) VALUES(
+                                    "2",
+                                    "توضیحات اضافه اینجا....",
+                                    "کانادا",
+                                    "toronto",
+                                    "انگلیسی",
+                                    "cs",
+                                    "دریافت شد",
+                                    "دریافت شد",
+                                    "در حال انجام",
+                                    "1397-12-07",
+                                    ?
+            );` ,[cuid()] ,errlog);
         });
 
     // ========================================= DEV INIT SETUP ===================================================================
     // error table
-    // ...
+    //...
     connection.query(`CREATE TABLE IF NOT EXISTS error (
         id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
         msg text NULL,

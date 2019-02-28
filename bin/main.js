@@ -34,7 +34,7 @@ db.connection.connect(err => {
 
 
 const PID = process.pid;
-const PORT = process.env.PORT || process.argv[2] || 5000; // we'll use this in production
+const PORT = process.env.PORT || process.argv[2] || 8080; // we'll use this in production
 const SECRET = process.env.SECRET || "force"; // we'll use this in production
 
 app.listen(PORT)
