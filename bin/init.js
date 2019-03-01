@@ -139,7 +139,7 @@ connection.connect(err => {
         FOREIGN KEY (user_id)
         REFERENCES user(id)
         ON DELETE CASCADE)ENGINE=INNODB;` ,[] ,(err, rows)=>{
-            if(err) errlog(err, rows)
+            if(err) errlog("apply")(err, rows)
             else connection.query(`INSERT INTO apply(user_id, description, country, university, education_language, field, cv, sop, rc, reg_date, cuid) VALUES(
                                     "2",
                                     "توضیحات اضافه اینجا....",
@@ -152,7 +152,7 @@ connection.connect(err => {
                                     "در حال انجام",
                                     "1397-12-07",
                                     ?
-            );` ,[cuid()] ,errlog);
+            );` ,[cuid()] ,errlog("first apply"));
         });
 
     // ========================================= DEV INIT SETUP ===================================================================
