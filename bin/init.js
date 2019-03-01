@@ -25,7 +25,7 @@ const connection = mysql.createConnection({
 connection.connect(err => {
     if(err) return console.error(err);
     console.log(`database is connected to ${DB_USER}@${DB_HOST}/${DB_NAME}`);
-    const errlog = (err, rows) => err ? console.log(err.sqlMessage) : console.log("ok");
+    const errlog = (name) => (err, rows) => err ? console.log(name, err.sqlMessage) : console.log("ok");
 
 
 
@@ -47,33 +47,33 @@ connection.connect(err => {
     FOREIGN KEY (post_id)
         REFERENCES post(id)
         ON DELETE CASCADE)ENGINE=INNODB;` ,[] ,(err, rows) => {
-            if(err) errlog(err, rows)
+            if(err) errlog("comment")(err, rows)
             else connection.query(`INSERT INTO comment(post_id, content, name, email, cuid) VALUES(
                 1,
                 'این پست عالی است!',
                 'wilonion',
                 'ea_pain@yahoo.com',
                 ?
-            );` ,[cuid()] ,errlog)
+            );` ,[cuid()] ,errlog("first comment"))
         });
 
-    // ================================ CANDO BODY AND THEIR RELATED tabs INIT SETUP ============================================================================
+    // ================================ CANDO PAGES ============================================================================
     connection.query(`CREATE TABLE IF NOT EXISTS route (
         id INT AUTO_INCREMENT PRIMARY KEY,
         access INT,
         title TEXT NOT NULL,
         en_title TEXT NOT NULL,
-        status TINYINT NOT NULL DEFAULT 0,
+        status TINYINT NOT NULL DEFAULT 0
     )ENGINE=INNODB;` ,[] ,(err, rows) =>{
-        if(err) errlog(err, rows)
+        if(err) errlog("route")(err, rows)
         // TODO
-        else connection.query(`INSERT INTO route(country_name, country_en_name, title, en_title, cuid) VALUES(
-            'کانادا',
-            'canada',
-            'مهاجرت به کانادا',
-            'migratio to canada',
-            ?
-        );` ,[cuid()] ,errlog)
+        // else connection.query(`INSERT INTO route(country_name, country_en_name, title, en_title, cuid) VALUES(
+        //     'کانادا',
+        //     'canada',
+        //     'مهاجرت به کانادا',
+        //     'migratio to canada',
+        //     ?
+        // );` ,[cuid()] ,errlog)
     });
     connection.query(`CREATE TABLE IF NOT EXISTS page (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -88,14 +88,11 @@ connection.connect(err => {
         status TINYINT NOT NULL DEFAULT 0,
         cuid VARCHAR(100) NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        INDEX route_ind (route_id),
-        FOREIGN KEY (route_id)
-            REFERENCES tab(id)
-                ON DELETE CASCADE)ENGINE=INNODB;` ,[] ,(err, rows) =>{
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        )ENGINE=INNODB;` ,[] ,(err, rows) =>{
         if(err) errlog(err, rows)
         else connection.query(`INSERT INTO page(route_id, slug, en_slug, content, en_content, cuid) 
-        VALUES();`, [cuid()], errlog)
+        VALUES();`, [cuid()], errlog("page"))
     });
 
     // ========================================= USER INIT SETUP ===================================================================
@@ -110,10 +107,10 @@ connection.connect(err => {
     access int NOT NULL DEFAULT '2',
     avatar text NULL
     )ENGINE=INNODB;` ,[] ,(err, rows)=>{
-        if(err) errlog(err, rows)
+        if(err) errlog("user")(err, rows)
         // add account dev@cds.or.ir:dev with dev access (7)
         else safe.hash("dev",(err, password) => {
-            connection.query(`INSERT INTO user(id, email, password, access, firstname, lastname) VALUES(1, 'dev@cds.org.ir', ?, 7, 'dev', 'eloper')` ,[password] ,errlog);
+            connection.query(`INSERT INTO user(id, email, password, access, firstname, lastname) VALUES(1, 'dev@cds.org.ir', ?, 7, 'dev', 'eloper')` ,[password] ,errlog("dev user"));
         });
     });
 
@@ -124,5 +121,5 @@ connection.connect(err => {
         id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
         msg text NULL,
         status int NULL
-        )ENGINE=INNODB;` ,[] ,errlog);
+        )ENGINE=INNODB;` ,[] ,errlog("error"));
 });

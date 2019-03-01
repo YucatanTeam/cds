@@ -277,7 +277,9 @@ module.exports = ({app, db}) => {
 
     // TODO use access guard
     app.get("/route/all", (req, res) => {
-        // TODO
+        db.route.getAll((err, rows) => {
+
+        })
         res.json({body: [
             {name: "tab", access: 7, items: [{name: "govah"}, {name: "lolo"}]},
             {name: "canada", access: 5, items: [{name: "zaban"}, {name: "moshavere"}]},
@@ -299,6 +301,10 @@ module.exports = ({app, db}) => {
             {name: "zaban"},
             {name: "lolo"}
         ]})
+    })
+    app.get("/page/add", (req, res) => {
+        // TODO
+        res.send("OK")
     })
 
     // --------------
