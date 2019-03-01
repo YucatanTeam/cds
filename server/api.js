@@ -312,7 +312,7 @@ module.exports = ({app, db}) => {
             return res.json({body: rows, err:null});
         })
     })
-    app.get("/page/add", (req, res) => {
+    app.post("/page/add", (req, res) => {
         // TODO
         res.send("OK")
     })
