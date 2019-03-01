@@ -170,9 +170,9 @@ const db = {
             },
         },
         /* ----------
-            BODY API
+            PAGE API
         */
-        body:{
+        page:{
             block(id, cb){
                 db.connection.query(`UPDATE body SET status = 0 WHERE id = ?`, [id], cb ? cb : e=>e);
             },
@@ -182,16 +182,10 @@ const db = {
             deleteById(id, cb){
                 db.connection.query(`DELETE FROM body WHERE id = ?`, [id], cb ? cb : e=>e);
             },
-            deleteByCuid(cuid, cb){
-                db.connection.query(`DELETE FROM body WHERE cuid = ?`, [cuid], cb ? cb : e=>e);
-            },
             getAll(cb){
-                db.connection.query(`SELECT body.id, body.cuid, body.tab_id, body.content, 
-                body.en_content, body.slug, body.en_slug, body.status as bodySTATUS, 
-                tab.status as tabSTATUS, body.created_at, body.updated_at,  
-                tab.country_name, tab.country_en_name, tab.title, tab.en_title
-                FROM body 
-                INNER JOIN tab ON body.tab_id=tab.id ORDER BY body.created_at DESC;`, [], (err, bodyrows)=>{
+                db.connection.query(`SELECT page.id, page.content, 
+                page.en_content, page.slug, page.en_slug, page.status, 
+                page.route, page.tags FROM page`, [], (err, bodyrows)=>{
                     if(bodyrows) {
                         var rws = []
                         for(var br of bodyrows){
@@ -210,14 +204,8 @@ const db = {
                         return cb(err, rws);
                     } else return cb(err, false);
                 });
-            }, 
-            deleteAll(cb){
-                db.connection.query(`DELETE * FROM body`, [], cb ? cb : e=>e);
             },
             getById(id, cb){
-        
-            },
-            getByCuid(cuid, cb){
         
             },
             add(body, cb){
@@ -226,13 +214,19 @@ const db = {
             update(body, cb){
                
             },
+            setRoute(id, route_id, cb) {
+                db.connection.query(`UPDATE page SET route_id = ? WHERE id = ?`, [route_id, id], cb ? cb : e=>e);
+            },
+            removeRoute(id, cb) {
+                db.connection.query(`UPDATE page SET route_id = ? WHERE id = ?`, [null, id], cb ? cb : e=>e);
+            },
         },
         /* ----------
-            TAB API
+            ROUTE API
         */
-       tab:{
+       route:{
             getAll(cb){
-                db.connection.query(`SELECT * FROM tab ORDER BY created_at DESC;`, [], (err, rows)=>{
+                db.connection.query(`SELECT * FROM route;`, [], (err, rows)=>{
                     if(rows){
                         return cb(err, rows);
                     } else {
@@ -240,55 +234,9 @@ const db = {
                     }
                 });
             },
-            block(id, cb){ // when a tab is blocked its content will blocked too!
-                db.connection.query(`UPDATE tab SET status = 0 WHERE id = ?`, [id], [], (err, rows)=>{
-                    if(rows) {
-                        db.connection.query(`UPDATE body SET status = 0 WHERE id = ?`, [id], [], (err, rows)=>{
-                            if(rows){
-                                return cb(err, rows);
-                            } else{
-                                return cb(err, false);
-                            }
-                        })
-                    } else return cb(err, false);
-                });
-            },
-            unblock(id, cb){ // when a tab is unblocked its content will unblocked too!
-                db.connection.query(`UPDATE tab SET status = 1 WHERE id = ?`, [id], [], (err, rows)=>{
-                    if(rows) {
-                        db.connection.query(`UPDATE body SET status = 1 WHERE id = ?`, [id], [], (err, rows)=>{
-                            if(rows){
-                                return cb(err, rows);
-                            } else{
-                                return cb(err, false);
-                            }
-                        })
-                    } else return cb(err, false);
-                });
-            },
-            deleteById(id, cb){ 
-                // allows you to delete data from child table
-                // automatically when you delete the data from the parent table.
-                // so when we delete a tab from table the corresponding 
-                // records in the child table will automatically be deleted.
-                db.connection.query(`DELETE FROM tab WHERE id = ?`, [id], cb ? cb : e=>e);
-            },
-            deleteAll(cb){
-                // it'll delete all data from child table to
-                db.connection.query(`DELETE * FROM tab`, [], cb ? cb : e=>e);
-            },
             getById(id, cb){
-        
-            },
-            getByCuid(cuid, cb){
-        
-            },
-            add(body, cb){
-
-            },
-            update(body, cb){
-               
-            },
+                
+            }
         },
     }
 }

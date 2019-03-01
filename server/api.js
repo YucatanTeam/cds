@@ -259,7 +259,7 @@ module.exports = ({app, db}) => {
     // --------------
 
     // get:  /route/all 
-    //      json-response{ body: [{name, access, items: [pages]}] }
+    //      json-response{ body: [{title, access, items: [pages]}] }
     // post: /route/:route/item/add
     //      json-body{title: page_title}
     // get:  /page/all
@@ -277,29 +277,41 @@ module.exports = ({app, db}) => {
 
     // TODO use access guard
     app.get("/route/all", (req, res) => {
-        db.route.getAll((err, rows) => {
-
+        db.api.route.getAll((err, rows) => {
+            if(err) {
+                dev.report(err);
+                return res.status(500).end("Internal Server Error !");
+            }
+            return res.json({body: rows, err:null});
         })
-        res.json({body: [
-            {name: "tab", access: 7, items: [{name: "govah"}, {name: "lolo"}]},
-            {name: "canada", access: 5, items: [{name: "zaban"}, {name: "moshavere"}]},
-        ]})
     })
     app.post("/route/:route/item/add", (req, res) => {
-        console.log(req.params, req.body)
-        res.json({})
+        console.log(req.params, req.body) // { route: '1' } { page: 1 }
+        db.api.page.setRoute(req.body.page, req.params.route, (err, row) => {
+            if(err) {
+                dev.report(err);
+                return res.status(500).end("Internal Server Error !");
+            }
+            return res.json({body: rows, err:null});
+        })
     })
-    app.post("/route/:route/item/:page/remove", (req, res) => {
-        console.log(req.params, req.body)
-        res.json({})
+    app.post("/page/:route/route/remove", (req, res) => {
+        console.log(req.params, req.body) // { route: '1', page: '1' } {}
+        db.api.page.removeRoute(req.params.route, (err, row) => {
+            if(err) {
+                dev.report(err);
+                return res.status(500).end("Internal Server Error !");
+            }
+            return res.json({body: rows, err:null});
+        })
     })
     app.get("/page/all", (req, res) => {
         // TODO
         res.json({body: [
-            {name: "govah"},
-            {name: "moshavere"},
-            {name: "zaban"},
-            {name: "lolo"}
+            {route_id: 1, name: "govah"},
+            {route_id: 1, name: "moshavere"},
+            {route_id: 2, name: "zaban"},
+            {route_id: 2, name: "lolo"}
         ]})
     })
     app.get("/page/add", (req, res) => {
