@@ -268,7 +268,11 @@ module.exports = ({app, db}) => {
     //      json-response{ body: [{name: page_title}]}
     // post: /page/:page_id/remove
     //      json-body{}
-
+    // post: /page/:page_id/block
+    //      json-body{}
+    // post: /page/:page_id/unblock
+    //      json-body{}
+    
     // TODO use access guard
     app.get("/route/all", (req, res) => {
         // TODO
