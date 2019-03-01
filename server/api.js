@@ -257,6 +257,22 @@ module.exports = ({app, db}) => {
     // --------------
     // content routes
     // --------------
+
+    // get:  /route/all 
+    //      json-response{ body: [{name, access, items: [pages]}] }
+    // post: /route/:route/item/add
+    //      json-body{title: page_title}
+    // get:  /page/all
+    //      json-response[page objects from db]
+    // get:  /page/:title
+    //      json-response{ body: [{name: page_title}]}
+    // post: /page/:page_id/remove
+    //      json-body{}
+    // post: /page/:page_id/block
+    //      json-body{}
+    // post: /page/:page_id/unblock
+    //      json-body{}
+    
     // TODO use access guard
     app.get("/route/all", (req, res) => {
         // TODO
