@@ -266,7 +266,7 @@ module.exports = ({app, db}) => {
     //      json-response[page objects from db]
     // get:  /page/:title
     //      json-response{ body: [{name: page_title}]}
-    // post: /page/:title/remove
+    // post: /page/:page_id/remove
     //      json-body{}
 
     // TODO use access guard
