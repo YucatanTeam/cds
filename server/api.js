@@ -286,8 +286,7 @@ module.exports = ({app, db}) => {
         })
     })
     app.post("/route/:route/item/add", (req, res) => {
-        console.log(req.params, req.body) // { route: '1' } { page: 1 }
-        db.api.page.setRoute(req.body.page, req.params.route, (err, row) => {
+        db.api.page.setRoute(req.body.page, req.params.route, (err, rows) => {
             if(err) {
                 dev.report(err);
                 return res.status(500).end("Internal Server Error !");
@@ -295,9 +294,8 @@ module.exports = ({app, db}) => {
             return res.json({body: rows, err:null});
         })
     })
-    app.post("/page/:route/route/remove", (req, res) => {
-        console.log(req.params, req.body) // { route: '1', page: '1' } {}
-        db.api.page.removeRoute(req.params.route, (err, row) => {
+    app.post("/page/:page/route/remove", (req, res) => {
+        db.api.page.removeRoute(req.params.page, (err, rows) => {
             if(err) {
                 dev.report(err);
                 return res.status(500).end("Internal Server Error !");
@@ -306,13 +304,13 @@ module.exports = ({app, db}) => {
         })
     })
     app.get("/page/all", (req, res) => {
-        // TODO
-        res.json({body: [
-            {route_id: 1, name: "govah"},
-            {route_id: 1, name: "moshavere"},
-            {route_id: 2, name: "zaban"},
-            {route_id: 2, name: "lolo"}
-        ]})
+        db.api.page.getAll((err, rows) => {
+            if(err) {
+                dev.report(err);
+                return res.status(500).end("Internal Server Error !");
+            }
+            return res.json({body: rows, err:null});
+        })
     })
     app.get("/page/add", (req, res) => {
         // TODO

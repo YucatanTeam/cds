@@ -183,27 +183,7 @@ const db = {
                 db.connection.query(`DELETE FROM body WHERE id = ?`, [id], cb ? cb : e=>e);
             },
             getAll(cb){
-                db.connection.query(`SELECT page.id, page.content, 
-                page.en_content, page.slug, page.en_slug, page.status, 
-                page.route, page.tags FROM page`, [], (err, bodyrows)=>{
-                    if(bodyrows) {
-                        var rws = []
-                        for(var br of bodyrows){
-                            db.connection.query(`SELECT tag, en_tag FROM body_tag WHERE body_id = ?`, [br.id], (err, tagrows)=>{
-                                if(tagrows){
-                                    br.tags = []
-                                    br.en_tags = []
-                                    for(var tg of tagrows){
-                                        br.tags.push(tg.tag)
-                                        br.en_tags.push(tg.en_tag)
-                                    }
-                                    rws.push(br)
-                                } else return cb(err, false);
-                            });
-                        }
-                        return cb(err, rws);
-                    } else return cb(err, false);
-                });
+                db.connection.query(`SELECT * FROM page`, [], cb);
             },
             getById(id, cb){
         
@@ -214,11 +194,11 @@ const db = {
             update(body, cb){
                
             },
-            setRoute(id, route_id, cb) {
-                db.connection.query(`UPDATE page SET route_id = ? WHERE id = ?`, [route_id, id], cb ? cb : e=>e);
+            setRoute(page_id, route_id, cb) {
+                db.connection.query(`UPDATE page SET route_id = ? WHERE id = ?`, [route_id, page_id], cb ? cb : e=>e);
             },
-            removeRoute(id, cb) {
-                db.connection.query(`UPDATE page SET route_id = ? WHERE id = ?`, [null, id], cb ? cb : e=>e);
+            removeRoute(page_id, cb) {
+                db.connection.query(`UPDATE page SET route_id = ? WHERE id = ?`, [null, page_id], cb ? cb : e=>e);
             },
         },
         /* ----------
