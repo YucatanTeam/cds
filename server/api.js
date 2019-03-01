@@ -257,30 +257,64 @@ module.exports = ({app, db}) => {
     // --------------
     // content routes
     // --------------
+
+    // get:  /route/all 
+    //      json-response{ body: [{title, access, items: [pages]}] }
+    // post: /route/:route/item/add
+    //      json-body{title: page_title}
+    // get:  /page/all
+    //      json-response[page objects from db]
+    // get:  /page/:title
+    //      json-response{ body: [{name: page_title}]}
+    // post: /page/add
+    //      json-body{page}
+    // post: /page/:page_id/remove
+    //      json-body{}
+    // post: /page/:page_id/block
+    //      json-body{}
+    // post: /page/:page_id/unblock
+    //      json-body{}
+
     // TODO use access guard
     app.get("/route/all", (req, res) => {
-        // TODO
-        res.json({body: [
-            {name: "tab", access: 7, items: [{name: "govah"}, {name: "lolo"}]},
-            {name: "canada", access: 5, items: [{name: "zaban"}, {name: "moshavere"}]},
-        ]})
+        db.api.route.getAll((err, rows) => {
+            if(err) {
+                dev.report(err);
+                return res.status(500).end("Internal Server Error !");
+            }
+            return res.json({body: rows, err:null});
+        })
     })
     app.post("/route/:route/item/add", (req, res) => {
-        console.log(req.params, req.body)
-        res.json({})
+        db.api.page.setRoute(req.body.page, req.params.route, (err, rows) => {
+            if(err) {
+                dev.report(err);
+                return res.status(500).end("Internal Server Error !");
+            }
+            return res.json({body: rows, err:null});
+        })
     })
-    app.post("/route/:route/item/:page/remove", (req, res) => {
-        console.log(req.params, req.body)
-        res.json({})
+    app.post("/page/:page/route/remove", (req, res) => {
+        db.api.page.removeRoute(req.params.page, (err, rows) => {
+            if(err) {
+                dev.report(err);
+                return res.status(500).end("Internal Server Error !");
+            }
+            return res.json({body: rows, err:null});
+        })
     })
     app.get("/page/all", (req, res) => {
+        db.api.page.getAll((err, rows) => {
+            if(err) {
+                dev.report(err);
+                return res.status(500).end("Internal Server Error !");
+            }
+            return res.json({body: rows, err:null});
+        })
+    })
+    app.post("/page/add", (req, res) => {
         // TODO
-        res.json({body: [
-            {name: "govah"},
-            {name: "moshavere"},
-            {name: "zaban"},
-            {name: "lolo"}
-        ]})
+        res.send("OK")
     })
 
     // --------------

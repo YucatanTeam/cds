@@ -1,5 +1,19 @@
 <div class="row">
     <Card image="/public/img/privacy.png" col="s12 m10 offset-m1 l8 offset-l2">
+        <form id="post">
+            <Input col="s12" label="Persian Page title" id="ftitle" type="text" />
+            <Editor id="content" initial="Persian Editor" bind:feditor=feditor></Editor>
+            <br><div class="divider"></div><br>
+            <Input col="s12" label="English Page title" id="title" type="text" />
+            <Editor id="en_content" initial="English Editor" bind:eneditor=eneditor></Editor><br>
+            <div class="chips chips-placeholder"></div>
+        </form>
+        <a class="waves-effect waves-light yellow black-text btn" onclick="post()">Post</a>
+    </Card>
+</div>
+
+<div class="row">
+    <Card image="/public/img/privacy.png" col="s12 m10 offset-m1 l8 offset-l2">
         {#await getRoutes}
             <Loading small/>
         {:then routes}
@@ -8,7 +22,7 @@
             {#if currentRoute}
                 <Table highlight rows={5} actions={[
                     {icon: "delete", tooltip: "delete", action(obj, table) {
-                        utils.fetch(`/route/${currentRoute.name}/item/${obj.name}/remove`, {})
+                        utils.fetch(`/page/${obj.route_id}/route/remove`, {})
                         .then(r=>{
                             if(r.status == 200) {
                                 utils.toast("Done");
@@ -38,7 +52,11 @@
 <script>
 export default {
     data() {
-        return {
+        return { 
+            tags: [],
+            instans:null,
+            feditor:null,
+            eneditor:null,
             utils,
             currentRoute: null,
             getRoutes: utils.fetch("/route/all")
@@ -51,6 +69,7 @@ export default {
                     var routes = res.body;
                     var rows = [];
                     for(var rt of routes) {
+                        rt.name = rt.title;
                         if(rt.access <= cdsuser.access) {
                             rows.push(rt)
                         }
@@ -70,18 +89,55 @@ export default {
             .catch(err => utils.toast("something went wrong !")),
         }
     },
+    oncreate(){
+        var elems = document.querySelectorAll('.chips-placeholder');
+        var instances = M.Chips.init(elems,{
+            placeholder:"+Tags"
+        });
+        
+    },
     methods: {
+        post(){
+            var formdata= new formData();
+            var elem = document.getElementById(post);
+            console.log(elem);
+            fetch('/page/add',{
+                method:"POST",
+                mode:"same-origin",
+                redirect:"follow",
+                data:elem
+            }).then(res=>{
+                if(res.status != 200)
+                    utils.toast("ridi");
+                else{
+                    utils.toast("Sent");
+                    utils.reload();
+                }
+            })
+                
+            ;
+        },
         loadRoute(currentRoute) {
-            var items = currentRoute.items;
-            for(var it of items) {
-                it.actions = [true];
-            }
-            this.set({currentRoute})
+            const self = this;
+            const { getPages } = this.get();
+            Promise.resolve(getPages).then(pages => {
+                var items = [];
+                for(var page of pages) {
+                    if(page.route_id == currentRoute.id) {
+                        items.push(page)
+                    }
+                }
+                for(var it of items) {
+                    it.actions = [true];
+                }
+                currentRoute.items = items;
+                self.set({currentRoute});
+            })
         },
         route_item_add(page) {
             if(page != null){
                 const { currentRoute } = this.get();
-                utils.fetch(`/route/${currentRoute.name}/item/add`, {page: page.name})
+                utils.fetch(`/route/${currentRoute.id}/item/add`, {page: page.route_id})
                 .then(response => {
                     if (response.status != 200) {
                         utils.toast("something went wrong !")
@@ -105,7 +161,8 @@ export default {
         Form: "../../tags/Form.html",
         Input: "../../tags/Input.html",
         Search: "../../tags/Search.html",
-        RequestBtn: "../../tags/RequestBtn.html",
+        RequestBtn: "../../tags/RequestBtn.html"
+        
     }
 }
 </script>
