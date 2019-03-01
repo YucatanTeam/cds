@@ -25,7 +25,7 @@ const connection = mysql.createConnection({
 connection.connect(err => {
     if(err) return console.error(err);
     console.log(`database is connected to ${DB_USER}@${DB_HOST}/${DB_NAME}`);
-    const errlog = (name) => (err, rows) => err ? console.log(name, err.sqlMessage) : console.log(name, "ok");
+    const errlog = (name) => (err, rows) => err ? console.log(name.toUpperCase()+">", err.sqlMessage) : console.log(name.toUpperCase()+">", "ok");
 
 
 
@@ -38,19 +38,19 @@ connection.connect(err => {
         status TINYINT NOT NULL DEFAULT 0
     )ENGINE=INNODB;` ,[] ,(err, rows) =>{
         if(err) errlog("route")(err, rows)
-        else connection.query(`INSERT INTO route(route_id, access, title, en_title, status) VALUES(
+        else connection.query(`INSERT INTO route(id, access, title, en_title, status) VALUES(
             1,
             7,
             'مهاجرت به کانادا',
             'migratio to canada',
             1
-        );` ,[] ,errlog)
+        );` ,[] ,errlog("route"))
     });
     connection.query(`CREATE TABLE IF NOT EXISTS page (
         id INT AUTO_INCREMENT PRIMARY KEY,
         route_id INT,
         tags TEXT,
-        title TEXT NOT NULL,
+        title VARCHAR(100) NOT NULL,
         en_title TEXT NOT NULL,
         slug TEXT NOT NULL,
         en_slug TEXT NOT NULL,
@@ -59,12 +59,13 @@ connection.connect(err => {
         status TINYINT NOT NULL DEFAULT 0,
         cuid VARCHAR(100) NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        UNIQUE KEY title_key (title)
         )ENGINE=INNODB;` ,[] ,(err, rows) =>{
-        if(err) errlog(err, rows)
-        else connection.query(`INSERT INTO page(route_id, slug, en_slug, content, en_content, cuid) 
+        errlog("page")(err, rows)
+        if(!err) connection.query(`INSERT INTO page(route_id, slug, en_slug, content, en_content, cuid) 
         VALUES(1, 'persian_govah' ,'govah', 'govah e khoshgel', 'nice govah', ?);`, [cuid()], (err, rows) => {
-            errlog("page")(err, rows)
+            errlog("first page")(err, rows)
             if(!err) {
     // ============================================= COMMENT INIT SETUP ===============================================================
     // comment table
@@ -83,8 +84,8 @@ connection.connect(err => {
         FOREIGN KEY (page_id)
             REFERENCES page(id)
             ON DELETE CASCADE)ENGINE=INNODB;` ,[] ,(err, rows) => {
-                if(err) errlog("comment")(err, rows)
-                else connection.query(`INSERT INTO comment(page_id, content, name, email, cuid) VALUES(
+                errlog("comment")(err, rows)
+                if(!err)  connection.query(`INSERT INTO comment(page_id, content, name, email, cuid) VALUES(
                     1,
                     'این پست عالی است!',
                     'wilonion',
