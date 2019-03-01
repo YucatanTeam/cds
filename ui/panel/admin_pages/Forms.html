@@ -1,9 +1,10 @@
+<!-- https://svelte.technology/guide#html -->
 
 <!-- set actions and bind content  -->
 <div class="row">
-    {#await getdata}
+    {#await getcomments}
         <Loading small/>
-    {:then data}
+    {:then comments}
 
             <!-- ======== THIS MODAL WILL TRIGGER ON EACH ACTION ======== -->
             <div id="{crudindex===1 ? "modaledit" :  crudindex===0 ? "modalcreate" : crudindex===4 ? "modalblock" : crudindex===5 ? "modalunblock" : "modaldelete"}" class="modal">
@@ -110,22 +111,33 @@ export default {
         return {
             objModal: null,
             crudindex: 0, // 1 : edit , 0 : create , 2 : delete , 4 : block , 5 : unblock
-            getdata: utils.fetch("/form/all")
+            getcomments: utils.fetch("/comment/getAll")
             .then(response => {
-                    var data = response.body;
+                    var comments = response.body;
                     var rows = [];
-                    for(var datum of comments) {
+                    for(var cmnt of comments) {
                             // [ CREATE , DELETE , EDIT , BLOCK , UNBLOCK ]
-                            datum.actions = [
+                            cmnt.actions = [
                                 [7].includes(cdsuser.access), // only dev can create new comment
                                 [5, 7].includes(cdsuser.access), 
                                 [3, 5, 7].includes(cdsuser.access), // dev , admin and mod can edit the comment 
-                                [5, 7].includes(cdsuser.access) && datum.status === 1,
-                                [5, 7].includes(cdsuser.access) && datum.status === 0,
+                                [5, 7].includes(cdsuser.access) && cmnt.status === 1,
+                                [5, 7].includes(cdsuser.access) && cmnt.status === 0,
 
                             ]
+
+                            var cdate = cmnt.created_at.split("T")[0]
+                            var ctime = cmnt.created_at.split("T")[1].slice(0,8)
+                            cmnt.created_at = cdate + " at " + ctime 
+
+                            var udate = cmnt.updated_at.split("T")[0]
+                            var utime = cmnt.updated_at.split("T")[1].slice(0,8)
+                            cmnt.updated_at = udate + " at " + utime 
                             
-                            rows.push(datum);
+                            // cmnt.created_at = moment(cmnt.created_at).fromNow()
+                            // cmnt.updated_at = moment(cmnt.updated_at).fromNow()
+                            
+                            rows.push(cmnt);
                     }
                     return rows;
                 })
@@ -152,7 +164,7 @@ export default {
                 const email = elemail.value ? elemail.value : null;
                 const content = elcontent.value ? elcontent.value : null;
                 
-                utils.fetch("/form/edit", {name, email, content, id}).then((res)=>{
+                utils.fetch("/comment/edit", {name, email, content, id}).then((res)=>{
                     if(res.status!=200){
                         utils.toast("something went wrong !")
                     } else{
@@ -169,7 +181,7 @@ export default {
                 const email = elemail.value ? elemail.value : null;
                 const content = elcontent.value ? elcontent.value : null;
 
-                utils.fetch("/form/add", {name, email, content, id, post_id}).then((res)=>{
+                utils.fetch("/comment/add", {name, email, content, id, post_id}).then((res)=>{
                     if(res.status!=200){
                         utils.toast("something went wrong !")
                     } else{
@@ -178,7 +190,7 @@ export default {
                     }
                }).catch(err => utils.toast("something went wrong !"));
             } else if(crudindex === 4){
-                utils.fetch(`/form/block/${id}`, {}).then((res)=>{
+                utils.fetch(`/comment/block/${id}`, {}).then((res)=>{
                     if(res.status!=200){
                         utils.toast("something went wrong !")
                     } else{
@@ -187,7 +199,7 @@ export default {
                     }
                 }).catch(err => utils.toast("something went wrong !"));
             } else if(crudindex === 5){
-                utils.fetch(`/form/unblock/${id}`, {}).then((res)=>{
+                utils.fetch(`/comment/unblock/${id}`, {}).then((res)=>{
                     if(res.status!=200){
                         utils.toast("something went wrong !")
                     } else{
@@ -196,7 +208,7 @@ export default {
                     }
                 }).catch(err => utils.toast("something went wrong !"));
             } else{
-                utils.fetch(`/form/delete/${id}`, {}).then((res)=>{
+                utils.fetch(`/comment/delete/${id}`, {}).then((res)=>{
                     if(res.status!=200){
                         utils.toast("something went wrong !")
                     } else{

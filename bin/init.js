@@ -155,6 +155,23 @@ connection.connect(err => {
             );` ,[cuid()] ,errlog("first apply"));
         });
 
+    // ========================================= FORM INIT SETUP ===================================================================
+    // form table
+    //...
+    connection.query(`CREATE TABLE IF NOT EXISTS forms (
+        id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        iframe TEXT NOT NULL,
+        status TINYINT NOT NULL DEFAULT 0,
+        cuid VARCHAR(100) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)ENGINE=INNODB;` ,[] ,(err, rows)=>{
+            if(err) errlog("form")(err, rows)
+            else connection.query(`INSERT INTO apply(iframe, ?) VALUES(
+                '<iframe src="https://docs.google.com/forms/d/e/1FAIpQLSc6sL9JIN2MfBJWyUinbzvVq4Nht1krsGFUzIDJK1_T0_bGmA/viewform?embedded=true" width="640" height="1112" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>',
+                ?
+            );` ,[cuid()] ,errlog("first form"));
+        });
+
     // ========================================= DEV INIT SETUP ===================================================================
     // error table
     //...
