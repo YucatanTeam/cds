@@ -8,6 +8,14 @@
             <Input col="s12" label="English Page title" id="title" type="text" />
             <Editor id="en_content" initial="English Editor" bind:eneditor=eneditor></Editor><br>
             <div class="chips chips-placeholder"></div>
+            <label>
+                <input type="checkbox"  />
+                <span>Send to telegram</span>
+            </label>
+            <label>
+                <input type="checkbox" id="comments"/>
+                <span>Enable comments</span>
+            </label>
         </form>
         <a class="waves-effect waves-light yellow black-text btn" on:click=post()>Post</a>
     </Card>
