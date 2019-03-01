@@ -1,22 +1,98 @@
-<Editor id="ckeditor" initial="this is the initial text" bind:editor/>
-<Select id="routes" label="routes" text="select a route" options={[
-    {name: "0"},
-    {name: "1"},
-    {name: "2"}]}
-    
-    on:select=loadRoute(event)/>
-
+<div class="row">
+    <Card image="/public/img/privacy.png" col="s12 m10 offset-m1 l8 offset-l2">
+        {#await getRoutes}
+            <Loading small/>
+        {:then routes}
+            <h3>Routes</h3>
+            <Select id="routes" label="routes" text="select a route" options={routes} on:select=loadRoute(event)/>
+            {#if currentRoute}
+                <Table highlight rows={5} actions={[
+                    {icon: "delete", tooltip: "delete", action(obj, table) {
+                        utils.fetch(`/route/${currentRoute.name}/item/${obj.name}/remove`, {})
+                        .then(r=>{
+                            if(r.status == 200) {
+                                utils.toast("Done");
+                                // utils.reload();
+                            }
+                            else utils.toast("something went wrong !");
+                        })
+                        .catch(err => utils.toast("something went wrong !"));
+                    }}]}
+                    content={currentRoute.items} search={["name"]}/>
+                <br>
+                <h5>Add an item to {currentRoute.name}</h5>
+                {#await getPages}
+                    <Loading small/>
+                {:then pages}
+                    <Search
+                    data={pages}
+                    label="page"
+                    id="route-item-page"
+                    on:result=route_item_add(event)/>
+                {/await}
+            {/if}
+        {/await}
+    </Card>
+</div>
 
 <script>
 export default {
     data() {
         return {
-            editor: null,
+            utils,
+            currentRoute: null,
+            getRoutes: utils.fetch("/route/all")
+            .then(res => {
+                if(res.status != 200)
+                    throw "not ok";
+                else {
+                    // route { items: [{name}], name, access }
+                    
+                    var routes = res.body;
+                    var rows = [];
+                    for(var rt of routes) {
+                        if(rt.access <= cdsuser.access) {
+                            rows.push(rt)
+                        }
+                    }
+                    return rows;
+                }
+                   
+            })
+            .catch(err => utils.toast("something went wrong !")),
+            getPages: utils.fetch("/page/all")
+            .then(res => {
+                if(res.status != 200)
+                    throw "not ok";
+                else
+                   return res.body;
+            })
+            .catch(err => utils.toast("something went wrong !")),
         }
     },
     methods: {
-        loadRoute(option) {
-            console.log(option)
+        loadRoute(currentRoute) {
+            var items = currentRoute.items;
+            for(var it of items) {
+                it.actions = [true];
+            }
+            this.set({currentRoute})
+        },
+        route_item_add(page) {
+            if(page != null){
+                const { currentRoute } = this.get();
+                utils.fetch(`/route/${currentRoute.name}/item/add`, {page: page.name})
+                .then(response => {
+                    if (response.status != 200) {
+                        utils.toast("something went wrong !")
+                    } else {
+                        utils.toast("Done")
+                        utils.reload()
+                    }
+                })
+            } else {
+                utils.toast("page doesn't exist !")
+            }
         }
     },
     components: {
@@ -28,6 +104,7 @@ export default {
         Modal: "../../tags/Modal.html",
         Form: "../../tags/Form.html",
         Input: "../../tags/Input.html",
+        Search: "../../tags/Search.html",
         RequestBtn: "../../tags/RequestBtn.html",
     }
 }
