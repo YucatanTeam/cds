@@ -38,11 +38,9 @@
 	import DatabaseControlCenter from "./dev_pages/DatabaseControlCenter.html";
 	import PortalControlCenter from "./admin_pages/PortalControlCenter.html";
 	import ContentControllCenter from "./admin_pages/ContentControlCenter.html";
-	import UIControllCenter from "./admin_pages/UIControllCenter.html";
+	import ConsultationSchedule from "./admin_pages/ConsultationSchedule.html";
 	import ApplyProcess from "./user_pages/ApplyProcess.html";
-	import CVProcess from "./user_pages/CVProcess.html";
 	import ReservingConsultancyTime from "./user_pages/ReservingConsultancyTime.html";
-	import SOPProcess from "./user_pages/SOPProcess.html";
 	import Transactions from "./user_pages/Transactions.html";
 
 
@@ -149,19 +147,17 @@
 					"Magazine Control Center":		{access: [3, 5, 7], icon: "import_contacts", page: MagazineControlCenter},
 					"Comment Control Center":		{access: [3, 5, 7], icon: "comment", page: CommentControlCenter},
 					"FAQ Control Center":			{access: [], icon: "question_answer", page: AnswerQuestionControlCenter},
-					"Consultancy Forms":			{access: [], icon: "live_help", page: ConsultancyForms},
+					"Consultation Schedule":		{access: [3, 5, 7], icon: "event", page: ConsultationSchedule},
+					"Consultancy Forms":			{access: [3, 5, 7], icon: "live_help", page: ConsultancyForms},
 					"Telegram Bot":					{access: [], icon: "send", page: TelegramBot},
 					"Live Chat":					{access: [], icon: "chat", page: LiveChat},
-					"Student Control Center":		{access: [], icon: "assignment_ind", page: StudentControlCenter},
+					"Student Control Center":		{access: [3, 5, 7], icon: "assignment_ind", page: StudentControlCenter},
 					"Portal Control Center":		{access: [], icon: "account_balance", page: PortalControlCenter},
 					"Database Control Center":		{access: [], icon: "storage", page: DatabaseControlCenter},
 					"Content Center":				{access: [3, 5, 7], icon: "subject", page: ContentControllCenter},
-					"UI Control Center":			{access: [], icon: "web", page: UIControllCenter},
-					"مشاهده پروسه اپلای" : 		    {access: [2], icon: "storage", page: ApplyProcess},
-					"پروسه نگارش رزومه" : 		    {access: [2], icon: "storage", page: CVProcess},
-					"پروسه نگارش sop" : 			{access: [2], icon: "storage", page: SOPProcess},
-					"تراکنش ها"	:					{access: [2], icon: "storage", page: Transactions},	
-					"دریافت زمان مشاوره" : 			{access: [2], icon: "storage", page: ReservingConsultancyTime},		
+					"پروسه اپلای" : 		    	{access: [2], icon: "airplanemode_active", page: ApplyProcess},
+					"تراکنش ها"	:				   {access: [2], icon: "receipt", page: Transactions},	
+					"دریافت زمان مشاوره" : 		   {access: [2], icon: "event", page: ReservingConsultancyTime},		
 				}
 			};
 		},

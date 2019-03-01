@@ -1,3 +1,313 @@
 
-some detail about student/user panel like sop , cv and transactions process
-delete and edit a student
+<!-- set actions and bind content  -->
+<div class="row">
+    {#await getinfos}
+        <Loading small/>
+    {:then infos}
+
+            <!-- ======== THIS MODAL WILL TRIGGER ON EACH ACTION ======== -->
+            <div id="{crudindex===1 ? "modaledit" :  crudindex===0 ? "modalcreate" : crudindex===4 ? "modalblock" : crudindex===5 ? "modalunblock" : "modaldelete"}" class="modal">
+                <div class="modal-content">
+                    <h4>{crudindex===1 ? "Edit" : crudindex===0 ? "Create" : ""}</h4>
+                        
+                        {#if crudindex === 2}
+                            <h4>Confirm Delete</h4>
+                            <p>Do you really want to delete this info for user <strong>{objModal.firstname}</strong> ?</p>
+
+                        {:elseif crudindex === 4}
+                            <h4>Confirm Block</h4>
+                            <p>Do you really want to block this info for user <strong>{objModal.firstname}</strong> ?</p>
+
+                        {:elseif crudindex === 5}
+                            <h4>Confirm Unblock</h4>
+                            <p>Do you really want to unblock this info for user <strong>{objModal.firstname}</strong> ?</p>
+                        
+                        {:elseif crudindex === 1}
+                            <div class="row">
+                                <Card col="s12 m10 offset-m1 l10 offset-l1">
+                                    {#if objModal}
+                                        <Input col="s12" label="cuid" id="cuid" type="text" value={ crudindex === 1 ? objModal.cuid : "" } disabled/>
+                                        <Input col="s12" label="user ID" id="user_id" type="text" value={ crudindex === 1 ? objModal.user_id : "" } disabled/>
+                                        <Input col="s12" label="email" id="email" type="email" value={ crudindex === 1 ? objModal.email : ""} disabled/>
+                                        <Input col="s12" label="firstname" id="firstname" type="text" value={ crudindex === 1 ? objModal.firstname : ""} disabled/>
+                                        <Input col="s12" label="lastname" id="lastname" type="text" value={ crudindex === 1 ? objModal.lastname : ""} disabled/>
+                                        <Input col="s12" label="country" id="country" type="text" value={ crudindex === 1 ? objModal.country : ""}/>
+                                        <Input col="s12" label="university" id="university" type="text" value={ crudindex === 1 ? objModal.university : ""}/>
+                                        <Input col="s12" label="education_language" id="education_language" type="text" value={ crudindex === 1 ? objModal.education_language : ""}/>
+                                        <Input col="s12" label="cv" id="cv" type="text" value={ crudindex === 1 ? objModal.cv : ""}/>
+                                        <Input col="s12" label="sop" id="sop" type="text" value={ crudindex === 1 ? objModal.sop : ""}/>
+                                        <Input col="s12" label="rc" id="rc" type="text" value={ crudindex === 1 ? objModal.rc : ""}/>
+                                        <Input col="s12" label="field" id="field" type="text" value={ crudindex === 1 ? objModal.field : ""}/>
+                                        <Input col="s12" label="created at" id="created_at" type="text" value={ crudindex === 1 ? objModal.created_at : "" } disabled/>
+                                        <Input col="s12" label="updated at" id="updated_at" type="text" value={ crudindex === 1 ? objModal.updated_at : "" } disabled/>
+                                        <Input col="s12" label="reg_date" id="reg_date" type="text" value={ crudindex === 1 ? objModal.reg_date : ""}/>
+                                        <Editor id="Editdescription" initial={crudindex === 1 ? objModal.description : ""} bind:editor/>
+                                        <label for="description">description</label>
+                                    {/if}
+                                </Card>
+                            </div>
+                        {:else}
+                            {#await getusers}
+                                <Loading small/>
+                            {:then users}
+                                    <Select id="users" label="users" text="select a user" options={users} on:select=loadUser(event)/>
+                                        <Input col="s12" label="country" id="country" type="text"/>
+                                        <Input col="s12" label="university" id="university" type="text"/>
+                                        <Input col="s12" label="education_language" id="education_language" type="text"/>
+                                        <Input col="s12" label="cv" id="cv" type="text"/>
+                                        <Input col="s12" label="sop" id="sop" type="text"/>
+                                        <Input col="s12" label="rc" id="rc" type="text"/>
+                                        <Input col="s12" label="field" id="field" type="text"/>
+                                        <Input col="s12" label="reg_date" id="reg_date" type="text"/>
+                                        <Editor id="description" bind:editor/>
+                                        <label for="description">description</label>
+                            {:catch err}
+                                <p>Error {err.message}</p>
+                            {/await}
+                        {/if}
+                </div>
+                <div class="modal-footer">
+                    <button class="modal-close waves-effect waves-green btn-flat" on:click="action()">{crudindex===1 ? "Update" : crudindex===0 ? "Add" : crudindex===2 ? "Delete" : crudindex===4? "Block" : "Unblock"}</button>
+                </div>
+            </div> <!-- ======== END - MODAL ======== -->
+
+        <Table highlight rows={3}
+            on:modal="open(event)"
+            content={infos}
+            search={["user_id", "description", "sop", "cv", "field", "education_language", 
+                     "country", "university", "rc", "reg_date", "cuid", "status", "id"]}
+            actions={[
+                                            /* ------------------------------------------------
+                                                list of all actions for student apply info data table 
+                                            --------------------------------------------------
+                                            */
+                    // ==============================================================================================
+                    // DELETE
+                    // ==============================================================================================
+                    {icon: "delete",tooltip: "delete", action(obj, component) {
+                            var index = 2
+                           component.fire("modal", {obj, index}) 
+                            
+                        }
+                    }, 
+                    // ==============================================================================================
+                    // EDIT : for dev , admin and mod
+                    // ==============================================================================================
+                    {icon: "edit",tooltip: "edit", action(obj, component) {
+                            var index = 1
+                            component.fire("modal", {obj, index})    
+                        }
+                    }, 
+                    // ==============================================================================================
+                    // BLOCK STATUS
+                    // ==============================================================================================
+                    {icon: "block",tooltip: "block", action(obj, component) {
+                                var index = 4
+                                component.fire("modal", {obj, index})
+                        }
+                    },
+                    // ==============================================================================================
+                    // UNBLOCK STATUS
+                    // ==============================================================================================
+                    {icon: "beenhere",tooltip: "unblock", action(obj, component) {
+                                var index = 5
+                                component.fire("modal", {obj, index})
+                        }
+                    } 
+                ]}
+        />
+
+        <div class="fixed-action-btn">
+              <a class="btn-floating btn-large waves-effect waves-light red" on:click="fireMe(0)"><I>add</I></a>
+        </div>
+
+
+    {:catch err}
+        <p>Error {err.message}</p>
+    {/await}
+</div>
+
+<script>
+export default {
+    data(){
+        var mob = {data: null};
+        return {
+            editor: null,
+            objModal: null,
+            mob,
+            info_id: null,
+            user_id: null,
+            getusers: utils.fetch("/user/all")
+            .then(response =>{
+                var users = []
+                for(var user of response.body){
+                    user.name = user.firstname + " " + user.lastname
+                    if(user.access === 2) users.push(user)
+                }
+                return users
+            }).catch(err => utils.toast("something went wrong !")),
+            crudindex: 0, // 1 : edit , 0 : create , 2 : delete , 4 : block , 5 : unblock
+            getinfos: utils.fetch("/student-control/getAll")
+            .then(response => {
+                var mobs = response.body;
+                    mob.data = mobs;
+                    var rows = [];
+                    for(var mb of mobs) {
+                            var info = {
+                                id : mb.id,
+                                country: mb.country,
+                                university: mb.university,
+                                education_language: mb.education_language,
+                                cv: mb.cv,
+                                sop: mb.sop,
+                                rc: mb.rc,
+                                field: mb.field,
+                                reg_date: mb.reg_date,
+                                status: mb.status
+                            }
+                            // [ DELETE , EDIT , BLOCK , UNBLOCK ]
+                            info.actions = [
+                                [5, 7].includes(cdsuser.access), 
+                                [3, 5, 7].includes(cdsuser.access), // dev , admin and mod can edit the apply
+                                [5, 7].includes(cdsuser.access) && info.status == 1,
+                                [5, 7].includes(cdsuser.access) && info.status == 0,
+                            ]
+                            
+                            rows.push(info);
+                    }
+                    return rows;
+                })
+                .catch(err => utils.toast("something went wrong !")),
+        }
+    },
+    methods:{
+        fireMe(index){
+            if(index === 0){
+                this.set({crudindex: index})
+                var elems = document.querySelector('.modal');
+                var instances = M.Modal.init(elems, {});
+                instances.open();    
+            }
+        },
+        loadUser(user) {
+            this.set({user_id: user.id})
+        },
+        open({obj, index}){
+                const mob = this.get().mob.data
+                for(var mb of mob){
+                    if(obj.id === mb.id) {
+                        this.set({crudindex: index, objModal: mb, info_id: obj.id})
+                        this.get().editor.setData(this.get().objModal.description)   
+                    }
+                }
+                var elems = document.querySelector('.modal');
+                var instances = M.Modal.init(elems, {});
+                instances.open();
+        },
+        action(){
+            
+            const {crudindex} = this.get()
+            const {info_id} = this.get()
+            // get down the road with crudindex!!!
+            if(crudindex === 1){
+                const elcountry = document.getElementById("country");
+                const eluniversity = document.getElementById("university");
+                const eleducation_language = document.getElementById("education_language");
+                const elcv = document.getElementById("cv");
+                const elsop = document.getElementById("sop");
+                const elrc = document.getElementById("rc");
+                const elfield = document.getElementById("field");
+                const elreg_date = document.getElementById("reg_date");
+
+                const country = elcountry.value ? elcountry.value : null;
+                const university = eluniversity.value ? eluniversity.value : null;
+                const education_language = eleducation_language.value ? eleducation_language.value : null;
+                const cv = elcv.value ? elcv.value : null;
+                const sop = elsop.value ? elsop.value : null;
+                const rc = elrc.value ? elrc.value : null;
+                const field = elfield.value ? elfield.value : null;
+                const reg_date = elreg_date.value ? elreg_date.value : null;
+                const description = this.get().editor.getData() ? this.get().editor.getData() : null;
+                
+                utils.fetch("/student-control/edit", {info_id, country, university, education_language, cv, sop, rc, field, reg_date, description}).then((res)=>{
+                    if(res.status!=200){
+                        utils.toast("something went wrong !")
+                    } else{
+                        utils.toast("Done")
+                        utils.reload()
+                    }
+               }).catch(err => utils.toast("something went wrong !"));
+            } else if(crudindex === 0){
+                
+                const {user_id} = this.get()
+
+                const elcountry = document.getElementById("country");
+                const eluniversity = document.getElementById("university");
+                const eleducation_language = document.getElementById("education_language");
+                const elcv = document.getElementById("cv");
+                const elsop = document.getElementById("sop");
+                const elrc = document.getElementById("rc");
+                const elfield = document.getElementById("field");
+                const elreg_date = document.getElementById("reg_date");
+
+                const country = elcountry.value ? elcountry.value : null;
+                const university = eluniversity.value ? eluniversity.value : null;
+                const education_language = eleducation_language.value ? eleducation_language.value : null;
+                const cv = elcv.value ? elcv.value : null;
+                const sop = elsop.value ? elsop.value : null;
+                const rc = elrc.value ? elrc.value : null;
+                const field = elfield.value ? elfield.value : null;
+                const reg_date = elreg_date.value ? elreg_date.value : null;
+                const description = this.get().editor.getData() ? this.get().editor.getData() : null
+
+                utils.fetch("/student-control/add", {country, university, education_language, cv, sop, rc, field, reg_date, description, user_id}).then((res)=>{
+                    if(res.status!=200){
+                        utils.toast("something went wrong !")
+                    } else{
+                        utils.toast("Done")
+                        utils.reload()
+                    }
+               }).catch(err => utils.toast("something went wrong !"));
+            } else if(crudindex === 4){
+                utils.fetch(`/student-control/block/${info_id}`, {}).then((res)=>{
+                    if(res.status!=200){
+                        utils.toast("something went wrong !")
+                    } else{
+                        utils.toast("Done")
+                        utils.reload()
+                    }
+                }).catch(err => utils.toast("something went wrong !"));
+            } else if(crudindex === 5){
+                utils.fetch(`/student-control/unblock/${info_id}`, {}).then((res)=>{
+                    if(res.status!=200){
+                        utils.toast("something went wrong !")
+                    } else{
+                        utils.toast("Done")
+                        utils.reload()
+                    }
+                }).catch(err => utils.toast("something went wrong !"));
+            } else{
+                utils.fetch(`/student-control/delete/${info_id}`, {}).then((res)=>{
+                    if(res.status!=200){
+                        utils.toast("something went wrong !")
+                    } else{
+                        utils.toast("Done")
+                        utils.reload()
+                    }
+               }).catch(err => utils.toast("something went wrong !"));
+            }
+            
+        }
+    },
+    components: {
+        Loading: "../../tags/Loading.html",
+        I: "../../tags/Icon.html",
+        Table: "../../tags/Table.html",
+        Card: "../../tags/Card.html",
+        Form: "../../tags/Form.html",
+        Input: "../../tags/Input.html",
+        Editor: "../../tags/Editor.html",
+        Select: "../../tags/Select.html"
+    }
+}
+</script>

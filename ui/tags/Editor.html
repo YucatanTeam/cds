@@ -1,7 +1,7 @@
 <div id="{id}-toolbar-container"></div>
 
 <div id="{id}">
-    <p>{initial}</p>
+    {initial}
 </div>
 
 <script>
@@ -18,12 +18,14 @@ export default {
     oncreate() {
         const self = this;
         const { id } = self.get();
+        const { initial } = this.get()
         DecoupledEditor
             .create( document.querySelector( `#${id}` ) )
             .then( editor => {
                 const toolbarContainer = document.getElementById( `${id}-toolbar-container` );
                 toolbarContainer.appendChild( editor.ui.view.toolbar.element );
                 self.set({ editor });
+                editor.setData(initial)
             })
             .catch( error => {
                 console.error( error );

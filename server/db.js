@@ -218,6 +218,59 @@ const db = {
                 
             }
         },
+        /* --------------------
+            STUDENT CONTROL API
+        */
+        studentcontrol:{
+            getAll(cb){
+                db.connection.query(`SELECT apply.id, apply.user_id, apply.description, apply.country, apply.university, apply.education_language,
+                                            apply.field, apply.cv, apply.sop, apply.rc, apply.reg_date, apply.cuid, apply.status,
+                                            apply.created_at, apply.updated_at, user.firstname, user.lastname, user.email
+                                            FROM apply 
+                                            INNER JOIN user ON apply.user_id=user.id ORDER BY apply.created_at DESC;`, [], (err, rows)=>{
+                    if(rows){
+                        return cb(err, rows);
+                    } else {
+                        return cb(err, false);
+                    }
+                });
+            },
+            getById(id, cb){
+                db.connection.query(`SELECT * FROM apply WHERE id = ?`, [id], (err, rows)=>{
+                    if(rows.length === 1){
+                        return cb(err, rows);
+                    } else{
+                        return cb(err, false);
+                    }
+                })
+            },
+            block(id, cb){
+                db.connection.query(`UPDATE apply SET status = 0 WHERE id = ?`, [id], cb ? cb : e=>e);
+            },
+            unblock(id, cb){
+                db.connection.query(`UPDATE apply SET status = 1 WHERE id = ?`, [id], cb ? cb : e=>e);
+            },
+            deleteById(id, cb){
+                db.connection.query(`DELETE FROM apply WHERE id = ?`, [id], cb ? cb : e=>e);
+            },
+            deleteByCuid(cuid, cb){
+                db.connection.query(`DELETE FROM apply WHERE cuid = ?`, [cuid], cb ? cb : e=>e);
+            },
+            deleteAll(cb){
+                db.connection.query(`DELETE * FROM apply`, [], cb ? cb : e=>e);
+            },
+            add(info, cb){
+                db.connection.query(`INSERT INTO apply(user_id, description, country, university, 
+                                                       education_language, field, cv, sop, rc, reg_date, cuid) 
+                                    VALUES(?, ?, ?, ?, ?, ? , ?, ?, ?, ?, ?)`, [info.user_id, info.description, info.country, info.university, 
+                                                             info.education_language, info.field, info.cv, info.sop, info.rc, info.reg_date, info.cuid], cb ? cb : e=>e)
+            },
+            update(info, cb){
+                db.connection.query(`UPDATE apply SET description = ?, country = ?, university = ?, education_language = ?, 
+                                                      field = ?, cv = ?, sop = ?, rc = ?, reg_date = ? 
+                WHERE id = ?`, [info.description, info.country, info.university, info.education_language, info.field, info.cv, info.sop, info.rc, info.reg_date, info.id], cb);
+            },
+        },
     }
 }
 
