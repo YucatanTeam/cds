@@ -331,6 +331,17 @@ const db = {
             deleteAll(cb){
                 db.connection.query(`DELETE * FROM apply`, [], cb ? cb : e=>e);
             },
+            add(info, cb){
+                db.connection.query(`INSERT INTO apply(user_id, description, country, university, 
+                                                       education_language, field, cv, sop, rc, reg_date, cuid) 
+                                    VALUES(?, ?, ?, ?, ?, ? , ?, ?, ?, ?, ?)`, [info.user_id, info.description, info.country, info.university, 
+                                                             info.education_language, info.field, info.cv, info.sop, info.rc, info.reg_date, info.cuid], cb ? cb : e=>e)
+            },
+            update(info, cb){
+                db.connection.query(`UPDATE apply SET description = ?, country = ?, university = ?, education_language = ?, 
+                                                      field = ?, cv = ?, sop = ?, rc = ?, reg_date = ? 
+                WHERE id = ?`, [info.description, info.country, info.university, info.education_language, info.field, info.cv, info.sop, info.rc, info.reg_date, info.id], cb);
+            },
         },
     }
 }

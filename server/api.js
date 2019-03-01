@@ -405,9 +405,8 @@ module.exports = ({app, db}) => {
                 dev.report(err);
                 return res.status(500).end("Internal Server Error !");
             } else return res.status(200).end("OK");
-        })
-            
-    })
+        })      
+    });
 
     // ----------------------
     // student control routes
@@ -425,14 +424,14 @@ module.exports = ({app, db}) => {
 
     app.post('/student-control/block/:id', access(3), (req, res) =>{
         db.api.studentcontrol.block(req.params.id, (err, row)=>{
-
+            
             if(err) {
                 dev.report(err);
                 return res.status(404).end("Nothing Found !");
             } else return res.status(200).end("OK");
         })
     });
-
+    
     app.post('/student-control/unblock/:id', access(3), (req, res)=>{
         db.api.studentcontrol.unblock(req.params.id, (err, row)=>{
 
@@ -443,7 +442,7 @@ module.exports = ({app, db}) => {
         })
     });
 
-    app.post('/studentcontrol/delete/:id', access(3), (req, res)=>{
+    app.post('/student-control/delete/:id', access(3), (req, res)=>{
         db.api.studentcontrol.deleteById(req.params.id, (err, rows)=>{
 
             if(err) {
@@ -453,7 +452,68 @@ module.exports = ({app, db}) => {
         })
     });
 
+    app.post('/student-control/edit', access(3), (req, res)=>{
+        for(var i in req.body) {
+            if(req.body[i] == null) delete req.body[i]
+        }
+        db.api.studentcontrol.getById(req.body.id, (err, info)=>{
+            if(err) {
+                dev.report(err);
+                return res.status(404).end("Nothing Found !");
+            }
 
+            var newinfo = { // TODO : validate and sanitize here
+                id : req.body.info_id ? req.body.info_id : info.id,
+                country : req.body.country ? req.body.country : info.country,
+                university : req.body.university ? req.body.university : info.university,
+                education_language : req.body.education_language ? req.body.education_language : info.education_language,
+                cv : req.body.cv ? req.body.cv : info.cv,
+                sop : req.body.sop ? req.body.sop : info.sop,
+                rc : req.body.rc ? req.body.rc : info.rc,
+                field : req.body.field ? req.body.field : info.body,
+                reg_date : req.body.reg_date ? req.body.reg_date : info.reg_date,
+                description : req.body.description ? req.body.description : info.description
+            }
+
+            db.api.studentcontrol.update(newinfo, (err, row)=>{
+                if(err) {
+                    dev.report(err);
+                    return res.status(500).end("Internal Server Error !");
+                } else return res.status(200).end("OK");
+            })
+
+        })
+    })
+
+    app.post('/student-control/add', access(3), (req, res)=>{
+        for(var i in req.body){
+            if(req.body[i] == null) {
+                delete req.body[i] 
+                return res.status(411).end("Length Required !");
+            } 
+        }
+            
+        var newinfo = { // TODO : validate and sanitize here
+            cuid: cuid(),
+            country : req.body.country,
+            university : req.body.university,
+            education_language : req.body.education_language,
+            cv : req.body.cv,
+            sop : req.body.sop,
+            rc : req.body.rc,
+            field : req.body.field,
+            reg_date : req.body.reg_date,
+            description : req.body.description,
+            user_id : req.body.user_id
+        }
+        
+        db.api.studentcontrol.add(newinfo, (err, row)=>{
+            if(err) {
+                dev.report(err);
+                return res.status(500).end("Internal Server Error !");
+            } else return res.status(200).end("OK");
+        })      
+    });
 
 
 
