@@ -18,7 +18,7 @@
             {#if currentRoute}
                 <Table highlight rows={5} actions={[
                     {icon: "delete", tooltip: "delete", action(obj, table) {
-                        utils.fetch(`/route/${currentRoute.name}/item/${obj.name}/remove`, {})
+                        utils.fetch(`/page/${obj.route_id}/route/remove`, {})
                         .then(r=>{
                             if(r.status == 200) {
                                 utils.toast("Done");
@@ -63,6 +63,7 @@ export default {
                     var routes = res.body;
                     var rows = [];
                     for(var rt of routes) {
+                        rt.name = rt.title;
                         if(rt.access <= cdsuser.access) {
                             rows.push(rt)
                         }
@@ -85,16 +86,26 @@ export default {
   
     methods: {
         loadRoute(currentRoute) {
-            var items = currentRoute.items;
-            for(var it of items) {
-                it.actions = [true];
-            }
-            this.set({currentRoute})
+            const self = this;
+            const { getPages } = this.get();
+            Promise.resolve(getPages).then(pages => {
+                var items = [];
+                for(var page of pages) {
+                    if(page.route_id == currentRoute.id) {
+                        items.push(page)
+                    }
+                }
+                for(var it of items) {
+                    it.actions = [true];
+                }
+                currentRoute.items = items;
+                self.set({currentRoute});
+            })
         },
         route_item_add(page) {
             if(page != null){
                 const { currentRoute } = this.get();
-                utils.fetch(`/route/${currentRoute.name}/item/add`, {page: page.name})
+                utils.fetch(`/route/${currentRoute.id}/item/add`, {page: page.route_id})
                 .then(response => {
                     if (response.status != 200) {
                         utils.toast("something went wrong !")
