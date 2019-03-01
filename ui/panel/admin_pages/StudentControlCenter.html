@@ -49,19 +49,19 @@
                                 </Card>
                             </div>
                         {:else}
-                                <Form response={{}}>
-                                    <Input col="s12" label="user ID" id="user_id" type="text"/>
-                                    <Input col="s12" label="country" id="country" type="text"/>
-                                    <Input col="s12" label="university" id="university" type="text"/>
-                                    <Input col="s12" label="education_language" id="education_language" type="text"/>
-                                    <Input col="s12" label="cv" id="cv" type="text"/>
-                                    <Input col="s12" label="sop" id="sop" type="text"/>
-                                    <Input col="s12" label="rc" id="rc" type="text"/>
-                                    <Input col="s12" label="field" id="field" type="text"/>
-                                    <Input col="s12" label="reg_date" id="reg_date" type="text"/>
-                                    <Editor id="description" initial="content goes here..." bind:editor/>
-                                    <label for="description">description</label>
-                                </Form>
+                            <Form response={{}}>
+                            <Select id="users" label="user ID" text="select a user" options={users} on:select=loadUser(event)/>
+                                <Input col="s12" label="country" id="country" type="text"/>
+                                <Input col="s12" label="university" id="university" type="text"/>
+                                <Input col="s12" label="education_language" id="education_language" type="text"/>
+                                <Input col="s12" label="cv" id="cv" type="text"/>
+                                <Input col="s12" label="sop" id="sop" type="text"/>
+                                <Input col="s12" label="rc" id="rc" type="text"/>
+                                <Input col="s12" label="field" id="field" type="text"/>
+                                <Input col="s12" label="reg_date" id="reg_date" type="text"/>
+                                <Editor id="description" initial="content goes here..." bind:editor/>
+                                <label for="description">description</label>
+                            </Form>
                         {/if}
                 </div>
                 <div class="modal-footer">
@@ -116,11 +116,7 @@
         />
 
 
-
-
-                <a class="btn-floating btn-large waves-effect waves-light red" on:modal="open(event)"><I>add</I></a>
-
-
+    <a class="btn-floating btn-large waves-effect waves-light red" on:modal="open(event)"><I>add</I></a>
 
     {:catch err}
         <p>Error {err.message}</p>
@@ -167,9 +163,19 @@ export default {
                 .catch(err => utils.toast("something went wrong !")),
         }
     },
+    oncreate(){
+        utils.fetch("/user/all")
+            .then(response =>{
+                return response.body
+            }).catch(err => utils.toast("something went wrong !"))
+    },
     methods:{
+        loadUser(option) {
+            console.log(option)
+        },
         open({obj, index}){
-            if(crudindex != 1 || crudindex != 4 || crudindex != 5 || crudindex != 2){
+            // TODO : fix bug!!
+            if(index != 1 || index != 4 || index != 5 || index != 2){
                 var elems = document.querySelector('.modal');
                 var instances = M.Modal.init(elems, {});
                 instances.open();    
@@ -184,7 +190,7 @@ export default {
                 instances.open();
             }
         },
-        action(id, post_id){
+        action(id, user_id){
             
             var {crudindex} = this.get()
             // get down the road with crudindex!!!
@@ -238,7 +244,7 @@ export default {
                 const reg_date = elreg_date.value ? elreg_date.value : null;
                 const description = eldescription.value ? eldescription.value : null;
 
-                utils.fetch("/student-control/add", {name, email, content, id, post_id}).then((res)=>{
+                utils.fetch("/student-control/add", {country, university, education_language, cv, sop, field, reg_date, description}).then((res)=>{
                     if(res.status!=200){
                         utils.toast("something went wrong !")
                     } else{
@@ -285,6 +291,7 @@ export default {
         Form: "../../tags/Form.html",
         Input: "../../tags/Input.html",
         Editor: "../../tags/Editor.html",
+        Select: "../../tags/Select.html"
     }
 }
 </script>
