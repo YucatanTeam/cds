@@ -28,53 +28,7 @@ connection.connect(err => {
     const errlog = (err, rows) => err ? console.log(err.sqlMessage) : console.log("ok");
 
 
-    // ============================================== POST INIT SETUP ==============================================================
-    // post table
-    // ...
-    connection.query(`CREATE TABLE IF NOT EXISTS post (
-    id INT AUTO_INCREMENT PRIMARY KEY, 
-    title TEXT NOT NULL,
-    en_title TEXT NOT NULL,
-    content TEXT NOT NULL,
-    en_content TEXT NOT NULL,
-    status TINYINT NOT NULL DEFAULT 0,
-    slug TEXT NOT NULL,
-    en_slug TEXT NOT NULL,
-    cuid VARCHAR(100) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    cover blob NULL)ENGINE=INNODB;` ,[] ,(err, rows) => {
-        if(err) errlog(err, rows)
-        else connection.query(`INSERT INTO post(title, en_title, content, en_content, slug, en_slug, cuid) VALUES(
-            'اوین پست',
-            'first post',
-            'این اولین پست است',
-            'this is the first post',
-            'اولین-پست',
-            'first-post',
-            ?
-        );` ,[cuid()] ,errlog);
-    });
-    connection.query(`CREATE TABLE IF NOT EXISTS post_tag(
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        post_id INT,
-        tag TEXT NOT NULL,
-        en_tag TEXT NOT NULL,
-        cuid VARCHAR(100) NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        INDEX post_ind (post_id),
-        FOREIGN KEY (post_id)
-        REFERENCES post(id)
-        ON DELETE CASCADE)ENGINE=INNODB;`, [], (err, rows)=>{
-            if(err) errlog(err, rows)
-            else connection.query(`INSERT INTO post_tag(post_id, tag, en_tag, cuid) VALUES ( 
-                            1, 
-                            "کانادا", 
-                            "canada", 
-                            ?
-                            );`, [cuid()], errlog)
-        });
+
     
     // ============================================= COMMENT INIT SETUP ===============================================================
     // comment table
@@ -122,9 +76,11 @@ connection.connect(err => {
         );` ,[cuid()] ,errlog)
     });
 // PAGE
-    connection.query(`CREATE TABLE IF NOT EXISTS body (
+    connection.query(`CREATE TABLE IF NOT EXISTS page (
         id INT AUTO_INCREMENT PRIMARY KEY,
-        tab_id INT,
+        route_id INT,
+        title TEXT NOT NULL,
+        en_title TEXT NOT NULL,
         slug TEXT NOT NULL,
         en_slug TEXT NOT NULL,
         content TEXT NOT NULL,
@@ -133,39 +89,29 @@ connection.connect(err => {
         cuid VARCHAR(100) NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        INDEX tab_ind (tab_id),
-        FOREIGN KEY (tab_id)
+        INDEX route_ind (route_id),
+        FOREIGN KEY (route_id)
             REFERENCES tab(id)
                 ON DELETE CASCADE)ENGINE=INNODB;` ,[] ,(err, rows) =>{
         if(err) errlog(err, rows)
-        else connection.query(`INSERT INTO body(tab_id, slug, en_slug, content, en_content, cuid) VALUES(
-            1,
-            'نظام-آموزشی-کانادا',
-            'Canadian-Education-System',
-            'نظام تحصيلي در سرتاسر كانادا از استاندارد بسيار بالائي برخوردار مي‌باشد.',
-            'ckeditor content goes here ...',
-            ?
-        );`, [cuid()], errlog)
+        else connection.query(`INSERT INTO page(route_id, slug, en_slug, content, en_content, cuid) 
+        VALUES();`, [cuid()], errlog)
     });
-    connection.query(`CREATE TABLE IF NOT EXISTS body_tag(
+    connection.query(`CREATE TABLE IF NOT EXISTS page_tag(
         id INT AUTO_INCREMENT PRIMARY KEY,
-        body_id INT,
+        page_id INT,
         tag TEXT NOT NULL,
         en_tag TEXT NOT NULL,
         cuid VARCHAR(100) NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        INDEX body_ind (body_id),
-        FOREIGN KEY (body_id)
-        REFERENCES body(id)
+        INDEX page_ind (page_id),
+        FOREIGN KEY (page_id)
+        REFERENCES page(id)
         ON DELETE CASCADE)ENGINE=INNODB;`, [], (err, rows)=>{
             if(err) errlog(err, rows)
-            else connection.query(`INSERT INTO body_tag(body_id, tag, en_tag, cuid) VALUES ( 
-                            1, 
-                            "کانادا", 
-                            "canada", 
-                            ?
-                            );`, [cuid()], errlog)
+            else connection.query(`INSERT INTO page_tag(page_id, tag, en_tag, cuid) 
+            VALUES ();`, [cuid()], errlog)
         });
 
     // ========================================= USER INIT SETUP ===================================================================

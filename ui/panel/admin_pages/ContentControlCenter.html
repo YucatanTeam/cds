@@ -1,6 +1,10 @@
 <div class="row">
     <Card image="/public/img/privacy.png" col="s12 m10 offset-m1 l8 offset-l2">
-        <!-- khashayar : content posting -->
+        <Input col="s12" label="Page title" id="title" type="text" />
+        <Editor id="content" initial="kossher" bind:feditor=feditor></Editor>
+        <br><div class="divider"></div><br>
+        <Editor id="en_content" initial="kambiz" bind:eneditor=eneditor></Editor>
+        <a class="waves-effect waves-light yellow black-text btn">Submit</a>
     </Card>
 </div>
 
@@ -45,6 +49,8 @@
 export default {
     data() {
         return {
+            feditor:null,
+            eneditor:null,
             utils,
             currentRoute: null,
             getRoutes: utils.fetch("/route/all")
@@ -76,6 +82,7 @@ export default {
             .catch(err => utils.toast("something went wrong !")),
         }
     },
+  
     methods: {
         loadRoute(currentRoute) {
             var items = currentRoute.items;
@@ -111,7 +118,8 @@ export default {
         Form: "../../tags/Form.html",
         Input: "../../tags/Input.html",
         Search: "../../tags/Search.html",
-        RequestBtn: "../../tags/RequestBtn.html",
+        RequestBtn: "../../tags/RequestBtn.html"
+        
     }
 }
 </script>
