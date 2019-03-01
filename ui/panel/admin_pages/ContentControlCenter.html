@@ -1,10 +1,14 @@
 <div class="row">
     <Card image="/public/img/privacy.png" col="s12 m10 offset-m1 l8 offset-l2">
-        <Input col="s12" label="Page title" id="title" type="text" />
-        <Editor id="content" initial="kossher" bind:feditor=feditor></Editor>
-        <br><div class="divider"></div><br>
-        <Editor id="en_content" initial="kambiz" bind:eneditor=eneditor></Editor>
-        <a class="waves-effect waves-light yellow black-text btn">Submit</a>
+        <form id="post">
+            <Input col="s12" label="Persian Page title" id="ftitle" type="text" />
+            <Editor id="content" initial="Persian Editor" bind:feditor=feditor></Editor>
+            <br><div class="divider"></div><br>
+            <Input col="s12" label="English Page title" id="title" type="text" />
+            <Editor id="en_content" initial="English Editor" bind:eneditor=eneditor></Editor><br>
+            <div class="chips chips-placeholder"></div>
+        </form>
+        <a class="waves-effect waves-light yellow black-text btn">Post</a>
     </Card>
 </div>
 
@@ -48,7 +52,9 @@
 <script>
 export default {
     data() {
-        return {
+        return { 
+            tags: [],
+            instans:null,
             feditor:null,
             eneditor:null,
             utils,
@@ -82,8 +88,19 @@ export default {
             .catch(err => utils.toast("something went wrong !")),
         }
     },
-  
+    oncreate(){
+        var elems = document.querySelectorAll('.chips-placeholder');
+        var instances = M.Chips.init(elems,{
+            placeholder:"+Tags"
+        });
+        
+    },
     methods: {
+        post(){
+            var formdata= new formData();
+            var elem = document.getElementById(post);
+            utils.fetch()
+        },
         loadRoute(currentRoute) {
             var items = currentRoute.items;
             for(var it of items) {
