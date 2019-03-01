@@ -75,10 +75,10 @@ connection.connect(err => {
             ?
         );` ,[cuid()] ,errlog)
     });
-// PAGE
     connection.query(`CREATE TABLE IF NOT EXISTS page (
         id INT AUTO_INCREMENT PRIMARY KEY,
         route_id INT,
+        tags TEXT,
         title TEXT NOT NULL,
         en_title TEXT NOT NULL,
         slug TEXT NOT NULL,
@@ -97,22 +97,6 @@ connection.connect(err => {
         else connection.query(`INSERT INTO page(route_id, slug, en_slug, content, en_content, cuid) 
         VALUES();`, [cuid()], errlog)
     });
-    connection.query(`CREATE TABLE IF NOT EXISTS page_tag(
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        page_id INT,
-        tag TEXT NOT NULL,
-        en_tag TEXT NOT NULL,
-        cuid VARCHAR(100) NOT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        INDEX page_ind (page_id),
-        FOREIGN KEY (page_id)
-        REFERENCES page(id)
-        ON DELETE CASCADE)ENGINE=INNODB;`, [], (err, rows)=>{
-            if(err) errlog(err, rows)
-            else connection.query(`INSERT INTO page_tag(page_id, tag, en_tag, cuid) 
-            VALUES ();`, [cuid()], errlog)
-        });
 
     // ========================================= USER INIT SETUP ===================================================================
     // user table
