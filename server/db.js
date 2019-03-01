@@ -106,8 +106,8 @@ const db = {
             COMMENTS API
         */
         comment: {
-            getAllRelToAPost(post_id, cb){
-                db.connection.query(`SELECT * FROM COMMENT WHERE post_id = ? ORDER BY created_at DESC;`, [post_id], (err, rows)=>{
+            getAllRelToAPage(page_id, cb){
+                db.connection.query(`SELECT * FROM COMMENT WHERE page_id = ? ORDER BY created_at DESC;`, [page_id], (err, rows)=>{
                     if(rows.length >= 1){
                         return cb(err, rows);
                     } else{
@@ -135,10 +135,10 @@ const db = {
                 })
             },
             getAll(cb){
-                db.connection.query(`SELECT comment.id, comment.post_id, comment.content, comment.name, comment.email, comment.status, 
+                db.connection.query(`SELECT comment.id, comment.page_id, comment.content, comment.name, comment.email, comment.status, 
                                             comment.cuid, comment.created_at, comment.updated_at, 
-                                            post.slug FROM comment 
-                                            INNER JOIN post ON comment.post_id=post.id ORDER BY comment.created_at DESC;`, [], (err, rows)=>{
+                                            page.slug FROM comment 
+                                            INNER JOIN page ON comment.page_id=page.id ORDER BY comment.created_at DESC;`, [], (err, rows)=>{
                     if(rows.length >= 1) {
                         return cb(err, rows);
                     } else {
@@ -162,8 +162,8 @@ const db = {
                 db.connection.query(`UPDATE comment SET status = 1 WHERE id = ?`, [id], cb ? cb : e=>e);
             },
             add(comment, cb){
-                db.connection.query(`INSERT INTO comment(post_id, content, name, email, cuid) 
-                                    VALUES(?, ?, ?, ?, ?)`, [comment.post_id, comment.content, comment.name, comment.email, comment.cuid], cb ? cb : e=>e)
+                db.connection.query(`INSERT INTO comment(page_id, content, name, email, cuid) 
+                                    VALUES(?, ?, ?, ?, ?)`, [comment.page_id, comment.content, comment.name, comment.email, comment.cuid], cb ? cb : e=>e)
             },
             update(comment, cb){
                 db.connection.query(`UPDATE comment SET content = ?, name = ?, email = ? WHERE id = ?`, [comment.content,comment.name,comment.email,comment.id], cb);
