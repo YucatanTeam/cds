@@ -104,19 +104,16 @@ connection.connect(err => {
         });
 
     // ================================ CANDO BODY AND THEIR RELATED tabs INIT SETUP ============================================================================
-    connection.query(`CREATE TABLE IF NOT EXISTS tab (
+    connection.query(`CREATE TABLE IF NOT EXISTS route (
         id INT AUTO_INCREMENT PRIMARY KEY,
-        country_name TEXT DEFAULT NULL,
-        country_en_name TEXT DEFAULT NULL,
+        access INT,
         title TEXT NOT NULL,
         en_title TEXT NOT NULL,
-        cuid VARCHAR(100) NOT NULL,
         status TINYINT NOT NULL DEFAULT 0,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP    
     )ENGINE=INNODB;` ,[] ,(err, rows) =>{
         if(err) errlog(err, rows)
-        else connection.query(`INSERT INTO tab(country_name, country_en_name, title, en_title, cuid) VALUES(
+        // TODO
+        else connection.query(`INSERT INTO route(country_name, country_en_name, title, en_title, cuid) VALUES(
             'کانادا',
             'canada',
             'مهاجرت به کانادا',
@@ -124,7 +121,7 @@ connection.connect(err => {
             ?
         );` ,[cuid()] ,errlog)
     });
-
+// PAGE
     connection.query(`CREATE TABLE IF NOT EXISTS body (
         id INT AUTO_INCREMENT PRIMARY KEY,
         tab_id INT,
