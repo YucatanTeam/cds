@@ -8,7 +8,7 @@
             <Editor id="en_content" initial="English Editor" bind:eneditor=eneditor></Editor><br>
             <div class="chips chips-placeholder"></div>
         </form>
-        <a class="waves-effect waves-light yellow black-text btn" onclick="post()">Post</a>
+        <a class="waves-effect waves-light yellow black-text btn" on:click=post()>Post</a>
     </Card>
 </div>
 
@@ -98,8 +98,8 @@ export default {
     },
     methods: {
         post(){
-            var formdata= new formData();
-            var elem = document.getElementById(post);
+            var formdata= new FormData();
+            var elem = document.getElementById("post");
             console.log(elem);
             fetch('/page/add',{
                 method:"POST",
