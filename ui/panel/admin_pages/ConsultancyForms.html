@@ -1,4 +1,230 @@
 
+<!-- set actions and bind content  -->
+<div class="row">
+    {#await getcomments}
+        <Loading small/>
+    {:then comments}
 
-use cds and iliad evaluation form (delete and edit the data table form for all rows)
-download cando contract form
+            <!-- ======== THIS MODAL WILL TRIGGER ON EACH ACTION ======== -->
+            <div id="{crudindex===1 ? "modaledit" :  crudindex===0 ? "modalcreate" : crudindex===4 ? "modalblock" : crudindex===5 ? "modalunblock" : "modaldelete"}" class="modal">
+                <div class="modal-content">
+                    <h4>{crudindex===1 ? "Edit" : crudindex===0 ? "Create" : ""}</h4>
+                        
+                        {#if crudindex === 2}
+                            <h4>Confirm Delete</h4>
+                            <p>Do you really want to delete the comment #{objModal.id} ?</p>
+
+                        {:elseif crudindex === 4}
+                            <h4>Confirm Block</h4>
+                            <p>Do you really want to block the comment #{objModal.id} ?</p>
+
+                        {:elseif crudindex === 5}
+                            <h4>Confirm Unblock</h4>
+                            <p>Do you really want to unblock the comment #{objModal.id} ?</p>
+                        
+                        {:else}
+                            <div class="row">
+                                <Card col="s12 m10 offset-m1 l10 offset-l1">
+                                    {#if objModal}
+                                    <!-- TODO : complete this when post page implemented ! add some style. -->
+                                      <a href="#!">{objModal.slug}</a>
+                                        <Form response={{}}>
+                                            <Input col="s12" label="cuid" id="cuid" type="text" value={ crudindex === 1 ? objModal.cuid : "" } disabled/>
+                                            <Input col="s12" label="created_at" id="created_at" type="text" value={ crudindex === 1 ? objModal.created_at : "" } disabled/>
+                                            <Input col="s12" label="updated_at" id="updated_at" type="text" value={ crudindex === 1 ? objModal.updated_at : "" } disabled/>
+                                            <Input col="s12" label="Email" id="email" type="email" value={ crudindex === 1 ? objModal.email : ""}/>
+                                            <Input col="s12" label="name" id="name" type="text" value={ crudindex === 1 ? objModal.name : ""}/>
+                                            <textarea id="content" class="materialize-textarea">{ crudindex === 1 ? objModal.content : ""}</textarea>
+                                            <label for="content">Content</label>
+                                        </Form>
+                                    {/if}
+                                </Card>
+                            </div>
+                        {/if}
+                </div>
+                <div class="modal-footer">
+                    <button class="modal-close waves-effect waves-green btn-flat" on:click="action(objModal.id, objModal.post_id)">{crudindex===1 ? "Update" : crudindex===0 ? "Add" : crudindex===2 ? "Delete" : crudindex===4? "Block" : "Unblock"}</button>
+                </div>
+            </div> <!-- ======== END - MODAL ======== -->
+
+        <Table highlight rows={5}
+            on:modal="open(event)"
+            content={comments}
+            search={["name", "content", "email", "cuid", "id", "post_id"]}
+            actions={[
+                                            /* ------------------------------------------
+                                                list of all actions for comment data table 
+                                            ------------------------------------------
+                                            */
+                    // ==============================================================================================
+                    // CREATE : only for dev
+                    // ==============================================================================================
+                    {icon: "fiber_new",tooltip: "create", action(obj, component) {
+                            var index = 0
+                            component.fire("modal", {obj, index})
+                        }
+                    }, 
+                    // ==============================================================================================
+                    // DELETE
+                    // ==============================================================================================
+                    {icon: "delete",tooltip: "delete", action(obj, component) {
+                            var index = 2
+                           component.fire("modal", {obj, index}) 
+                            
+                        }
+                    }, 
+                    // ==============================================================================================
+                    // EDIT : for dev , admin and mod
+                    // ==============================================================================================
+                    {icon: "edit",tooltip: "edit", action(obj, component) {
+                            var index = 1
+                            component.fire("modal", {obj, index})    
+                        }
+                    }, 
+                    // ==============================================================================================
+                    // BLOCK STATUS
+                    // ==============================================================================================
+                    {icon: "block",tooltip: "block", action(obj, component) {
+                                var index = 4
+                                component.fire("modal", {obj, index})
+                        }
+                    },
+                    // ==============================================================================================
+                    // UNBLOCK STATUS
+                    // ==============================================================================================
+                    {icon: "beenhere",tooltip: "unblock", action(obj, component) {
+                                var index = 5
+                                component.fire("modal", {obj, index})
+                        }
+                    } 
+                ]}
+        />
+    {:catch err}
+        <p>Error {err.message}</p>
+    {/await}
+</div>
+
+<script>
+export default {
+    data(){
+        return {
+            objModal: null,
+            crudindex: 0, // 1 : edit , 0 : create , 2 : delete , 4 : block , 5 : unblock
+            getcomments: utils.fetch("/comment/getAll")
+            .then(response => {
+                    var comments = response.body;
+                    var rows = [];
+                    for(var cmnt of comments) {
+                            // [ CREATE , DELETE , EDIT , BLOCK , UNBLOCK ]
+                            cmnt.actions = [
+                                [7].includes(cdsuser.access), // only dev can create new comment
+                                [5, 7].includes(cdsuser.access), 
+                                [3, 5, 7].includes(cdsuser.access), // dev , admin and mod can edit the comment 
+                                [5, 7].includes(cdsuser.access) && cmnt.status === 1,
+                                [5, 7].includes(cdsuser.access) && cmnt.status === 0,
+
+                            ]
+
+                            var cdate = cmnt.created_at.split("T")[0]
+                            var ctime = cmnt.created_at.split("T")[1].slice(0,8)
+                            cmnt.created_at = cdate + " at " + ctime 
+
+                            var udate = cmnt.updated_at.split("T")[0]
+                            var utime = cmnt.updated_at.split("T")[1].slice(0,8)
+                            cmnt.updated_at = udate + " at " + utime 
+                            
+                            // cmnt.created_at = moment(cmnt.created_at).fromNow()
+                            // cmnt.updated_at = moment(cmnt.updated_at).fromNow()
+                            
+                            rows.push(cmnt);
+                    }
+                    return rows;
+                })
+                .catch(err => utils.toast("something went wrong !")),
+        }
+    },
+    methods:{
+        open({obj, index}){
+            this.set({crudindex: index, objModal: obj})
+            var elems = document.querySelector('.modal');
+            var instances = M.Modal.init(elems, {});
+            instances.open();
+        },
+        action(id, post_id){
+            
+            var {crudindex} = this.get()
+            // get down the road with crudindex!!!
+            if(crudindex === 1){
+                const elname = document.getElementById("name");
+                const elemail = document.getElementById("email");
+                const elcontent = document.getElementById("content");
+
+                const name = elname.value ? elname.value : null;
+                const email = elemail.value ? elemail.value : null;
+                const content = elcontent.value ? elcontent.value : null;
+                
+                utils.fetch("/comment/edit", {name, email, content, id}).then((res)=>{
+                    if(res.status!=200){
+                        utils.toast("something went wrong !")
+                    } else{
+                        utils.toast("Done")
+                        utils.reload()
+                    }
+               }).catch(err => utils.toast("something went wrong !"));
+            } else if(crudindex === 0){
+                const elname = document.getElementById("name");
+                const elemail = document.getElementById("email");
+                const elcontent = document.getElementById("content");
+
+                const name = elname.value ? elname.value : null;
+                const email = elemail.value ? elemail.value : null;
+                const content = elcontent.value ? elcontent.value : null;
+
+                utils.fetch("/comment/add", {name, email, content, id, post_id}).then((res)=>{
+                    if(res.status!=200){
+                        utils.toast("something went wrong !")
+                    } else{
+                        utils.toast("Done")
+                        utils.reload()
+                    }
+               }).catch(err => utils.toast("something went wrong !"));
+            } else if(crudindex === 4){
+                utils.fetch(`/comment/block/${id}`, {}).then((res)=>{
+                    if(res.status!=200){
+                        utils.toast("something went wrong !")
+                    } else{
+                        utils.toast("Done")
+                        utils.reload()
+                    }
+                }).catch(err => utils.toast("something went wrong !"));
+            } else if(crudindex === 5){
+                utils.fetch(`/comment/unblock/${id}`, {}).then((res)=>{
+                    if(res.status!=200){
+                        utils.toast("something went wrong !")
+                    } else{
+                        utils.toast("Done")
+                        utils.reload()
+                    }
+                }).catch(err => utils.toast("something went wrong !"));
+            } else{
+                utils.fetch(`/comment/delete/${id}`, {}).then((res)=>{
+                    if(res.status!=200){
+                        utils.toast("something went wrong !")
+                    } else{
+                        utils.toast("Done")
+                        utils.reload()
+                    }
+               }).catch(err => utils.toast("something went wrong !"));
+            }
+            
+        }
+    },
+    components: {
+        Loading: "../../tags/Loading.html",
+        Table: "../../tags/Table.html",
+        Card: "../../tags/Card.html",
+        Form: "../../tags/Form.html",
+        Input: "../../tags/Input.html"
+    }
+}
+</script>
