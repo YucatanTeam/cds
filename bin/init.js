@@ -25,37 +25,9 @@ const connection = mysql.createConnection({
 connection.connect(err => {
     if(err) return console.error(err);
     console.log(`database is connected to ${DB_USER}@${DB_HOST}/${DB_NAME}`);
-    const errlog = (name) => (err, rows) => err ? console.log(name, err.sqlMessage) : console.log("ok");
+    const errlog = (name) => (err, rows) => err ? console.log(name, err.sqlMessage) : console.log(name, "ok");
 
 
-
-    
-    // ============================================= COMMENT INIT SETUP ===============================================================
-    // comment table
-    // ...
-    connection.query(`CREATE TABLE IF NOT EXISTS comment (
-    id INT AUTO_INCREMENT PRIMARY KEY, 
-    post_id INT,
-    content TEXT NOT NULL,
-    name TEXT NOT NULL,
-    email TEXT NOT NULL,
-    status TINYINT NOT NULL DEFAULT 0,
-    cuid VARCHAR(100) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX post_ind (post_id),
-    FOREIGN KEY (post_id)
-        REFERENCES post(id)
-        ON DELETE CASCADE)ENGINE=INNODB;` ,[] ,(err, rows) => {
-            if(err) errlog("comment")(err, rows)
-            else connection.query(`INSERT INTO comment(post_id, content, name, email, cuid) VALUES(
-                1,
-                'این پست عالی است!',
-                'wilonion',
-                'ea_pain@yahoo.com',
-                ?
-            );` ,[cuid()] ,errlog("first comment"))
-        });
 
     // ================================ CANDO PAGES ============================================================================
     connection.query(`CREATE TABLE IF NOT EXISTS route (
@@ -66,14 +38,13 @@ connection.connect(err => {
         status TINYINT NOT NULL DEFAULT 0
     )ENGINE=INNODB;` ,[] ,(err, rows) =>{
         if(err) errlog("route")(err, rows)
-        // TODO
-        // else connection.query(`INSERT INTO route(country_name, country_en_name, title, en_title, cuid) VALUES(
-        //     'کانادا',
-        //     'canada',
-        //     'مهاجرت به کانادا',
-        //     'migratio to canada',
-        //     ?
-        // );` ,[cuid()] ,errlog)
+        else connection.query(`INSERT INTO route(route_id, access, title, en_title, status) VALUES(
+            1,
+            7,
+            'مهاجرت به کانادا',
+            'migratio to canada',
+            1
+        );` ,[] ,errlog)
     });
     connection.query(`CREATE TABLE IF NOT EXISTS page (
         id INT AUTO_INCREMENT PRIMARY KEY,
@@ -92,7 +63,37 @@ connection.connect(err => {
         )ENGINE=INNODB;` ,[] ,(err, rows) =>{
         if(err) errlog(err, rows)
         else connection.query(`INSERT INTO page(route_id, slug, en_slug, content, en_content, cuid) 
-        VALUES();`, [cuid()], errlog("page"))
+        VALUES(1, 'persian_govah' ,'govah', 'govah e khoshgel', 'nice govah', ?);`, [cuid()], (err, rows) => {
+            errlog("page")(err, rows)
+            if(!err) {
+    // ============================================= COMMENT INIT SETUP ===============================================================
+    // comment table
+    // ...
+    connection.query(`CREATE TABLE IF NOT EXISTS comment (
+        id INT AUTO_INCREMENT PRIMARY KEY, 
+        page_id INT,
+        content TEXT NOT NULL,
+        name TEXT NOT NULL,
+        email TEXT NOT NULL,
+        status TINYINT NOT NULL DEFAULT 0,
+        cuid VARCHAR(100) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+        INDEX post_ind (page_id),
+        FOREIGN KEY (page_id)
+            REFERENCES page(id)
+            ON DELETE CASCADE)ENGINE=INNODB;` ,[] ,(err, rows) => {
+                if(err) errlog("comment")(err, rows)
+                else connection.query(`INSERT INTO comment(page_id, content, name, email, cuid) VALUES(
+                    1,
+                    'این پست عالی است!',
+                    'wilonion',
+                    'ea_pain@yahoo.com',
+                    ?
+                );` ,[cuid()] ,errlog("first comment"))
+            });
+            }
+        })
     });
 
     // ========================================= USER INIT SETUP ===================================================================
