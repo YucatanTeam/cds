@@ -254,7 +254,35 @@ module.exports = ({app, db}) => {
         res.sendFile(req.user.avatar ? req.user.avatar : cwd + "/www/public/img/noavatar.png");
     })
 
-    
+    // --------------
+    // content routes
+    // --------------
+    // TODO use access guard
+    app.get("/route/all", (req, res) => {
+        // TODO
+        res.json({body: [
+            {name: "tab", access: 7, items: [{name: "govah"}, {name: "lolo"}]},
+            {name: "canada", access: 5, items: [{name: "zaban"}, {name: "moshavere"}]},
+        ]})
+    })
+    app.post("/route/:route/item/add", (req, res) => {
+        console.log(req.params, req.body)
+        res.json({})
+    })
+    app.post("/route/:route/item/:page/remove", (req, res) => {
+        console.log(req.params, req.body)
+        res.json({})
+    })
+    app.get("/page/all", (req, res) => {
+        // TODO
+        res.json({body: [
+            {name: "govah"},
+            {name: "moshavere"},
+            {name: "zaban"},
+            {name: "lolo"}
+        ]})
+    })
+
     // --------------
     // comment routes
     // --------------
