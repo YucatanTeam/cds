@@ -1,5 +1,6 @@
 <div class="row">
     <Card image="/public/img/privacy.png" col="s12 m10 offset-m1 l8 offset-l2">
+
         <form id="post">
             <Input col="s12" label="Persian Page title" id="ftitle" type="text" />
             <Editor id="content" initial="Persian Editor" bind:feditor=feditor></Editor>
@@ -8,7 +9,7 @@
             <Editor id="en_content" initial="English Editor" bind:eneditor=eneditor></Editor><br>
             <div class="chips chips-placeholder"></div>
         </form>
-        <a class="waves-effect waves-light yellow black-text btn" onclick="post()">Post</a>
+        <a class="waves-effect waves-light yellow black-text btn" on:click=post()>Post</a>
     </Card>
 </div>
 
@@ -53,7 +54,6 @@
 export default {
     data() {
         return { 
-            tags: [],
             instans:null,
             feditor:null,
             eneditor:null,
@@ -98,17 +98,18 @@ export default {
     },
     methods: {
         post(){
-            var formdata= new formData();
-            var elem = document.getElementById(post);
-            console.log(elem);
+            var formdata= new FormData();
+            formdata.append("title",`${document.getElementById("ftitle").value}`);
+            formdata.append("en_title",`${document.getElementById("title").value}`);
+            console.log(formdata);
             fetch('/page/add',{
                 method:"POST",
                 mode:"same-origin",
                 redirect:"follow",
-                data:elem
+                data:formdata
             }).then(res=>{
                 if(res.status != 200)
-                    utils.toast("ridi");
+                    utils.toast("err");
                 else{
                     utils.toast("Sent");
                     utils.reload();
