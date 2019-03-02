@@ -1,10 +1,10 @@
-
+                
 <!-- set actions and bind content  -->
 <div class="row">
-    {#await getdata}
+ <Card image="/public/img/privacy.png" col="s12 m10 offset-m1 l10 offset-l1">
+    {#await getforms}
         <Loading small/>
-    {:then data}
-
+    {:then forms}
             <!-- ======== THIS MODAL WILL TRIGGER ON EACH ACTION ======== -->
             <div id="{crudindex===1 ? "modaledit" :  crudindex===0 ? "modalcreate" : crudindex===4 ? "modalblock" : crudindex===5 ? "modalunblock" : "modaldelete"}" class="modal">
                 <div class="modal-content">
@@ -12,58 +12,44 @@
                         
                         {#if crudindex === 2}
                             <h4>Confirm Delete</h4>
-                            <p>Do you really want to delete the comment #{objModal.id} ?</p>
+                            <p>Do you really want to delete the form <strong>#{objModal.id}</strong> ?</p>
 
                         {:elseif crudindex === 4}
                             <h4>Confirm Block</h4>
-                            <p>Do you really want to block the comment #{objModal.id} ?</p>
+                            <p>Do you really want to block the form <strong>#{objModal.id}</strong> ?</p>
 
                         {:elseif crudindex === 5}
                             <h4>Confirm Unblock</h4>
-                            <p>Do you really want to unblock the comment #{objModal.id} ?</p>
+                            <p>Do you really want to unblock the form <strong>#{objModal.id}</strong> ?</p>
                         
+                        {:elseif crudindex === 1}
+                            
+                                {#if objModal}
+                                    <Input col="s12" label="name" id="name" type="text" value={ crudindex === 1 ? objModal.name : "" }/>
+                                    <Input col="s12" label="iframe" id="iframe" type="text" value={ crudindex === 1 ? objModal.iframe : "" }/>
+                                    <div class="divider"></div>
+                                        {@html objModal.iframe}                    
+                                {/if}
+                            
                         {:else}
-                            <div class="row">
-                                <Card col="s12 m10 offset-m1 l10 offset-l1">
-                                    {#if objModal}
-                                    <!-- TODO : complete this when post page implemented ! add some style. -->
-                                      <a href="#!">{objModal.slug}</a>
-                                        <Form response={{}}>
-                                            <Input col="s12" label="cuid" id="cuid" type="text" value={ crudindex === 1 ? objModal.cuid : "" } disabled/>
-                                            <Input col="s12" label="created_at" id="created_at" type="text" value={ crudindex === 1 ? objModal.created_at : "" } disabled/>
-                                            <Input col="s12" label="updated_at" id="updated_at" type="text" value={ crudindex === 1 ? objModal.updated_at : "" } disabled/>
-                                            <Input col="s12" label="Email" id="email" type="email" value={ crudindex === 1 ? objModal.email : ""}/>
-                                            <Input col="s12" label="name" id="name" type="text" value={ crudindex === 1 ? objModal.name : ""}/>
-                                            <textarea id="content" class="materialize-textarea">{ crudindex === 1 ? objModal.content : ""}</textarea>
-                                            <label for="content">Content</label>
-                                        </Form>
-                                    {/if}
-                                </Card>
-                            </div>
+                            <Input col="s12" label="name" id="name" type="text"/>
+                            <Input col="s12" label="iframe" id="iframe" type="text"/>
                         {/if}
                 </div>
                 <div class="modal-footer">
-                    <button class="modal-close waves-effect waves-green btn-flat" on:click="action(objModal.id, objModal.post_id)">{crudindex===1 ? "Update" : crudindex===0 ? "Add" : crudindex===2 ? "Delete" : crudindex===4? "Block" : "Unblock"}</button>
+                    <button class="modal-close waves-effect waves-green btn-flat" on:click="action()">{crudindex===1 ? "Update" : crudindex===0 ? "Add" : crudindex===2 ? "Delete" : crudindex===4? "Block" : "Unblock"}</button>
                 </div>
             </div> <!-- ======== END - MODAL ======== -->
 
         <Table highlight rows={5}
             on:modal="open(event)"
-            content={comments}
-            search={["name", "content", "email", "cuid", "id", "post_id"]}
+            content={forms}
+            search={["name", "iframe", "id"]}
             actions={[
                                             /* ------------------------------------------
-                                                list of all actions for comment data table 
+                                                list of all actions for forms data table 
                                             ------------------------------------------
                                             */
-                    // ==============================================================================================
-                    // CREATE : only for dev
-                    // ==============================================================================================
-                    {icon: "fiber_new",tooltip: "create", action(obj, component) {
-                            var index = 0
-                            component.fire("modal", {obj, index})
-                        }
-                    }, 
                     // ==============================================================================================
                     // DELETE
                     // ==============================================================================================
@@ -99,60 +85,89 @@
                     } 
                 ]}
         />
+
+        <div class="fixed-action-btn">
+              <a class="btn-floating btn-large waves-effect waves-light red" on:click="fireMe(0)"><I>add</I></a>
+        </div>
+
     {:catch err}
         <p>Error {err.message}</p>
     {/await}
+ </Card>
 </div>
 
 <script>
 export default {
     data(){
+        var mob = {data: null};
         return {
             objModal: null,
-            crudindex: 0, // 1 : edit , 0 : create , 2 : delete , 4 : block , 5 : unblock
-            getdata: utils.fetch("/form/all")
+            crudindex: 0,
+            datum_id: null,
+            form_id: null,
+            mob,
+            getforms: utils.fetch("/form/all")
             .then(response => {
-                    var data = response.body;
+                var mobs = response.body;
+                    mob.data = mobs;
                     var rows = [];
-                    for(var datum of comments) {
-                            // [ CREATE , DELETE , EDIT , BLOCK , UNBLOCK ]
+                    for(var mb of mobs) {
+                            var datum = {
+                                id : mb.id,
+                                name: mb.name,
+                                iframe: mb.iframe,
+                                status: mb.status
+                            }
+                            // [ DELETE , EDIT , BLOCK , UNBLOCK ]
                             datum.actions = [
-                                [7].includes(cdsuser.access), // only dev can create new comment
                                 [5, 7].includes(cdsuser.access), 
-                                [3, 5, 7].includes(cdsuser.access), // dev , admin and mod can edit the comment 
-                                [5, 7].includes(cdsuser.access) && datum.status === 1,
-                                [5, 7].includes(cdsuser.access) && datum.status === 0,
-
+                                [3, 5, 7].includes(cdsuser.access), // dev , admin and mod can edit the apply
+                                [5, 7].includes(cdsuser.access) && datum.status == 1,
+                                [5, 7].includes(cdsuser.access) && datum.status == 0,
                             ]
                             
                             rows.push(datum);
                     }
-                    return rows;
+                    return rows
                 })
                 .catch(err => utils.toast("something went wrong !")),
         }
     },
     methods:{
-        open({obj, index}){
-            this.set({crudindex: index, objModal: obj})
-            var elems = document.querySelector('.modal');
-            var instances = M.Modal.init(elems, {});
-            instances.open();
+        fireMe(index){
+            if(index === 0){
+                this.set({crudindex: index})
+                var elems = document.querySelector('.modal');
+                var instances = M.Modal.init(elems, {});
+                instances.open();    
+            }
         },
-        action(id, post_id){
+        loadForm(form) {
+            this.set({form_id: form.id})
+        },
+        open({obj, index}){
+            const mob = this.get().mob.data
+                for(var mb of mob){
+                    if(obj.id === mb.id) this.set({crudindex: index, objModal: mb, datum_id: obj.id})
+                }
+                var elems = document.querySelector('.modal');
+                var instances = M.Modal.init(elems, {});
+                instances.open();
+        },
+        action(){
             
-            var {crudindex} = this.get()
+            const {crudindex} = this.get()
+            const {datum_id} = this.get()
+
             // get down the road with crudindex!!!
             if(crudindex === 1){
                 const elname = document.getElementById("name");
-                const elemail = document.getElementById("email");
-                const elcontent = document.getElementById("content");
+                const eliframe = document.getElementById("iframe");
 
                 const name = elname.value ? elname.value : null;
-                const email = elemail.value ? elemail.value : null;
-                const content = elcontent.value ? elcontent.value : null;
+                const iframe = eliframe.value ? eliframe.value : null;
                 
-                utils.fetch("/form/edit", {name, email, content, id}).then((res)=>{
+                utils.fetch("/form/edit", {name, iframe, datum_id}).then((res)=>{
                     if(res.status!=200){
                         utils.toast("something went wrong !")
                     } else{
@@ -161,15 +176,14 @@ export default {
                     }
                }).catch(err => utils.toast("something went wrong !"));
             } else if(crudindex === 0){
+
                 const elname = document.getElementById("name");
-                const elemail = document.getElementById("email");
-                const elcontent = document.getElementById("content");
+                const eliframe = document.getElementById("iframe");
 
                 const name = elname.value ? elname.value : null;
-                const email = elemail.value ? elemail.value : null;
-                const content = elcontent.value ? elcontent.value : null;
+                const iframe = eliframe.value ? eliframe.value : null;
 
-                utils.fetch("/form/add", {name, email, content, id, post_id}).then((res)=>{
+                utils.fetch("/form/add", {name, iframe}).then((res)=>{
                     if(res.status!=200){
                         utils.toast("something went wrong !")
                     } else{
@@ -178,7 +192,7 @@ export default {
                     }
                }).catch(err => utils.toast("something went wrong !"));
             } else if(crudindex === 4){
-                utils.fetch(`/form/block/${id}`, {}).then((res)=>{
+                utils.fetch(`/form/block/${datum_id}`, {}).then((res)=>{
                     if(res.status!=200){
                         utils.toast("something went wrong !")
                     } else{
@@ -187,7 +201,7 @@ export default {
                     }
                 }).catch(err => utils.toast("something went wrong !"));
             } else if(crudindex === 5){
-                utils.fetch(`/form/unblock/${id}`, {}).then((res)=>{
+                utils.fetch(`/form/unblock/${datum_id}`, {}).then((res)=>{
                     if(res.status!=200){
                         utils.toast("something went wrong !")
                     } else{
@@ -196,7 +210,7 @@ export default {
                     }
                 }).catch(err => utils.toast("something went wrong !"));
             } else{
-                utils.fetch(`/form/delete/${id}`, {}).then((res)=>{
+                utils.fetch(`/form/delete/${datum_id}`, {}).then((res)=>{
                     if(res.status!=200){
                         utils.toast("something went wrong !")
                     } else{
@@ -213,7 +227,9 @@ export default {
         Table: "../../tags/Table.html",
         Card: "../../tags/Card.html",
         Form: "../../tags/Form.html",
-        Input: "../../tags/Input.html"
+        Input: "../../tags/Input.html",
+        Select: "../../tags/Select.html",
+        I: "../../tags/Icon.html"
     }
 }
 </script>
