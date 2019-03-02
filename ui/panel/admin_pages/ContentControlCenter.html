@@ -1,15 +1,27 @@
 <div class="row">
-    <Card image="/public/img/privacy.png" col="s12 m10 offset-m1 l8 offset-l2">
-
-        <form id="post">
+   
+         <form id="post">
+            <div class="file-field input-field">
+                <div class="btn waves-effect waves-light black-text yellow">
+                    <span>image</span>
+                    <input id="cover" type="file">
+                </div>
+                <div class="file-path-wrapper">
+                    <input disabled placeholder="Add image" class="file-path validate" type="text">
+                </div>
+            </div>
             <Input col="s12" label="Persian Page title" id="ftitle" type="text" />
-            <Editor id="content" initial="Persian Editor" bind:feditor=feditor></Editor>
+            <Editor id="content" initial="Persian Editor" bind:editor=feditor></Editor>
+            <label for="description">Persian description</label>
             <br><div class="divider"></div><br>
             <Input col="s12" label="English Page title" id="title" type="text" />
-            <Editor id="en_content" initial="English Editor" bind:eneditor=eneditor></Editor><br>
-            <div class="chips chips-placeholder"></div>
+            <Editor id="en_content" initial="English Editor" bind:editor=eneditor></Editor>
+            <label for="description">English description</label>
+            <div class="chips">
+                    <input placeholder="+Tag" class="custom-class" id="tags">
+                </div>
             <label>
-                <input type="checkbox"  />
+                <input type="checkbox" id="telegram" />
                 <span>Send to telegram</span>
             </label>
             <label>
@@ -17,12 +29,12 @@
                 <span>Enable comments</span>
             </label>
         </form>
-        <a class="waves-effect waves-light yellow black-text btn" on:click=post()>Post</a>
-    </Card>
+        <br><a class="waves-effect waves-light yellow black-text btn" on:click=post()>Post</a>
+    
 </div>
-
+<br><div class="divider" ></div><br>
 <div class="row">
-    <Card image="/public/img/privacy.png" col="s12 m10 offset-m1 l8 offset-l2">
+    
         {#await getRoutes}
             <Loading small/>
         {:then routes}
@@ -55,7 +67,7 @@
                 {/await}
             {/if}
         {/await}
-    </Card>
+    
 </div>
 
 <script>
@@ -98,18 +110,21 @@ export default {
         }
     },
     oncreate(){
-        var elems = document.querySelectorAll('.chips-placeholder');
+        var elems = document.querySelectorAll('.chips');
         var instances = M.Chips.init(elems,{
-            placeholder:"+Tags"
         });
         
     },
     methods: {
         post(){
             var formdata= new FormData();
+            formdata.append("cover",`${document.getElementById("cover").files[0]}`);
             formdata.append("title",`${document.getElementById("ftitle").value}`);
             formdata.append("en_title",`${document.getElementById("title").value}`);
-            console.log(formdata);
+            formdata.append("telegram",`${document.getElementById("telegram").value}`)
+            formdata.append("telegram",`${document.getElementById("comments").value}`)
+            formdata.append("telegram",`${document.getElementById("tags").value}`)
+
             fetch('/page/add',{
                 method:"POST",
                 mode:"same-origin",
@@ -122,9 +137,8 @@ export default {
                     utils.toast("Sent");
                     utils.reload();
                 }
-            })
                 
-            ;
+            });
         },
         loadRoute(currentRoute) {
             const self = this;
