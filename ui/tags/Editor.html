@@ -6,6 +6,7 @@
 
 <script>
 import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
+import EasyImage from '@ckeditor/ckeditor5-easy-image/src/easyimage';
 
 export default {
     data() {
@@ -20,7 +21,15 @@ export default {
         const { id } = self.get();
         const { initial } = this.get()
         DecoupledEditor
-            .create( document.querySelector( `#${id}` ) )
+            .create( document.querySelector( `#${id}` ), {
+                plugins: [ EasyImage ],
+                toolbar: [ 'imageUpload' ],
+
+                cloudServices: {
+                        tokenUrl: 'https://example.com/cs-token-endpoint',
+                        uploadUrl: 'https://your-organization-id.cke-cs.com/easyimage/upload/'
+                    }
+            })
             .then( editor => {
                 const toolbarContainer = document.getElementById( `${id}-toolbar-container` );
                 toolbarContainer.appendChild( editor.ui.view.toolbar.element );
