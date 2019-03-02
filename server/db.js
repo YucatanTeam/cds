@@ -312,8 +312,8 @@ const db = {
                 db.connection.query(`INSERT INTO forms(name, iframe, cuid) 
                                     VALUES(?, ?, ?)`, [datum.name, datum.iframe, datum.cuid], cb ? cb : e=>e)
             },
-            update(info, cb){
-                db.connection.query(`UPDATE forms SET name = ?, iframe = ? WHERE id = ?`, [datum.name, datum.iframe, info.id], cb);
+            update(datum, cb){
+                db.connection.query(`UPDATE forms SET name = ?, iframe = ? WHERE id = ?`, [datum.name, datum.iframe, datum.id], cb);
             },
         },
 

@@ -600,7 +600,7 @@ module.exports = ({app, db}) => {
             if(req.body[i] == null) delete req.body[i]
         }
         
-        db.api.datum.getById(req.body.id, (err, datum)=>{
+        db.api.form.getById(req.body.datum_id, (err, datum)=>{
             if(err) {
                 dev.report(err);
                 return res.status(404).end("Nothing Found !");
