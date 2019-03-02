@@ -456,6 +456,17 @@ module.exports = ({app, db}) => {
         })
     });
 
+    app.get('/student-control/getAll/:id', access(2), (req, res)=>{
+        db.api.studentcontrol.getAllRelToId(req.params.id, (err, rows)=>{
+            
+            if(rows) return res.json({body: rows, err:null})
+            if(err) {
+                dev.report(err);
+                return res.status(404).end("Nothing Found !");
+            }
+        })
+    });
+
     app.post('/student-control/block/:id', access(3), (req, res) =>{
         db.api.studentcontrol.block(req.params.id, (err, row)=>{
             
