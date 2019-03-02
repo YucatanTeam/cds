@@ -240,7 +240,11 @@ export default {
             } else if(crudindex === 0){
                 
                 const {user_id} = this.get()
-
+                
+                if(user_id === null){
+                    utils.toast("select a user !")
+                    utils.reload()
+                }
                 const elcountry = document.getElementById("country");
                 const eluniversity = document.getElementById("university");
                 const eleducation_language = document.getElementById("education_language");

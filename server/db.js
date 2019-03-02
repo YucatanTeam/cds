@@ -271,6 +271,52 @@ const db = {
                 WHERE id = ?`, [info.description, info.country, info.university, info.education_language, info.field, info.cv, info.sop, info.rc, info.reg_date, info.id], cb);
             },
         },
+        /* --------------------
+            FORMS API
+        */
+       form:{
+            all(cb){
+                db.connection.query(`SELECT * FROM forms ORDER BY created_at DESC;`, [], (err, rows)=>{
+                    if(rows){
+                        return cb(err, rows);
+                    } else {
+                        return cb(err, false);
+                    }
+                });
+            },
+            getById(id, cb){
+                db.connection.query(`SELECT * FROM forms WHERE id = ?`, [id], (err, rows)=>{
+                    if(rows.length === 1){
+                        return cb(err, rows);
+                    } else{
+                        return cb(err, false);
+                    }
+                })
+            },
+            block(id, cb){
+                db.connection.query(`UPDATE forms SET status = 0 WHERE id = ?`, [id], cb ? cb : e=>e);
+            },
+            unblock(id, cb){
+                db.connection.query(`UPDATE forms SET status = 1 WHERE id = ?`, [id], cb ? cb : e=>e);
+            },
+            deleteById(id, cb){
+                db.connection.query(`DELETE FROM forms WHERE id = ?`, [id], cb ? cb : e=>e);
+            },
+            deleteByCuid(cuid, cb){
+                db.connection.query(`DELETE FROM forms WHERE cuid = ?`, [cuid], cb ? cb : e=>e);
+            },
+            deleteAll(cb){
+                db.connection.query(`DELETE * FROM forms`, [], cb ? cb : e=>e);
+            },
+            add(datum, cb){
+                db.connection.query(`INSERT INTO forms(name, iframe, cuid) 
+                                    VALUES(?, ?, ?)`, [datum.name, datum.iframe, datum.cuid], cb ? cb : e=>e)
+            },
+            update(info, cb){
+                db.connection.query(`UPDATE forms SET name = ?, iframe = ? WHERE id = ?`, [datum.name, datum.iframe, info.id], cb);
+            },
+        },
+
     }
 }
 

@@ -2,6 +2,9 @@
 
 // to scaffold the project!
 
+// ---------------------------------------------------------------
+// CREATE DATABASE cds CHARACTER SET utf8 COLLATE utf8_persian_ci;
+
 
 const mysql = require("mysql");
 const cuid = require("cuid"); // use this to create a cuid in insertaion ops
@@ -160,13 +163,15 @@ connection.connect(err => {
     //...
     connection.query(`CREATE TABLE IF NOT EXISTS forms (
         id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
         iframe TEXT NOT NULL,
-        status TINYINT NOT NULL DEFAULT 0,
         cuid VARCHAR(100) NOT NULL,
+        status TINYINT NOT NULL DEFAULT 0,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)ENGINE=INNODB;` ,[] ,(err, rows)=>{
             if(err) errlog("form")(err, rows)
-            else connection.query(`INSERT INTO apply(iframe, ?) VALUES(
+            else connection.query(`INSERT INTO forms(name, iframe, cuid) VALUES(
+                'cando form',
                 '<iframe src="https://docs.google.com/forms/d/e/1FAIpQLSc6sL9JIN2MfBJWyUinbzvVq4Nht1krsGFUzIDJK1_T0_bGmA/viewform?embedded=true" width="640" height="1112" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>',
                 ?
             );` ,[cuid()] ,errlog("first form"));
