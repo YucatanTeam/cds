@@ -12,7 +12,7 @@
         close()
 -->
 {#if !nobtn}
-    <button data-target="{id}" class="btn waves-effect waves-light yellow modal-trigger">{id}</button>
+    <button data-target="{id}" class="btn waves-effect waves-light black-text yellow modal-trigger">{id}</button>
 {/if}
 <div id="{id}" class="modal">
     <div class="modal-content">
@@ -22,7 +22,7 @@
     </div>
     <div class="modal-footer">
         {#each buttons as btn, i}
-            <a class="modal-close waves-effect waves-light yellow btn-flat" on:click=click(i)>{btn.name}</a>
+            <a class="modal-close waves-effect waves-light black-text yellow btn-flat" on:click=click(i)>{btn.name}</a>
         {/each}
     </div>
 </div>
