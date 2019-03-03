@@ -40,14 +40,15 @@
         {:then routes}
             <h3>Routes</h3>
             <Select id="routes" label="routes" text="select a route" options={routes} on:select=loadRoute(event)/>
-            {#if currentRoute}
+            <div>
+            {#if currentRoute}    
                 <Table highlight rows={5} actions={[
-                    {icon: "delete", tooltip: "delete", action(obj, table) {
-                        utils.fetch(`/page/${obj.route_id}/route/remove`, {})
+                    {icon: "delete", tooltip: "delete", action(page, table) {
+                        utils.fetch(`/page/${page.id}/route/remove`, {})
                         .then(r=>{
                             if(r.status == 200) {
                                 utils.toast("Done");
-                                // utils.reload();
+                                utils.reload();
                             }
                             else utils.toast("something went wrong !");
                         })
@@ -56,7 +57,16 @@
                     content={currentRoute.items} search={["name"]}/>
                 <br>
                 <h5>Add an item to {currentRoute.name}</h5>
-                {#await getPages}
+                {#await getPages.then(pages => {
+                    var items = [];
+                    for(var page of pages) {
+                        items.push({
+                            id: page.id,
+                            name: page.title
+                        })
+                    }
+                    return items;
+                })}
                     <Loading small/>
                 {:then pages}
                     <Search
@@ -66,6 +76,7 @@
                     on:result=route_item_add(event)/>
                 {/await}
             {/if}
+            </div>
         {/await}
     
 </div>
@@ -121,15 +132,17 @@ export default {
             formdata.append("cover",`${document.getElementById("cover").files[0]}`);
             formdata.append("title",`${document.getElementById("ftitle").value}`);
             formdata.append("en_title",`${document.getElementById("title").value}`);
-            formdata.append("telegram",`${document.getElementById("telegram").value}`)
-            formdata.append("telegram",`${document.getElementById("comments").value}`)
-            formdata.append("telegram",`${document.getElementById("tags").value}`)
+            formdata.append("telegram",`${document.getElementById("telegram").checked}`)
+            formdata.append("comment",`${document.getElementById("comments").checked}`)
+            formdata.append("tags",`${document.getElementById("tags").value}`) // TODO fix this
+
+            // TODO append CKEditor content
 
             fetch('/page/add',{
-                method:"POST",
-                mode:"same-origin",
-                redirect:"follow",
-                data:formdata
+                method: "POST",
+                mode: "same-origin",
+                redirect: "follow",
+                body: formdata
             }).then(res=>{
                 if(res.status != 200)
                     utils.toast("err");
@@ -146,8 +159,12 @@ export default {
             Promise.resolve(getPages).then(pages => {
                 var items = [];
                 for(var page of pages) {
+                    var item = {
+                        id: page.id,
+                        name: page.title
+                    }
                     if(page.route_id == currentRoute.id) {
-                        items.push(page)
+                        items.push(item);
                     }
                 }
                 for(var it of items) {
@@ -155,12 +172,12 @@ export default {
                 }
                 currentRoute.items = items;
                 self.set({currentRoute});
-            })
+            }).catch(console.error);
         },
         route_item_add(page) {
             if(page != null){
                 const { currentRoute } = this.get();
-                utils.fetch(`/route/${currentRoute.id}/item/add`, {page: page.route_id})
+                utils.fetch(`/route/${currentRoute.id}/item/add`, {page: page.id})
                 .then(response => {
                     if (response.status != 200) {
                         utils.toast("something went wrong !")
@@ -172,7 +189,7 @@ export default {
             } else {
                 utils.toast("page doesn't exist !")
             }
-        }
+        },
     },
     components: {
         Editor: "../../tags/Editor.html",
