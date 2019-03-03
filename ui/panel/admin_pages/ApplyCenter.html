@@ -264,6 +264,11 @@ export default {
                 const reg_date = elreg_date.value ? elreg_date.value : null;
                 const description = this.get().editor.getData() ? this.get().editor.getData() : null
 
+                if(!country || !university || !education_language || !cv || !sop || !rc || !field || !reg_date || !description){
+                    utils.toast("fill all the fields !")
+                    utils.reload()
+                }
+
                 utils.fetch("/student-control/add", {country, university, education_language, cv, sop, rc, field, reg_date, description, user_id}).then((res)=>{
                     if(res.status!=200){
                         utils.toast("something went wrong !")

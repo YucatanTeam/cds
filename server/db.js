@@ -386,6 +386,15 @@ const db = {
                 }
             });
         },
+        getAllRelToId(id, cb){
+            db.connection.query(`SELECT * FROM reserve WHERE user_id = ? ORDER BY apply.created_at DESC;`, [id], (err, rows)=>{
+                if(rows){
+                    return cb(err, rows);
+                } else {
+                    return cb(err, false);
+                }
+            });
+        },
         getById(id, cb){
             db.connection.query(`SELECT * FROM reserve WHERE id = ?`, [id], (err, rows)=>{
                 if(rows.length === 1){

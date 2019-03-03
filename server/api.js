@@ -661,7 +661,7 @@ module.exports = ({app, db}) => {
     // free-time routes
     // -----------------------------
     
-    app.get('/free-time/all', access(3), (req, res)=>{
+    app.get('/free-time/all', access(2), (req, res)=>{
         db.api.freetime.all((err, rows)=>{
             
             if(rows) return res.json({body: rows, err:null})
@@ -707,16 +707,16 @@ module.exports = ({app, db}) => {
             if(req.body[i] == null) delete req.body[i]
         }
         
-        db.api.freetime.getById(req.body.id, (err, ft)=>{
+        db.api.freetime.getById(req.body.ft_id, (err, ft)=>{
             if(err) {
                 dev.report(err);
                 return res.status(404).end("Nothing Found !");
             }
 
             var newfreetime = { // TODO : validate and sanitize here
-                id : req.body.id ? req.body.id : ft.id,
-                date : req.body.name ? req.body.name : ft.date,
-                time : req.body.iframe ? req.body.iframe : ft.time,
+                id : req.body.ft_id ? req.body.ft_id : ft.id,
+                date : req.body.date ? req.body.date : ft.date,
+                time : req.body.time ? req.body.time : ft.time,
                 price : req.body.price ? req.body.price : ft.price,
             }
 
@@ -743,8 +743,9 @@ module.exports = ({app, db}) => {
             
             date : req.body.date,
             time : req.body.time,
-            price : req.body.price
+            price : req.body.price ? req.body.price : 0 
         }
+
         
         db.api.freetime.add(newfreetime, (err, row)=>{
             if(err) {
@@ -762,6 +763,17 @@ module.exports = ({app, db}) => {
 
     app.get('/reserve/all', access(3), (req, res)=>{
         db.api.reserve.all((err, rows)=>{
+            
+            if(rows) return res.json({body: rows, err:null})
+            if(err) {
+                dev.report(err);
+                return res.status(404).end("Nothing Found !");
+            }
+        })
+    });
+
+    app.get('/reserve/all/:id', access(2), (req, res)=>{
+        db.api.freetime.getAllRelToId(req.params.id, (err, rows)=>{
             
             if(rows) return res.json({body: rows, err:null})
             if(err) {

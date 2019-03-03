@@ -1,0 +1,114 @@
+
+<!-- set actions and bind content  -->
+<div class="row">
+<Card image="/public/img/privacy.png" col="s12 m10 offset-m1 l10 offset-l1">
+    {#await getinfos}
+        <Loading small/>
+    {:then infos}
+
+    <!-- ======== THIS MODAL WILL TRIGGER ON EACH ACTION ======== -->
+            <div id="modalshow" class="modal">
+                <div class="modal-content">
+                    <h4>رزرو وقت مشاوره</h4>
+                        {#if objModal}
+                                رزرو مشاوره در روز 
+                                <div>{objModal.date}</div>
+                                در ساعت
+                                <div>{objModal.time}</div>
+                                به قیمت
+                                <div>{objModal.price}</div>
+                                تومان.
+
+
+
+                                <!-- TODO : implement payment process.... -->
+                            <a class="btn waves-effect waves-light black-text yellow" on:click="pay(objModal.id)">
+                                پرداخت
+                                <i class="material-icons left">send</i>
+                            </a>
+                        {/if}                 
+                </div>
+                <div class="modal-footer">
+                    <button class="modal-close waves-effect waves-green btn-flat" on:click="close()">Close</button>
+                </div>
+            </div> <!-- ======== END - MODAL ======== -->
+
+        <Table highlight rows={3}
+            on:modal="open(event)"
+            content={infos}
+            search={["id", "time", "date", "price"]}
+            actions={[
+                {icon: "account_balance", tooltip: "رزرو", action(obj, component) {
+                           component.fire("modal", {obj})
+                        }
+                }, 
+            ]}
+        />
+
+    {:catch err}
+        <p>Error {err.message}</p>
+    {/await}
+    </Card>
+</div>
+
+<script>
+export default {
+    data(){
+        var mob = {data: null};
+        return {
+            objModal: null,
+            mob,
+            getinfos: utils.fetch(`/free-time/all`)
+            .then(response => {
+                var mobs = response.body;
+                    mob.data = mobs;
+                    var rows = [];
+                    for(var mb of mobs) {
+                            var info = {
+                                id : mb.id,
+                                date: mb.date,
+                                time: mb.time,
+                                price: mb.price
+                            }
+                            // [ show description ]
+                            info.actions = [
+                                [2].includes(cdsuser.access)
+                            ]
+                            rows.push(info);
+                    }
+                    return rows;
+                })
+                .catch(err => utils.toast("something went wrong !")),
+        }
+    },
+    methods:{
+        open({obj}){
+                const mob = this.get().mob.data
+                for(var mb of mob){
+                    if(obj.id === mb.id) {
+                        this.set({objModal: mb}) 
+                    }
+                }
+                var elems = document.querySelector('.modal');
+                var instances = M.Modal.init(elems, {});
+                instances.open();
+        },
+        close(){
+            var elems = document.querySelector('.modal');
+            var instances = M.Modal.init(elems, {});
+            instances.close();
+        },
+        pay(id){
+            console.log(id)
+        }
+    },
+    components: {
+        Loading: "../../tags/Loading.html",
+        I: "../../tags/Icon.html",
+        Table: "../../tags/Table.html",
+        Card: "../../tags/Card.html"
+    }
+}
+</script>
+
+

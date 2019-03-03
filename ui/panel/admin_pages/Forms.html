@@ -183,6 +183,11 @@ export default {
                 const name = elname.value ? elname.value : null;
                 const iframe = eliframe.value ? eliframe.value : null;
 
+                if(!name || !iframe){
+                    utils.toast("fill all the fields !")
+                    utils.reload()
+                }
+
                 utils.fetch("/form/add", {name, iframe}).then((res)=>{
                     if(res.status!=200){
                         utils.toast("something went wrong !")
