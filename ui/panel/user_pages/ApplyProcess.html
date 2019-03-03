@@ -1,4 +1,100 @@
 
+<!-- set actions and bind content  -->
+<div class="row">
+    {#await getinfos}
+        <Loading small/>
+    {:then infos}
+
+    <!-- ======== THIS MODAL WILL TRIGGER ON EACH ACTION ======== -->
+            <div id="modalshow" class="modal">
+                <div class="modal-content">
+                    <h4>توضیحات اضافه</h4>
+                        {#if objModal}
+                            {@html objModal.description}      
+                        {/if}                 
+                </div>
+                <div class="modal-footer">
+                    <button class="modal-close waves-effect waves-green btn-flat" on:click="close()">Close</button>
+                </div>
+            </div> <!-- ======== END - MODAL ======== -->
+
+        <Table highlight rows={3}
+            on:modal="open(event)"
+            content={infos}
+            search={["description", "sop", "cv", "field", "education_language", 
+                     "country", "university", "rc", "reg_date", "cuid", "status", "id"]}
+            actions={[
+                {icon: "remove_red_eye", tooltip: "مشاهده توضیحات", action(obj, component) {
+                           component.fire("modal", {obj})
+                        }
+                }, 
+            ]}
+        />
+
+    {:catch err}
+        <p>Error {err.message}</p>
+    {/await}
+</div>
+
+<script>
+export default {
+    data(){
+        var mob = {data: null};
+        return {
+            objModal: null,
+            mob,
+            getinfos: utils.fetch(`/student-control/getAll/${cdsuser.id}`)
+            .then(response => {
+                var mobs = response.body;
+                    mob.data = mobs;
+                    var rows = [];
+                    for(var mb of mobs) {
+                            var info = {
+                                id : mb.id,
+                                country: mb.country,
+                                university: mb.university,
+                                education_language: mb.education_language,
+                                cv: mb.cv,
+                                sop: mb.sop,
+                                rc: mb.rc,
+                                field: mb.field,
+                                reg_date: mb.reg_date
+                            }
+                            // [ show description ]
+                            info.actions = [
+                                [2].includes(cdsuser.access)
+                            ]
+                            rows.push(info);
+                    }
+                    return rows;
+                })
+                .catch(err => utils.toast("something went wrong !")),
+        }
+    },
+    methods:{
+        open({obj}){
+                const mob = this.get().mob.data
+                for(var mb of mob){
+                    if(obj.id === mb.id) {
+                        this.set({objModal: mb}) 
+                    }
+                }
+                var elems = document.querySelector('.modal');
+                var instances = M.Modal.init(elems, {});
+                instances.open();
+        },
+        close(){
+            var elems = document.querySelector('.modal');
+            var instances = M.Modal.init(elems, {});
+            instances.close();
+        }
+    },
+    components: {
+        Loading: "../../tags/Loading.html",
+        I: "../../tags/Icon.html",
+        Table: "../../tags/Table.html"
+    }
+}
+</script>
 
 
-user can see his/her apply status which is fetched from apply table

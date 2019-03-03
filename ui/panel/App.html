@@ -25,18 +25,17 @@
 </div>
 
 <script>
+	import DecoupledEditor from '@ckeditor/ckeditor5-build-decoupled-document';
 	import SecurityPolicy from "./admin_pages/SecurityPolicy.html";
 	import AccessControlCenter from "./admin_pages/AccessControlCenter.html";
-	import AnswerQuestionControlCenter from "./admin_pages/AnswerQuestionControlCenter.html";
-	import ConsultancyForms from "./admin_pages/ConsultancyForms.html";
+	import Forms from "./admin_pages/Forms.html";
 	import TelegramBot from "./admin_pages/TelegramBot.html";
 	import LiveChat from "./admin_pages/LiveChat.html";
-	import StudentControlCenter from "./admin_pages/StudentControlCenter.html";
 	import CommentControlCenter  from "./admin_pages/CommentControlCenter.html";
-	import DatabaseControlCenter from "./dev_pages/DatabaseControlCenter.html";
 	import PortalControlCenter from "./admin_pages/PortalControlCenter.html";
 	import ContentControllCenter from "./admin_pages/ContentControlCenter.html";
 	import ConsultationSchedule from "./admin_pages/ConsultationSchedule.html";
+	import ApplyCenter from "./admin_pages/ApplyCenter.html";
 	import ApplyProcess from "./user_pages/ApplyProcess.html";
 	import ReservingConsultancyTime from "./user_pages/ReservingConsultancyTime.html";
 	import Transactions from "./user_pages/Transactions.html";
@@ -143,14 +142,12 @@
 					"Security Policy":				{access: [2, 3, 5, 7], icon: "security", page: SecurityPolicy},
 					"Access Control Center":		{access: [5, 7], icon: "account_circle", page: AccessControlCenter},
 					"Comment Control Center":		{access: [3, 5, 7], icon: "comment", page: CommentControlCenter},
-					"FAQ Control Center":			{access: [], icon: "question_answer", page: AnswerQuestionControlCenter},
 					"Consultation Schedule":		{access: [3, 5, 7], icon: "event", page: ConsultationSchedule},
-					"Consultancy Forms":			{access: [3, 5, 7], icon: "live_help", page: ConsultancyForms},
 					"Telegram Bot":					{access: [], icon: "send", page: TelegramBot},
 					"Live Chat":					{access: [], icon: "chat", page: LiveChat},
-					"Student Control Center":		{access: [3, 5, 7], icon: "assignment_ind", page: StudentControlCenter},
+					"Forms":						{access: [3, 5, 7], icon: "assignment", page: Forms},
+					"Apply Center":					{access: [3, 5, 7], icon: "assignment_ind", page: ApplyCenter},
 					"Portal Control Center":		{access: [], icon: "account_balance", page: PortalControlCenter},
-					"Database Control Center":		{access: [], icon: "storage", page: DatabaseControlCenter},
 					"Content Center":				{access: [3, 5, 7], icon: "subject", page: ContentControllCenter},
 					"پروسه اپلای" : 		    	{access: [2], icon: "airplanemode_active", page: ApplyProcess},
 					"تراکنش ها"	:				   {access: [2], icon: "receipt", page: Transactions},	

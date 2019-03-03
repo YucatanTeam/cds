@@ -28,15 +28,13 @@
                                     {#if objModal}
                                     <!-- TODO : complete this when post page implemented ! add some style. -->
                                       <a href="#!">{objModal.slug}</a>
-                                        <Form response={{}}>
-                                            <Input col="s12" label="cuid" id="cuid" type="text" value={ crudindex === 1 ? objModal.cuid : "" } disabled/>
-                                            <Input col="s12" label="created_at" id="created_at" type="text" value={ crudindex === 1 ? objModal.created_at : "" } disabled/>
-                                            <Input col="s12" label="updated_at" id="updated_at" type="text" value={ crudindex === 1 ? objModal.updated_at : "" } disabled/>
-                                            <Input col="s12" label="Email" id="email" type="email" value={ crudindex === 1 ? objModal.email : ""}/>
-                                            <Input col="s12" label="name" id="name" type="text" value={ crudindex === 1 ? objModal.name : ""}/>
-                                            <textarea id="content" class="materialize-textarea">{ crudindex === 1 ? objModal.content : ""}</textarea>
-                                            <label for="content">Content</label>
-                                        </Form>
+                                        <Input col="s12" label="cuid" id="cuid" type="text" value={ crudindex === 1 ? objModal.cuid : "" } disabled/>
+                                        <Input col="s12" label="created_at" id="created_at" type="text" value={ crudindex === 1 ? objModal.created_at : "" } disabled/>
+                                        <Input col="s12" label="updated_at" id="updated_at" type="text" value={ crudindex === 1 ? objModal.updated_at : "" } disabled/>
+                                        <Input col="s12" label="Email" id="email" type="email" value={ crudindex === 1 ? objModal.email : ""}/>
+                                        <Input col="s12" label="name" id="name" type="text" value={ crudindex === 1 ? objModal.name : ""}/>
+                                        <textarea id="content" class="materialize-textarea">{ crudindex === 1 ? objModal.content : ""}</textarea>
+                                        <label for="content">Content</label>
                                     {/if}
                                 </Card>
                             </div>

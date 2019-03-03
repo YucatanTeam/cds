@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@ckeditor/ckeditor5-build-decoupled-document": "^11.2.0",
+    "@ckeditor/ckeditor5-easy-image": "^11.0.0",
     "body-parser": "^1.18.3",
     "cookie-parser": "^1.4.3",
     "cookie-session": "^2.0.0-beta.3",
@@ -23,6 +24,7 @@
     "mysql": "^2.16.0",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
+    "request": "^2.88.0",
     "sharp": "^0.21.3"
   },
   "devDependencies": {

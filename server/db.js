@@ -106,8 +106,8 @@ const db = {
             COMMENTS API
         */
         comment: {
-            getAllRelToAPost(post_id, cb){
-                db.connection.query(`SELECT * FROM COMMENT WHERE post_id = ? ORDER BY created_at DESC;`, [post_id], (err, rows)=>{
+            getAllRelToAPage(page_id, cb){
+                db.connection.query(`SELECT * FROM COMMENT WHERE page_id = ? ORDER BY created_at DESC;`, [page_id], (err, rows)=>{
                     if(rows.length >= 1){
                         return cb(err, rows);
                     } else{
@@ -135,10 +135,10 @@ const db = {
                 })
             },
             getAll(cb){
-                db.connection.query(`SELECT comment.id, comment.post_id, comment.content, comment.name, comment.email, comment.status, 
+                db.connection.query(`SELECT comment.id, comment.page_id, comment.content, comment.name, comment.email, comment.status, 
                                             comment.cuid, comment.created_at, comment.updated_at, 
-                                            post.slug FROM comment 
-                                            INNER JOIN post ON comment.post_id=post.id ORDER BY comment.created_at DESC;`, [], (err, rows)=>{
+                                            page.slug FROM comment 
+                                            INNER JOIN page ON comment.page_id=page.id ORDER BY comment.created_at DESC;`, [], (err, rows)=>{
                     if(rows.length >= 1) {
                         return cb(err, rows);
                     } else {
@@ -162,8 +162,8 @@ const db = {
                 db.connection.query(`UPDATE comment SET status = 1 WHERE id = ?`, [id], cb ? cb : e=>e);
             },
             add(comment, cb){
-                db.connection.query(`INSERT INTO comment(post_id, content, name, email, cuid) 
-                                    VALUES(?, ?, ?, ?, ?)`, [comment.post_id, comment.content, comment.name, comment.email, comment.cuid], cb ? cb : e=>e)
+                db.connection.query(`INSERT INTO comment(page_id, content, name, email, cuid) 
+                                    VALUES(?, ?, ?, ?, ?)`, [comment.page_id, comment.content, comment.name, comment.email, comment.cuid], cb ? cb : e=>e)
             },
             update(comment, cb){
                 db.connection.query(`UPDATE comment SET content = ?, name = ?, email = ? WHERE id = ?`, [comment.content,comment.name,comment.email,comment.id], cb);
@@ -235,6 +235,15 @@ const db = {
                     }
                 });
             },
+            getAllRelToId(id, cb){
+                db.connection.query(`SELECT * FROM apply WHERE user_id = ? ORDER BY apply.created_at DESC;`, [id], (err, rows)=>{
+                    if(rows){
+                        return cb(err, rows);
+                    } else {
+                        return cb(err, false);
+                    }
+                });
+            },
             getById(id, cb){
                 db.connection.query(`SELECT * FROM apply WHERE id = ?`, [id], (err, rows)=>{
                     if(rows.length === 1){
@@ -271,6 +280,128 @@ const db = {
                 WHERE id = ?`, [info.description, info.country, info.university, info.education_language, info.field, info.cv, info.sop, info.rc, info.reg_date, info.id], cb);
             },
         },
+        /* --------------------
+            FORMS API
+        */
+       form:{
+            all(cb){
+                db.connection.query(`SELECT * FROM forms ORDER BY created_at DESC;`, [], (err, rows)=>{
+                    if(rows){
+                        return cb(err, rows);
+                    } else {
+                        return cb(err, false);
+                    }
+                });
+            },
+            getById(id, cb){
+                db.connection.query(`SELECT * FROM forms WHERE id = ?`, [id], (err, rows)=>{
+                    if(rows.length === 1){
+                        return cb(err, rows);
+                    } else{
+                        return cb(err, false);
+                    }
+                })
+            },
+            block(id, cb){
+                db.connection.query(`UPDATE forms SET status = 0 WHERE id = ?`, [id], cb ? cb : e=>e);
+            },
+            unblock(id, cb){
+                db.connection.query(`UPDATE forms SET status = 1 WHERE id = ?`, [id], cb ? cb : e=>e);
+            },
+            deleteById(id, cb){
+                db.connection.query(`DELETE FROM forms WHERE id = ?`, [id], cb ? cb : e=>e);
+            },
+            deleteByCuid(cuid, cb){
+                db.connection.query(`DELETE FROM forms WHERE cuid = ?`, [cuid], cb ? cb : e=>e);
+            },
+            deleteAll(cb){
+                db.connection.query(`DELETE * FROM forms`, [], cb ? cb : e=>e);
+            },
+            add(datum, cb){
+                db.connection.query(`INSERT INTO forms(name, iframe, cuid) 
+                                    VALUES(?, ?, ?)`, [datum.name, datum.iframe, datum.cuid], cb ? cb : e=>e)
+            },
+            update(datum, cb){
+                db.connection.query(`UPDATE forms SET name = ?, iframe = ? WHERE id = ?`, [datum.name, datum.iframe, datum.id], cb);
+            },
+        },
+        /* --------------------
+            FREETIME API
+        */
+        freetime:{
+            all(cb){
+                db.connection.query(`SELECT * FROM freetime ORDER BY created_at DESC;`, [], (err, rows)=>{
+                    if(rows){
+                        return cb(err, rows);
+                    } else {
+                        return cb(err, false);
+                    }
+                });
+            },
+            getById(id, cb){
+                db.connection.query(`SELECT * FROM freetime WHERE id = ?`, [id], (err, rows)=>{
+                    if(rows.length === 1){
+                        return cb(err, rows);
+                    } else{
+                        return cb(err, false);
+                    }
+                })
+            },
+            block(id, cb){
+                db.connection.query(`UPDATE freetime SET status = 0 WHERE id = ?`, [id], cb ? cb : e=>e);
+            },
+            unblock(id, cb){
+                db.connection.query(`UPDATE freetime SET status = 1 WHERE id = ?`, [id], cb ? cb : e=>e);
+            },
+            deleteById(id, cb){
+                db.connection.query(`DELETE FROM freetime WHERE id = ?`, [id], cb ? cb : e=>e);
+            },
+            deleteAll(cb){
+                db.connection.query(`DELETE * FROM freetime`, [], cb ? cb : e=>e);
+            },
+            add(ft, cb){
+                db.connection.query(`INSERT INTO freetime(date, time, price) 
+                                    VALUES(?, ?, ?)`, [ft.date, ft.time, ft.price], cb ? cb : e=>e)
+            },
+            update(ft, cb){
+                db.connection.query(`UPDATE freetime SET date = ?, time = ?, price = ? WHERE id = ?`, [ft.date, ft.time, ft.price, ft.id], cb);
+            },
+        },
+        /* --------------------
+            RESERVE API
+        */
+       reserve:{
+        all(cb){ // TODO fetch from transactions when implemented completely !!
+            db.connection.query(`SELECT reserve.id, reserve.user_id, reserve.transactions_id, user.firstname, user.lastname
+                                    freetime.price, transaction.paid
+                                    FROM reserve
+                                        INNER JOIN transactions ON reserve.transaction_id=transactions.id
+                                        INNER JOIN freetime ON reserve.freetime_id=freetime.id
+                                        INNER JOIN user ON reserve.user_id=user.id 
+                                    ORDER BY reserve.created_at DESC;`, [], (err, rows)=>{
+                if(rows){
+                    return cb(err, rows);
+                } else {
+                    return cb(err, false);
+                }
+            });
+        },
+        getById(id, cb){
+            db.connection.query(`SELECT * FROM reserve WHERE id = ?`, [id], (err, rows)=>{
+                if(rows.length === 1){
+                    return cb(err, rows);
+                } else{
+                    return cb(err, false);
+                }
+            })
+        },
+        deleteById(id, cb){
+            db.connection.query(`DELETE FROM reserve WHERE id = ?`, [id], cb ? cb : e=>e);
+        },
+        deleteAll(cb){
+            db.connection.query(`DELETE * FROM reserve`, [], cb ? cb : e=>e);
+        },
+      },
     }
 }
 
