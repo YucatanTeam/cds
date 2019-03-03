@@ -657,9 +657,119 @@ module.exports = ({app, db}) => {
                  
     });
 
+    // -----------------------------
+    // free-time routes
+    // -----------------------------
+    
+    app.get('/free-time/all', access(3), (req, res)=>{
+        db.api.freetime.all((err, rows)=>{
+            
+            if(rows) return res.json({body: rows, err:null})
+            if(err) {
+                dev.report(err);
+                return res.status(404).end("Nothing Found !");
+            }
+        })
+    });
+
+    app.post('/free-time/block/:id', access(3), (req, res) =>{
+        db.api.freetime.block(req.params.id, (err, row)=>{
+            
+            if(err) {
+                dev.report(err);
+                return res.status(404).end("Nothing Found !");
+            } else return res.status(200).end("OK");
+        })
+    });
+    
+    app.post('/free-time/unblock/:id', access(3), (req, res)=>{
+        db.api.freetime.unblock(req.params.id, (err, row)=>{
+
+            if(err) {
+                dev.report(err);
+                return res.status(404).end("Nothing Found !");
+            } else return res.status(200).end("OK");
+        })
+    });
+
+    app.post('/free-time/delete/:id', access(3), (req, res)=>{
+        db.api.freetime.deleteById(req.params.id, (err, rows)=>{
+
+            if(err) {
+                dev.report(err);
+                return res.status(404).end("Nothing Found !");
+            } else return res.status(200).end("OK");
+        })
+    });
+
+    app.post('/free-time/edit', access(3), (req, res)=>{
+        for(var i in req.body) {
+            if(req.body[i] == null) delete req.body[i]
+        }
+        
+        db.api.freetime.getById(req.body.id, (err, ft)=>{
+            if(err) {
+                dev.report(err);
+                return res.status(404).end("Nothing Found !");
+            }
+
+            var newfreetime = { // TODO : validate and sanitize here
+                id : req.body.id ? req.body.id : ft.id,
+                date : req.body.name ? req.body.name : ft.date,
+                time : req.body.iframe ? req.body.iframe : ft.time,
+                price : req.body.price ? req.body.price : ft.price,
+            }
+
+            db.api.freetime.update(newfreetime, (err, row)=>{
+                if(err) {
+                    dev.report(err);
+                    return res.status(500).end("Internal Server Error !");
+                } else return res.status(200).end("OK");
+            })
+
+        })
+
+    })
+
+    app.post('/free-time/add', access(3), (req, res)=>{
+        for(var i in req.body){
+            if(req.body[i] == null) {
+                delete req.body[i] 
+                return res.status(411).end("Length Required !");
+            } 
+        }
+
+        var newfreetime = { // TODO : validate and sanitize here
+            
+            date : req.body.date,
+            time : req.body.time,
+            price : req.body.price
+        }
+        
+        db.api.freetime.add(newfreetime, (err, row)=>{
+            if(err) {
+                dev.report(err);
+                return res.status(500).end("Internal Server Error !");
+            } else return res.status(200).end("OK");
+        })
+                 
+    });
 
 
+    // -----------------------------
+    // reserve routes
+    // -----------------------------
 
+    app.get('/reserve/all', access(3), (req, res)=>{
+        db.api.reserve.all((err, rows)=>{
+            
+            if(rows) return res.json({body: rows, err:null})
+            if(err) {
+                dev.report(err);
+                return res.status(404).end("Nothing Found !");
+            }
+        })
+    });
 
 
 

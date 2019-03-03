@@ -325,7 +325,83 @@ const db = {
                 db.connection.query(`UPDATE forms SET name = ?, iframe = ? WHERE id = ?`, [datum.name, datum.iframe, datum.id], cb);
             },
         },
-
+        /* --------------------
+            FREETIME API
+        */
+        freetime:{
+            all(cb){
+                db.connection.query(`SELECT * FROM freetime ORDER BY created_at DESC;`, [], (err, rows)=>{
+                    if(rows){
+                        return cb(err, rows);
+                    } else {
+                        return cb(err, false);
+                    }
+                });
+            },
+            getById(id, cb){
+                db.connection.query(`SELECT * FROM freetime WHERE id = ?`, [id], (err, rows)=>{
+                    if(rows.length === 1){
+                        return cb(err, rows);
+                    } else{
+                        return cb(err, false);
+                    }
+                })
+            },
+            block(id, cb){
+                db.connection.query(`UPDATE freetime SET status = 0 WHERE id = ?`, [id], cb ? cb : e=>e);
+            },
+            unblock(id, cb){
+                db.connection.query(`UPDATE freetime SET status = 1 WHERE id = ?`, [id], cb ? cb : e=>e);
+            },
+            deleteById(id, cb){
+                db.connection.query(`DELETE FROM freetime WHERE id = ?`, [id], cb ? cb : e=>e);
+            },
+            deleteAll(cb){
+                db.connection.query(`DELETE * FROM freetime`, [], cb ? cb : e=>e);
+            },
+            add(ft, cb){
+                db.connection.query(`INSERT INTO freetime(date, time, price) 
+                                    VALUES(?, ?, ?)`, [ft.date, ft.time, ft.price], cb ? cb : e=>e)
+            },
+            update(ft, cb){
+                db.connection.query(`UPDATE freetime SET date = ?, time = ?, price = ? WHERE id = ?`, [ft.date, ft.time, ft.price, ft.id], cb);
+            },
+        },
+        /* --------------------
+            RESERVE API
+        */
+       reserve:{
+        all(cb){ // TODO fetch from transactions when implemented completely !!
+            db.connection.query(`SELECT reserve.id, reserve.user_id, reserve.transactions_id, user.firstname, user.lastname
+                                    freetime.price, transaction.paid
+                                    FROM reserve
+                                        INNER JOIN transactions ON reserve.transaction_id=transactions.id
+                                        INNER JOIN freetime ON reserve.freetime_id=freetime.id
+                                        INNER JOIN user ON reserve.user_id=user.id 
+                                    ORDER BY reserve.created_at DESC;`, [], (err, rows)=>{
+                if(rows){
+                    return cb(err, rows);
+                } else {
+                    return cb(err, false);
+                }
+            });
+        },
+        getById(id, cb){
+            db.connection.query(`SELECT * FROM reserve WHERE id = ?`, [id], (err, rows)=>{
+                if(rows.length === 1){
+                    return cb(err, rows);
+                } else{
+                    return cb(err, false);
+                }
+            })
+        },
+        deleteById(id, cb){
+            db.connection.query(`DELETE FROM reserve WHERE id = ?`, [id], cb ? cb : e=>e);
+        },
+        deleteAll(cb){
+            db.connection.query(`DELETE * FROM reserve`, [], cb ? cb : e=>e);
+        },
+      },
     }
 }
 

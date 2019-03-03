@@ -176,6 +176,44 @@ connection.connect(err => {
                 ?
             );` ,[cuid()] ,errlog("first form"));
         });
+    
+    // ========================================= FORM INIT SETUP ===================================================================
+    // transactions table
+    //...
+    connection.query(`CREATE TABLE IF NOT EXISTS transactions (
+        id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        paid TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)ENGINE=INNODB;` ,[] ,(err, rows)=>{
+            if(err) errlog("freetime")(err, rows)
+        });
+
+    // ========================================= FORM INIT SETUP ===================================================================
+    // freetime table
+    //...
+    connection.query(`CREATE TABLE IF NOT EXISTS freetime (
+        id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        date TEXT NOT NULL,
+        time TEXT NOT NULL,
+        price TEXT NOT NULL,
+        status TINYINT NOT NULL DEFAULT 0,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)ENGINE=INNODB;` ,[] ,(err, rows)=>{
+            if(err) errlog("freetime")(err, rows)
+        });
+
+    // ========================================= FORM INIT SETUP ===================================================================
+    // reserve table
+    //...
+    connection.query(`CREATE TABLE IF NOT EXISTS reserve (
+        id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL,
+        freetime_id INT NOT NULL,
+        transaction_id INT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)ENGINE=INNODB;` ,[] ,(err, rows)=>{
+            if(err) errlog("freetime")(err, rows)
+        });
 
     // ========================================= DEV INIT SETUP ===================================================================
     // error table
