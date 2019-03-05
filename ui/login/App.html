@@ -34,8 +34,8 @@ export default {
         // https://svelte.technology/guide#component-events
         handle({ err, response }) {
             if (response && response.status == 401) {
-                utils.toast("Invalid credentials")
-                this.set({ response: { err: "Erro ! Invalid credentials", body: null } });
+                // utils.toast("Invalid credentials")
+                this.set({ response: { err: "invalid username or password !", body: null } });
             } else if (response && response.status == 200) {
                 this.set({ response: { err: null, body: response.body } });
             }
