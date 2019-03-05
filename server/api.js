@@ -196,7 +196,12 @@ module.exports = ({app, db}) => {
                     return res.status(500).end("Internal server err !");
                 }
                 else{
-                   return res.status(200).end("Ok"); 
+                    req.login(user, function(err) {
+                        if (err) { return next(err); }
+                        return res.redirect('/panel');
+                      });
+                    
+                    
                 }
             })
         })
