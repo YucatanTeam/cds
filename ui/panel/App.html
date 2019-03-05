@@ -2,9 +2,6 @@
 	<title>{title}</title>
 </svelte:head>
 
-
-<!-- TODO : implement logout btn ! -->
-
 <div class="row">
 	<Sidenav background="/public/img/cds.svg" fixed>
 		{#await getuser}
@@ -29,7 +26,6 @@
 	import SecurityPolicy from "./admin_pages/SecurityPolicy.html";
 	import AccessControlCenter from "./admin_pages/AccessControlCenter.html";
 	import Forms from "./admin_pages/Forms.html";
-	import TelegramBot from "./admin_pages/TelegramBot.html";
 	import LiveChat from "./admin_pages/LiveChat.html";
 	import CommentControlCenter  from "./admin_pages/CommentControlCenter.html";
 	import PortalControlCenter from "./admin_pages/PortalControlCenter.html";
@@ -144,7 +140,6 @@
 					"Access Control Center":			{access: [5, 7], icon: "account_circle", page: AccessControlCenter},
 					"Comment Control Center":			{access: [3, 5, 7], icon: "comment", page: CommentControlCenter},
 					"Consultation Schedule":			{access: [3, 5, 7], icon: "event", page: ConsultationSchedule},
-					"Telegram Bot":						{access: [5, 7], icon: "send", page: TelegramBot},
 					"Live Chat":						{access: [5, 7], icon: "chat", page: LiveChat},
 					"Forms":							{access: [3, 5, 7], icon: "assignment", page: Forms},
 					"Apply Center":						{access: [3, 5, 7], icon: "assignment_ind", page: ApplyCenter},
