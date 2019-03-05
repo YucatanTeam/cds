@@ -8,6 +8,7 @@ const pages = [
 	'login',
 	'index',
 	'ssr',
+	'register'
 ]
 
 const production = !process.env.ROLLUP_WATCH;

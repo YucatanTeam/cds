@@ -3,13 +3,12 @@
 
 <!-- set actions and bind content  -->
 <div class="row">
- <Card image="/public/img/privacy.png" col="s12 m10 offset-m1 l10 offset-l1">
     {#await getfreetimes}
         <Loading small/>
     {:then freetimes}
 
             <!-- ======== THIS MODAL WILL TRIGGER ON EACH ACTION ======== -->
-            <div id="{crudindex===1 ? "modaledit" :  crudindex===0 ? "modalcreate" : crudindex===4 ? "modalblock" : crudindex===5 ? "modalunblock" : "modaldelete"}" class="modal">
+            <div id="{crudindex===1 ? "modaledit" :  crudindex===0 ? "modalcreate" : crudindex===4 ? "modalblock" : crudindex===5 ? "modalunblock" : "modaldelete"}" class="modal bottom-sheet">
                 <div class="modal-content">
                     <h4>{crudindex===1 ? "Edit" : crudindex===0 ? "Create" : ""}</h4>
                         
@@ -17,32 +16,25 @@
                             <h4>Confirm Delete</h4>
                             <p>Do you really want to delete this free time with id <strong>{objModal.id}</strong> ?</p>
 
-                        {:elseif crudindex === 4}
-                            <h4>Confirm Block</h4>
-                            <p>Do you really want to block this free time with id <strong>{objModal.id}</strong> ?</p>
-
-                        {:elseif crudindex === 5}
-                            <h4>Confirm Unblock</h4>
-                            <p>Do you really want to unblock this free time with id <strong>{objModal.id}</strong> ?</p>
-                        
                         {:elseif crudindex === 1}
                             <div class="row">
                                 <Card col="s12 m10 offset-m1 l10 offset-l1">
                                     {#if objModal}
-                                            <Input class="datepicker" col="s12" label="date" id="date" type="text" value={ crudindex === 1 ? objModal.date : "" }/>
-                                            <Input class="timepicker" col="s12" label="time" id="time" type="text" value={ crudindex === 1 ? objModal.time : "" }/>
-                                            <Input col="s12" label="price" id="price" type="text" value={ crudindex === 1 ? objModal.price : "" }/>
+                                            <Input col="s12" label="date" class="datepicker" id="date" type="text" value={objModal.date ? objModal.date : ""} />
+                                            <Input col="s12" label="time" class="timepicker" id="time" type="text" value={objModal.time ? objModal.time : ""} />
+                                            <Input col="s12" label="price" id="price" type="number" min="0" value={objModal.price ? objModal.price : ""} />
                                     {/if}
                                 </Card>
                             </div>
                         {:else}
-                            <Input col="s12" label="date" id="date" type="text" class="datepicker"/>
-                            <Input col="s12" label="time" id="time" type="text" class="timepicker"/>
-                            <Input col="s12" label="price" id="price" type="text"/>
+                            <Input col="s12" label="date" class="datepicker" id="date" type="text" />
+                            <Input col="s12" label="time" class="timepicker" id="time" type="text" />
+                            <Input col="s12" label="price" id="price" type="number" />
+
                         {/if}
                 </div>
                 <div class="modal-footer">
-                    <button class="modal-close waves-effect waves-green btn-flat" on:click="action(objModal.id)">{crudindex===1 ? "Update" : crudindex===0 ? "Add" : crudindex===2 ? "Delete" : crudindex===4? "Block" : "Unblock"}</button>
+                    <button class="modal-close waves-effect waves-green btn-flat" on:click="action()">{crudindex===1 ? "Update" : crudindex===0 ? "Add" : crudindex===2 ? "Delete" : crudindex===4? "Block" : "Unblock"}</button>
                 </div>
             </div> <!-- ======== END - MODAL ======== -->
 
@@ -60,7 +52,7 @@
                         // ==============================================================================================
                         {icon: "delete",tooltip: "delete", action(obj, component) {
                                 var index = 2
-                            component.fire("modal", {obj, index}) 
+                                component.fire("modal", {obj, index}) 
                                 
                             }
                         }, 
@@ -73,21 +65,13 @@
                             }
                         }, 
                         // ==============================================================================================
-                        // BLOCK STATUS
+                        // RESERVED : 
+                        // status 0 means reserved and is not available
+                        // status 1 means not reserved and is available
+                        // when the status is 1 icon is off
+                        // when the status is 0 icon is on
                         // ==============================================================================================
-                        {icon: "block",tooltip: "block", action(obj, component) {
-                                    var index = 4
-                                    component.fire("modal", {obj, index})
-                            }
-                        },
-                        // ==============================================================================================
-                        // UNBLOCK STATUS
-                        // ==============================================================================================
-                        {icon: "beenhere",tooltip: "unblock", action(obj, component) {
-                                    var index = 5
-                                    component.fire("modal", {obj, index})
-                            }
-                        } 
+                        {icon: "alarm_on",tooltip: "not reserved", action(obj, component) {}}
                     ]}
             />
 
@@ -99,7 +83,6 @@
     {:catch err}
         <p>Error {err.message}</p>
     {/await}
-    </Card>
 </div>
 
 <script>
@@ -107,19 +90,18 @@ export default {
     data(){
         return {
             objModal: null,
-            crudindex: 0, // 1 : edit , 0 : create , 2 : delete , 4 : block , 5 : unblock
+            ft_id: null,
+            crudindex: 0, // 1 : edit , 0 : create , 2 : delete
             getfreetimes: utils.fetch("/free-time/all")
             .then(response => {
                     var fts = response.body
                     var rows = [];
                     for(var ft of fts) {
-                            // [ CREATE , DELETE , EDIT , BLOCK , UNBLOCK ]
+                            // [ DELETE , EDIT , BLOCK , UNBLOCK ]
                             ft.actions = [
-                                [5, 7].includes(cdsuser.access),
-                                [5, 7].includes(cdsuser.access), 
+                                [7].includes(cdsuser.access),  // only dev can delete a data
                                 [3, 5, 7].includes(cdsuser.access), // dev , admin and mod can edit the apply
-                                [5, 7].includes(cdsuser.access) && info.status == 1,
-                                [5, 7].includes(cdsuser.access) && info.status == 0,
+                                [5, 7].includes(cdsuser.access) && ft.status == 1, // available and not reserved
                             ]
                             
                             rows.push(ft);
@@ -129,30 +111,33 @@ export default {
                 .catch(err => utils.toast("something went wrong !")),
         }
     },
-    oncreate(){
-        var delems = document.querySelectorAll('.datepicker');
-        var dinstances = M.Datepicker.init(delems);
-        var telems = document.querySelectorAll('.timepicker');
-        var tinstances = M.Timepicker.init(telems);
-    },
     methods:{
         fireMe(index){
             if(index === 0){
                 this.set({crudindex: index})
                 var elems = document.querySelector('.modal');
                 var instances = M.Modal.init(elems, {});
-                instances.open();    
+                instances.open();
+                var delems = document.querySelectorAll('.datepicker');
+                var dinstances = M.Datepicker.init(delems);
+                var telems = document.querySelectorAll('.timepicker');
+                var tinstances = M.Timepicker.init(telems);
             }
         },
         open({obj, index}){
-                this.set({crudindex: index, objModal: obj})
+                this.set({crudindex: index, objModal: obj, ft_id: obj.id})
                 var elems = document.querySelector('.modal');
                 var instances = M.Modal.init(elems, {});
                 instances.open();
+                var delems = document.querySelectorAll('.datepicker');
+                var dinstances = M.Datepicker.init(delems);
+                var telems = document.querySelectorAll('.timepicker');
+                var tinstances = M.Timepicker.init(telems);
         },
-        action(id){
+        action(){
             
             const {crudindex} = this.get()
+            const {ft_id} = this.get()
             
             // get down the road with crudindex!!!
             if(crudindex === 1){
@@ -165,7 +150,7 @@ export default {
                 const time = eltime.value ? eltime.value : null;
                 const price = elprice.value ? elprice.value : null;
                 
-                utils.fetch("/free-time/edit", {date, time, price, id}).then((res)=>{
+                utils.fetch("/free-time/edit", {date, time, price, ft_id}).then((res)=>{
                     if(res.status!=200){
                         utils.toast("something went wrong !")
                     } else{
@@ -183,6 +168,11 @@ export default {
                 const time = eltime.value ? eltime.value : null;
                 const price = elprice.value ? elprice.value : null;
                
+                if(!date || !time || !price){
+                    utils.toast("fill all the fields !")
+                    utils.reload()
+                }
+
                 utils.fetch("/free-time/add", {date, time, price}).then((res)=>{
                     if(res.status!=200){
                         utils.toast("something went wrong !")
@@ -191,26 +181,8 @@ export default {
                         utils.reload()
                     }
                }).catch(err => utils.toast("something went wrong !"));
-            } else if(crudindex === 4){
-                utils.fetch(`/free-time/block/${id}`, {}).then((res)=>{
-                    if(res.status!=200){
-                        utils.toast("something went wrong !")
-                    } else{
-                        utils.toast("Done")
-                        utils.reload()
-                    }
-                }).catch(err => utils.toast("something went wrong !"));
-            } else if(crudindex === 5){
-                utils.fetch(`/free-time/unblock/${id}`, {}).then((res)=>{
-                    if(res.status!=200){
-                        utils.toast("something went wrong !")
-                    } else{
-                        utils.toast("Done")
-                        utils.reload()
-                    }
-                }).catch(err => utils.toast("something went wrong !"));
-            } else{
-                utils.fetch(`/free-time/delete/${id}`, {}).then((res)=>{
+            }  else{
+                utils.fetch(`/free-time/delete/${ft_id}`, {}).then((res)=>{
                     if(res.status!=200){
                         utils.toast("something went wrong !")
                     } else{

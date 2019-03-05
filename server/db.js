@@ -338,6 +338,15 @@ const db = {
                     }
                 });
             },
+            available(cb){
+                db.connection.query(`SELECT id, date, time, price FROM freetime WHERE status = 1 ORDER BY created_at DESC;`, [], (err, rows)=>{
+                    if(rows){
+                        return cb(err, rows);
+                    } else {
+                        return cb(err, false);
+                    }
+                });
+            },
             getById(id, cb){
                 db.connection.query(`SELECT * FROM freetime WHERE id = ?`, [id], (err, rows)=>{
                     if(rows.length === 1){
@@ -371,7 +380,7 @@ const db = {
             RESERVE API
         */
        reserve:{
-        all(cb){ // TODO fetch from transactions when implemented completely !!
+        all(cb){ // TODO fetch from transactions when portal and payment process implemented completely !!
             db.connection.query(`SELECT reserve.id, reserve.user_id, reserve.transactions_id, user.firstname, user.lastname
                                     freetime.price, transaction.paid
                                     FROM reserve
@@ -379,6 +388,15 @@ const db = {
                                         INNER JOIN freetime ON reserve.freetime_id=freetime.id
                                         INNER JOIN user ON reserve.user_id=user.id 
                                     ORDER BY reserve.created_at DESC;`, [], (err, rows)=>{
+                if(rows){
+                    return cb(err, rows);
+                } else {
+                    return cb(err, false);
+                }
+            });
+        },
+        getAllRelToId(id, cb){
+            db.connection.query(`SELECT * FROM reserve WHERE user_id = ? ORDER BY apply.created_at DESC;`, [id], (err, rows)=>{
                 if(rows){
                     return cb(err, rows);
                 } else {

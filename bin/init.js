@@ -40,8 +40,8 @@ connection.connect(err => {
         en_title TEXT NOT NULL,
         status TINYINT NOT NULL DEFAULT 0
     )ENGINE=INNODB;` ,[] ,(err, rows) =>{
-        if(err) errlog("route")(err, rows)
-        else connection.query(`INSERT INTO route(id, access, title, en_title, status) VALUES(
+        errlog("route")(err, rows)
+        connection.query(`INSERT INTO route(id, access, title, en_title, status) VALUES(
             1,
             7,
             'مهاجرت به کانادا',
@@ -112,9 +112,9 @@ connection.connect(err => {
     access int NOT NULL DEFAULT '2',
     avatar text NULL
     )ENGINE=INNODB;` ,[] ,(err, rows)=>{
-        if(err) errlog("user")(err, rows)
+        errlog("user")(err, rows)
         // add account dev@cds.or.ir:dev with dev access (7)
-        else safe.hash("dev",(err, password) => {
+        safe.hash("dev",(err, password) => {
             connection.query(`INSERT INTO user(id, email, password, access, firstname, lastname) VALUES(1, 'dev@cds.org.ir', ?, 7, 'dev', 'eloper')` ,[password] ,errlog("dev user"));
         });
     });
@@ -142,8 +142,8 @@ connection.connect(err => {
         FOREIGN KEY (user_id)
         REFERENCES user(id)
         ON DELETE CASCADE)ENGINE=INNODB;` ,[] ,(err, rows)=>{
-            if(err) errlog("apply")(err, rows)
-            else connection.query(`INSERT INTO apply(user_id, description, country, university, education_language, field, cv, sop, rc, reg_date, cuid) VALUES(
+            errlog("apply")(err, rows)
+            connection.query(`INSERT INTO apply(user_id, description, country, university, education_language, field, cv, sop, rc, reg_date, cuid) VALUES(
                                     "2",
                                     "توضیحات اضافه اینجا....",
                                     "کانادا",
@@ -169,8 +169,8 @@ connection.connect(err => {
         status TINYINT NOT NULL DEFAULT 0,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)ENGINE=INNODB;` ,[] ,(err, rows)=>{
-            if(err) errlog("form")(err, rows)
-            else connection.query(`INSERT INTO forms(name, iframe, cuid) VALUES(
+            errlog("form")(err, rows)
+            connection.query(`INSERT INTO forms(name, iframe, cuid) VALUES(
                 'cando form',
                 '<iframe src="https://docs.google.com/forms/d/e/1FAIpQLSc6sL9JIN2MfBJWyUinbzvVq4Nht1krsGFUzIDJK1_T0_bGmA/viewform?embedded=true" width="640" height="1112" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>',
                 ?
@@ -182,10 +182,10 @@ connection.connect(err => {
     //...
     connection.query(`CREATE TABLE IF NOT EXISTS transactions (
         id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-        paid TEXT NOT NULL,
+        paid INT NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)ENGINE=INNODB;` ,[] ,(err, rows)=>{
-            if(err) errlog("freetime")(err, rows)
+            errlog("freetime")(err, rows)
         });
 
     // ========================================= FORM INIT SETUP ===================================================================
@@ -195,11 +195,11 @@ connection.connect(err => {
         id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
         date TEXT NOT NULL,
         time TEXT NOT NULL,
-        price TEXT NOT NULL,
-        status TINYINT NOT NULL DEFAULT 0,
+        price INT NOT NULL,
+        status TINYINT NOT NULL DEFAULT 1,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)ENGINE=INNODB;` ,[] ,(err, rows)=>{
-            if(err) errlog("freetime")(err, rows)
+            errlog("freetime")(err, rows)
         });
 
     // ========================================= FORM INIT SETUP ===================================================================
@@ -212,7 +212,7 @@ connection.connect(err => {
         transaction_id INT NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)ENGINE=INNODB;` ,[] ,(err, rows)=>{
-            if(err) errlog("freetime")(err, rows)
+            errlog("freetime")(err, rows)
         });
 
     // ========================================= DEV INIT SETUP ===================================================================

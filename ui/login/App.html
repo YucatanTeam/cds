@@ -15,17 +15,27 @@
 </div>
 
 <script>
+const utils = {
+    toast(html) {
+        M.toast({ html });
+    }
+}
 export default {
     data() {
         return {
             response: null
         };
     },
+    oncreate() {
+        M.AutoInit();
+        window.utils = utils;
+	},
     methods: {
         // https://svelte.technology/guide#component-events
         handle({ err, response }) {
             if (response && response.status == 401) {
-                this.set({ response: { err: "Invalid credentials", body: null } });
+                // utils.toast("Invalid credentials")
+                this.set({ response: { err: "invalid username or password !", body: null } });
             } else if (response && response.status == 200) {
                 this.set({ response: { err: null, body: response.body } });
             }

@@ -1,0 +1,132 @@
+
+<!-- set actions and bind content  -->
+<div class="row">
+<Card image="/public/img/privacy.png" col="s12 m10 offset-m1 l10 offset-l1">
+    {#await getfreetims}
+        <Loading small/>
+    {:then freetimes}
+
+    <!-- ======== THIS MODAL WILL TRIGGER ON EACH ACTION ======== -->
+            <div id="modalshow" class="modal">
+                <div class="modal-content">
+                    <h4>رزرو وقت مشاوره</h4>
+                        {#if objModal}
+
+                                رزرو مشاوره در روز 
+                                <div>{objModal.date}</div>
+                                در ساعت
+                                <div>{objModal.time}</div>
+                                به قیمت
+                                <div>{objModal.price}</div>
+                                تومان.
+
+
+                            <a class="btn waves-effect waves-light black-text yellow" on:click="pay(objModal.id)">
+                                پرداخت
+                                <i class="material-icons left">send</i>
+                            </a>
+
+                        {/if}                 
+                </div>
+                <div class="modal-footer">
+                    <button class="modal-close waves-effect waves-green btn-flat" on:click="close()">Close</button>
+                </div>
+            </div> <!-- ======== END - MODAL ======== -->
+
+        <Table highlight rows={3}
+            on:modal="open(event)"
+            content={freetimes}
+            search={["id", "time", "date", "price"]}
+            actions={[
+                {icon: "account_balance", tooltip: "رزرو", action(obj, component) {
+                           component.fire("modal", {obj})
+                        }
+                }, 
+            ]}
+        />
+
+    {:catch err}
+        <p>Error {err.message}</p>
+    {/await}
+    </Card>
+</div>
+
+<script>
+export default {
+    data(){
+        return {
+            objModal: null,
+            getfreetims: utils.fetch(`/free-time/available`)
+            .then(response => {
+                var freetimes = response.body;
+                    var rows = [];
+                    for(var ft of freetimes) {
+                            // [ show description ]
+                            ft.actions = [
+                                [2].includes(cdsuser.access)
+                            ]
+                            rows.push(ft);
+                    }
+                    return rows;
+                })
+                .catch(err => utils.toast("something went wrong !")),
+        }
+    },
+    methods:{
+        open({obj}){
+                
+                this.set({objModal: obj})
+                var elems = document.querySelector('.modal');
+                var instances = M.Modal.init(elems, {});
+                instances.open();
+        },
+        close(){
+            var elems = document.querySelector('.modal');
+            var instances = M.Modal.init(elems, {});
+            instances.close();
+        },
+        pay(id){
+
+            const user_id = cdsuser.id
+            const freetime_id = id
+            const transaction_id = null
+            
+            // block this free-time to avoid conflict payment issues
+            utils.fetch(`/free-time/block/${id}`, {})
+                .then((res)=>{
+                    if(res.status!=200){
+                        utils.toast("something went wrong !")
+                        utils.reload()
+                    } else{
+                        utils.toast("در حال اتصال به درگاه...")
+                    }
+                }).catch(err=>{
+                    utils.toast('مشکل اتصال به درگاه ...')
+                    utils.reload()
+                })
+
+
+
+            // TODO payment api
+            // ...
+            // redirect => PaymentRedirect.html
+            //          on:valid:
+            //             on:success >> msg success
+            //             on:failur >> msg failur and update status to 1
+            //          on:invalid:
+            //             alert >> no payment process exists
+
+
+
+}
+    },
+    components: {
+        Loading: "../../tags/Loading.html",
+        I: "../../tags/Icon.html",
+        Table: "../../tags/Table.html",
+        Card: "../../tags/Card.html"
+    }
+}
+</script>
+
+

@@ -201,7 +201,35 @@ module.exports = ({app, db}) => {
             })
         })
     })
-
+    /*------Registeration------*/
+    app.post('/user/register',function(req,res){
+        console.log(req.body)
+        db.api.user.add(req.body.email,req.body.password,function(err,user){
+            if(err){
+                dev.report(err);
+                return res.status(500).end("internal server error!");
+            } else if(!user){
+                return res.status(409).end("This email existed");
+            }
+            user.fname = req.body.firstname;
+            user.lname = req.body.lastname;
+            user.access = 2;
+            db.api.user.update(user,function(err){
+                if(err){
+                    dev.report(err);
+                    return res.status(500).end("Internal server err !");
+                }
+                else{
+                    req.login(user, function(err) {
+                        if (err) { return next(err); }
+                        return res.redirect('/panel');
+                      });
+                    
+                    
+                }
+            })
+        })
+    })
     app.post('/user/add', access(5), (req, res) => { // TODO what access should it be ?
         db.api.user.add(req.body.email, req.body.password ,(err, user) => {
             if(err) {
@@ -404,7 +432,7 @@ module.exports = ({app, db}) => {
         })
     });
 
-    app.post('/comment/delete/cu/:cuid', access(3), (req, res)=>{
+    app.post('/comment/delete/cu/:cuid', access(5), (req, res)=>{
         db.api.comment.deleteByCuid(req.params.cuid, (err, rows)=>{
 
             if(err) {
@@ -414,7 +442,7 @@ module.exports = ({app, db}) => {
         })
     });
 
-    app.post('/comment/delete/:id', access(3), (req, res)=>{
+    app.post('/comment/delete/:id', access(5), (req, res)=>{
         db.api.comment.deleteById(req.params.id, (err, rows)=>{
 
             if(err) {
@@ -424,7 +452,7 @@ module.exports = ({app, db}) => {
         })
     });
     
-    app.post('/comment/deleteAll', access(3), (req, res)=>{
+    app.post('/comment/deleteAll', access(7), (req, res)=>{
         db.api.comment.deleteAll((err, rows)=>{
             
             if(err) {
@@ -434,7 +462,7 @@ module.exports = ({app, db}) => {
         })
     });
 
-    app.post('/comment/block/:id', access(3), (req, res)=>{
+    app.post('/comment/block/:id', access(5), (req, res)=>{
         db.api.comment.block(req.params.id, (err, row)=>{
 
             if(err) {
@@ -444,7 +472,7 @@ module.exports = ({app, db}) => {
         })
     });
 
-    app.post('/comment/unblock/:id', access(3), (req, res)=>{
+    app.post('/comment/unblock/:id', access(5), (req, res)=>{
         db.api.comment.unblock(req.params.id, (err, row)=>{
 
             if(err) {
@@ -463,7 +491,7 @@ module.exports = ({app, db}) => {
                 dev.report(err);
                 return res.status(404).end("Nothing Found !");
             }
-            var newcomment = { // TODO : validate and sanitize here
+            var newcomment = {
                 id : req.body.id ? req.body.id : cmnt.id,
                 content : req.body.content ? req.body.content : cmnt.content,
                 name : req.body.name ? req.body.name : cmnt.name,
@@ -480,7 +508,7 @@ module.exports = ({app, db}) => {
         })
     })
 
-    app.post('/comment/add', access(3), (req, res)=>{
+    app.post('/comment/add', access(5), (req, res)=>{
         for(var i in req.body){
             if(req.body[i] == null) {
                 delete req.body[i] 
@@ -488,7 +516,7 @@ module.exports = ({app, db}) => {
             } 
         }
             
-            var newcomment = { // TODO : validate and sanitize here
+            var newcomment = {
                 cuid: cuid(),
                 content : req.body.content,
                 name : req.body.name,
@@ -529,7 +557,7 @@ module.exports = ({app, db}) => {
         })
     });
 
-    app.post('/student-control/block/:id', access(3), (req, res) =>{
+    app.post('/student-control/block/:id', access(5), (req, res) =>{
         db.api.studentcontrol.block(req.params.id, (err, row)=>{
             
             if(err) {
@@ -539,7 +567,7 @@ module.exports = ({app, db}) => {
         })
     });
     
-    app.post('/student-control/unblock/:id', access(3), (req, res)=>{
+    app.post('/student-control/unblock/:id', access(5), (req, res)=>{
         db.api.studentcontrol.unblock(req.params.id, (err, row)=>{
 
             if(err) {
@@ -549,7 +577,7 @@ module.exports = ({app, db}) => {
         })
     });
 
-    app.post('/student-control/delete/:id', access(3), (req, res)=>{
+    app.post('/student-control/delete/:id', access(5), (req, res)=>{
         db.api.studentcontrol.deleteById(req.params.id, (err, rows)=>{
 
             if(err) {
@@ -569,7 +597,7 @@ module.exports = ({app, db}) => {
                 return res.status(404).end("Nothing Found !");
             }
 
-            var newinfo = { // TODO : validate and sanitize here
+            var newinfo = {
                 id : req.body.info_id ? req.body.info_id : info.id,
                 country : req.body.country ? req.body.country : info.country,
                 university : req.body.university ? req.body.university : info.university,
@@ -592,7 +620,7 @@ module.exports = ({app, db}) => {
         })
     })
 
-    app.post('/student-control/add', access(3), (req, res)=>{
+    app.post('/student-control/add', access(5), (req, res)=>{
         for(var i in req.body){
             if(req.body[i] == null) {
                 delete req.body[i] 
@@ -600,7 +628,7 @@ module.exports = ({app, db}) => {
             } 
         }
             
-        var newinfo = { // TODO : validate and sanitize here
+        var newinfo = {
             cuid: cuid(),
             country : req.body.country,
             university : req.body.university,
@@ -638,7 +666,7 @@ module.exports = ({app, db}) => {
         })
     });
 
-    app.post('/form/block/:id', access(3), (req, res) =>{
+    app.post('/form/block/:id', access(5), (req, res) =>{
         db.api.form.block(req.params.id, (err, row)=>{
             
             if(err) {
@@ -648,7 +676,7 @@ module.exports = ({app, db}) => {
         })
     });
     
-    app.post('/form/unblock/:id', access(3), (req, res)=>{
+    app.post('/form/unblock/:id', access(5), (req, res)=>{
         db.api.form.unblock(req.params.id, (err, row)=>{
 
             if(err) {
@@ -658,7 +686,7 @@ module.exports = ({app, db}) => {
         })
     });
 
-    app.post('/form/delete/:id', access(3), (req, res)=>{
+    app.post('/form/delete/:id', access(5), (req, res)=>{
         db.api.form.deleteById(req.params.id, (err, rows)=>{
 
             if(err) {
@@ -679,7 +707,7 @@ module.exports = ({app, db}) => {
                 return res.status(404).end("Nothing Found !");
             }
 
-            var newdatum = { // TODO : validate and sanitize here
+            var newdatum = {
                 id : req.body.datum_id ? req.body.datum_id : datum.id,
                 name : req.body.name ? req.body.name : datum.name,
                 iframe : req.body.iframe ? req.body.iframe : datum.iframe
@@ -696,7 +724,7 @@ module.exports = ({app, db}) => {
 
     })
 
-    app.post('/form/add', access(3), (req, res)=>{
+    app.post('/form/add', access(5), (req, res)=>{
         for(var i in req.body){
             if(req.body[i] == null) {
                 delete req.body[i] 
@@ -704,7 +732,7 @@ module.exports = ({app, db}) => {
             } 
         }
 
-        var newdatum = { // TODO : validate and sanitize here
+        var newdatum = {
             cuid: cuid(),
             name : req.body.name,
             iframe : req.body.iframe
@@ -734,7 +762,18 @@ module.exports = ({app, db}) => {
         })
     });
 
-    app.post('/free-time/block/:id', access(3), (req, res) =>{
+    app.get('/free-time/available', access(2), (req, res) =>{
+        db.api.freetime.available((err, rows)=>{
+            
+            if(rows) return res.json({body: rows, err:null})
+            if(err) {
+                dev.report(err);
+                return res.status(404).end("Nothing Found !");
+            }
+        })
+    })
+
+    app.post('/free-time/block/:id', access(2), (req, res) =>{
         db.api.freetime.block(req.params.id, (err, row)=>{
             
             if(err) {
@@ -744,7 +783,7 @@ module.exports = ({app, db}) => {
         })
     });
     
-    app.post('/free-time/unblock/:id', access(3), (req, res)=>{
+    app.post('/free-time/unblock/:id', access(2), (req, res)=>{
         db.api.freetime.unblock(req.params.id, (err, row)=>{
 
             if(err) {
@@ -754,7 +793,7 @@ module.exports = ({app, db}) => {
         })
     });
 
-    app.post('/free-time/delete/:id', access(3), (req, res)=>{
+    app.post('/free-time/delete/:id', access(7), (req, res)=>{
         db.api.freetime.deleteById(req.params.id, (err, rows)=>{
 
             if(err) {
@@ -769,16 +808,16 @@ module.exports = ({app, db}) => {
             if(req.body[i] == null) delete req.body[i]
         }
         
-        db.api.freetime.getById(req.body.id, (err, ft)=>{
+        db.api.freetime.getById(req.body.ft_id, (err, ft)=>{
             if(err) {
                 dev.report(err);
                 return res.status(404).end("Nothing Found !");
             }
 
-            var newfreetime = { // TODO : validate and sanitize here
-                id : req.body.id ? req.body.id : ft.id,
-                date : req.body.name ? req.body.name : ft.date,
-                time : req.body.iframe ? req.body.iframe : ft.time,
+            var newfreetime = {
+                id : req.body.ft_id ? req.body.ft_id : ft.id,
+                date : req.body.date ? req.body.date : ft.date,
+                time : req.body.time ? req.body.time : ft.time,
                 price : req.body.price ? req.body.price : ft.price,
             }
 
@@ -793,7 +832,7 @@ module.exports = ({app, db}) => {
 
     })
 
-    app.post('/free-time/add', access(3), (req, res)=>{
+    app.post('/free-time/add', access(5), (req, res)=>{
         for(var i in req.body){
             if(req.body[i] == null) {
                 delete req.body[i] 
@@ -801,12 +840,13 @@ module.exports = ({app, db}) => {
             } 
         }
 
-        var newfreetime = { // TODO : validate and sanitize here
+        var newfreetime = {
             
             date : req.body.date,
             time : req.body.time,
-            price : req.body.price
+            price : req.body.price ? req.body.price : 0 
         }
+
         
         db.api.freetime.add(newfreetime, (err, row)=>{
             if(err) {
@@ -833,6 +873,17 @@ module.exports = ({app, db}) => {
         })
     });
 
+    app.get('/reserve/all/:id', access(2), (req, res)=>{
+        db.api.freetime.getAllRelToId(req.params.id, (err, rows)=>{
+            
+            if(rows) return res.json({body: rows, err:null})
+            if(err) {
+                dev.report(err);
+                return res.status(404).end("Nothing Found !");
+            }
+        })
+    });
+
 
 
 
@@ -846,4 +897,5 @@ module.exports = ({app, db}) => {
     app.use('/panel', access(2, "/login"), page('panel'))
     app.use('/', page('index'))
     app.use('/ssr', page('ssr'))
+    app.use('/register',page('register'));
 }

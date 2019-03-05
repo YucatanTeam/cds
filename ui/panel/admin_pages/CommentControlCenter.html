@@ -170,6 +170,7 @@ export default {
                     }
                }).catch(err => utils.toast("something went wrong !"));
             } else if(crudindex === 0){
+
                 const elname = document.getElementById("name");
                 const elemail = document.getElementById("email");
                 const elcontent = document.getElementById("content");
@@ -178,6 +179,11 @@ export default {
                 const email = elemail.value ? elemail.value : null;
                 const content = elcontent.value ? elcontent.value : null;
 
+                if(!name || !email || !content){
+                    utils.toast("fill all the fields !")
+                    utils.reload()
+                }
+                
                 utils.fetch("/comment/add", {name, email, content, id, post_id}).then((res)=>{
                     if(res.status!=200){
                         utils.toast("something went wrong !")
