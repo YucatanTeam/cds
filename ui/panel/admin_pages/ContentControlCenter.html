@@ -135,9 +135,9 @@ export default {
             formdata.append("telegram",`${document.getElementById("telegram").checked}`)
             formdata.append("comment",`${document.getElementById("comments").checked}`)
             formdata.append("tags",`${document.getElementById("tags").value}`) // TODO fix this
-
+            formdata.append("feditor"`${this.get().feditor.getData()}`);
+            formdata.append("eneditor",`${this.get().eneditor.getData()}`);
             // TODO append CKEditor content
-
             fetch('/page/add',{
                 method: "POST",
                 mode: "same-origin",

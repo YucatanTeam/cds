@@ -114,7 +114,7 @@ connection.connect(err => {
     )ENGINE=INNODB;` ,[] ,(err, rows)=>{
         errlog("user")(err, rows)
         // add account dev@cds.or.ir:dev with dev access (7)
-        else safe.hash("dev",(err, password) => {
+         safe.hash("dev",(err, password) => {
             connection.query(`INSERT INTO user(id, email, password, access, firstname, lastname) VALUES(1, 'dev@cds.org.ir', ?, 7, 'dev', 'eloper')` ,[password] ,errlog("dev user"));
         });
     });
@@ -143,7 +143,7 @@ connection.connect(err => {
         REFERENCES user(id)
         ON DELETE CASCADE)ENGINE=INNODB;` ,[] ,(err, rows)=>{
             errlog("apply")(err, rows)
-            else connection.query(`INSERT INTO apply(user_id, description, country, university, education_language, field, cv, sop, rc, reg_date, cuid) VALUES(
+             connection.query(`INSERT INTO apply(user_id, description, country, university, education_language, field, cv, sop, rc, reg_date, cuid) VALUES(
                                     "2",
                                     "توضیحات اضافه اینجا....",
                                     "کانادا",
@@ -170,7 +170,7 @@ connection.connect(err => {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)ENGINE=INNODB;` ,[] ,(err, rows)=>{
             errlog("form")(err, rows)
-            else connection.query(`INSERT INTO forms(name, iframe, cuid) VALUES(
+             connection.query(`INSERT INTO forms(name, iframe, cuid) VALUES(
                 'cando form',
                 '<iframe src="https://docs.google.com/forms/d/e/1FAIpQLSc6sL9JIN2MfBJWyUinbzvVq4Nht1krsGFUzIDJK1_T0_bGmA/viewform?embedded=true" width="640" height="1112" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>',
                 ?
