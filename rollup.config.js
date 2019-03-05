@@ -7,6 +7,7 @@ const pages = [
 	'panel',
 	'login',
 	'index',
+	'ssr',
 	'register'
 ]
 
