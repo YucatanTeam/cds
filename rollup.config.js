@@ -6,7 +6,8 @@ import { terser } from 'rollup-plugin-terser';
 const pages = [
 	'panel',
 	'login',
-	'index'
+	'index',
+	'register'
 ]
 
 const production = !process.env.ROLLUP_WATCH;

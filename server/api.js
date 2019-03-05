@@ -177,7 +177,35 @@ module.exports = ({app, db}) => {
             })
         })
     })
-
+    /*------Registeration------*/
+    app.post('/user/register',function(req,res){
+        console.log(req.body)
+        db.api.user.add(req.body.email,req.body.password,function(err,user){
+            if(err){
+                dev.report(err);
+                return res.status(500).end("internal server error!");
+            } else if(!user){
+                return res.status(409).end("This email existed");
+            }
+            user.fname = req.body.firstname;
+            user.lname = req.body.lastname;
+            user.access = 2;
+            db.api.user.update(user,function(err){
+                if(err){
+                    dev.report(err);
+                    return res.status(500).end("Internal server err !");
+                }
+                else{
+                    req.login(user, function(err) {
+                        if (err) { return next(err); }
+                        return res.redirect('/panel');
+                      });
+                    
+                    
+                }
+            })
+        })
+    })
     app.post('/user/add', access(5), (req, res) => { // TODO what access should it be ?
         db.api.user.add(req.body.email, req.body.password ,(err, user) => {
             if(err) {
@@ -844,4 +872,5 @@ module.exports = ({app, db}) => {
     app.use("/login", page('login'))
     app.use('/panel', access(2, "/login"), page('panel'))
     app.use('/', page('index'))
+    app.use('/register',page('register'));
 }

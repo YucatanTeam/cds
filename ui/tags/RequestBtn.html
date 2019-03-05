@@ -30,6 +30,7 @@ export default {
     },
     methods: {
         send(e) {
+            this.fire("click",e);
             const self = this;
             e.preventDefault();
             self.set({disabled: true});
