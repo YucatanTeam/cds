@@ -43,6 +43,30 @@ function access(level, redirect) {
 module.exports = ({app, db}) => {
     const dev = require('./dev.js')({app, db});
 
+
+
+    const Layout = require('./layout.html');
+
+    app.use("/content/:page", (req, res) => {
+        const {head, html} = Layout.render({
+            page: req.params.page,
+            title: req.params.page,
+            content: `<p>Welcome to ${req.params.page}</p>`
+        })
+        const page = `<html><head>${head}</head><body>${html}</body></html>`
+        console.log("PAGE>", page);
+        res.set('Content-Type', 'text/html').send(page)
+    })
+    app.use("/css/:page", (req, res) => {
+        const {css} = Layout.render({
+            page: req.params.page,
+            title: req.params.page,
+            content: `<p>Welcome to ${req.params.page}</p>`
+        })
+        console.log("CSS>", css.code);
+        res.set('Content-Type', 'text/css').send(css.code)
+    })
+    
     /*
         use res.status(code).end("http message") to send errors to client
         use res.json({body: ...}) to send data to client
@@ -871,5 +895,6 @@ module.exports = ({app, db}) => {
     app.use("/login", page('login'))
     app.use('/panel', access(2, "/login"), page('panel'))
     app.use('/', page('index'))
+    app.use('/ssr', page('ssr'))
     app.use('/register',page('register'));
 }
