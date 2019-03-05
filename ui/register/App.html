@@ -47,12 +47,11 @@
                     "password": `${pass}`
                 }
 
-                console.log(formdata.email)
                 if (formdata.email == null || formdata.firstname == null || formdata.lastname == null || formdata.password || Cpass) {
-                    utils.toast("poresh kon")
+                    utils.toast("Length Required !")
                 }
                 else if (cpass != pass) {
-                    utils.toast("this pss is fucked")
+                    utils.toast("Password and Confirm Doesn't Match !")
                 }
                 else {
                     fetch("/user/register", {
@@ -71,7 +70,7 @@
                             }
                         }
                         else {
-                            console.log(res.status)
+                            utils.toast("Something went wrong !")
                         }
                     })
                 }

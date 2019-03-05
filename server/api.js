@@ -179,13 +179,12 @@ module.exports = ({app, db}) => {
     })
     /*------Registeration------*/
     app.post('/user/register',function(req,res){
-        console.log(req.body)
         db.api.user.add(req.body.email,req.body.password,function(err,user){
             if(err){
                 dev.report(err);
-                return res.status(500).end("internal server error!");
+                return res.status(500).end("Internal server error !");
             } else if(!user){
-                return res.status(409).end("This email existed");
+                return res.status(409).end("This email exists !");
             }
             user.fname = req.body.firstname;
             user.lname = req.body.lastname;
