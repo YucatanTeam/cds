@@ -1,13 +1,13 @@
 <div class="row">
-    
-    <!-- {#if response}
-        {#if !response.err}
-            <div>done : {response.body}</div>
-        {:else}
-            <div>error : {response.err}</div>
-        {/if}
-    {/if} -->
 
+    {#if response} 
+        {#if !response.err}
+            <span class="new badge green left" data-badge-caption=" ">Done ! {response.body === null ? "" : response.body}</span>
+        {:else}
+            <span class="new badge red left" data-badge-caption=" ">{response.err}</span> 
+        {/if}
+    {/if}
+    
     <form class="col s12">
         <div class="row">
         <slot>
