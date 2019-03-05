@@ -196,7 +196,7 @@ connection.connect(err => {
         date TEXT NOT NULL,
         time TEXT NOT NULL,
         price INT NOT NULL,
-        status TINYINT NOT NULL DEFAULT 0,
+        status TINYINT NOT NULL DEFAULT 1,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)ENGINE=INNODB;` ,[] ,(err, rows)=>{
             errlog("freetime")(err, rows)

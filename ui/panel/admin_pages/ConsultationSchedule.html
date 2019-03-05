@@ -16,14 +16,6 @@
                             <h4>Confirm Delete</h4>
                             <p>Do you really want to delete this free time with id <strong>{objModal.id}</strong> ?</p>
 
-                        {:elseif crudindex === 4}
-                            <h4>Confirm Block</h4>
-                            <p>Do you really want to block this free time with id <strong>{objModal.id}</strong> ?</p>
-
-                        {:elseif crudindex === 5}
-                            <h4>Confirm Unblock</h4>
-                            <p>Do you really want to unblock this free time with id <strong>{objModal.id}</strong> ?</p>
-                        
                         {:elseif crudindex === 1}
                             <div class="row">
                                 <Card col="s12 m10 offset-m1 l10 offset-l1">
@@ -73,21 +65,13 @@
                             }
                         }, 
                         // ==============================================================================================
-                        // BLOCK STATUS
+                        // RESERVED : 
+                        // status 0 means reserved and is not available
+                        // status 1 means not reserved and is available
+                        // when the status is 1 icon is off
+                        // when the status is 0 icon is on
                         // ==============================================================================================
-                        {icon: "block",tooltip: "block", action(obj, component) {
-                                    var index = 4
-                                    component.fire("modal", {obj, index})
-                            }
-                        },
-                        // ==============================================================================================
-                        // UNBLOCK STATUS
-                        // ==============================================================================================
-                        {icon: "beenhere",tooltip: "unblock", action(obj, component) {
-                                    var index = 5
-                                    component.fire("modal", {obj, index})
-                            }
-                        } 
+                        {icon: "alarm_on",tooltip: "not reserved", action(obj, component) {}}
                     ]}
             />
 
@@ -107,7 +91,7 @@ export default {
         return {
             objModal: null,
             ft_id: null,
-            crudindex: 0, // 1 : edit , 0 : create , 2 : delete , 4 : block , 5 : unblock
+            crudindex: 0, // 1 : edit , 0 : create , 2 : delete
             getfreetimes: utils.fetch("/free-time/all")
             .then(response => {
                     var fts = response.body
@@ -115,10 +99,9 @@ export default {
                     for(var ft of fts) {
                             // [ DELETE , EDIT , BLOCK , UNBLOCK ]
                             ft.actions = [
-                                [5, 7].includes(cdsuser.access), 
+                                [7].includes(cdsuser.access),  // only dev can delete a data
                                 [3, 5, 7].includes(cdsuser.access), // dev , admin and mod can edit the apply
-                                [5, 7].includes(cdsuser.access) && ft.status == 1,
-                                [5, 7].includes(cdsuser.access) && ft.status == 0,
+                                [5, 7].includes(cdsuser.access) && ft.status == 1, // available and not reserved
                             ]
                             
                             rows.push(ft);
@@ -198,25 +181,7 @@ export default {
                         utils.reload()
                     }
                }).catch(err => utils.toast("something went wrong !"));
-            } else if(crudindex === 4){
-                utils.fetch(`/free-time/block/${ft_id}`, {}).then((res)=>{
-                    if(res.status!=200){
-                        utils.toast("something went wrong !")
-                    } else{
-                        utils.toast("Done")
-                        utils.reload()
-                    }
-                }).catch(err => utils.toast("something went wrong !"));
-            } else if(crudindex === 5){
-                utils.fetch(`/free-time/unblock/${ft_id}`, {}).then((res)=>{
-                    if(res.status!=200){
-                        utils.toast("something went wrong !")
-                    } else{
-                        utils.toast("Done")
-                        utils.reload()
-                    }
-                }).catch(err => utils.toast("something went wrong !"));
-            } else{
+            }  else{
                 utils.fetch(`/free-time/delete/${ft_id}`, {}).then((res)=>{
                     if(res.status!=200){
                         utils.toast("something went wrong !")

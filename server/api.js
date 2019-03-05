@@ -380,7 +380,7 @@ module.exports = ({app, db}) => {
         })
     });
 
-    app.post('/comment/delete/cu/:cuid', access(3), (req, res)=>{
+    app.post('/comment/delete/cu/:cuid', access(5), (req, res)=>{
         db.api.comment.deleteByCuid(req.params.cuid, (err, rows)=>{
 
             if(err) {
@@ -390,7 +390,7 @@ module.exports = ({app, db}) => {
         })
     });
 
-    app.post('/comment/delete/:id', access(3), (req, res)=>{
+    app.post('/comment/delete/:id', access(5), (req, res)=>{
         db.api.comment.deleteById(req.params.id, (err, rows)=>{
 
             if(err) {
@@ -400,7 +400,7 @@ module.exports = ({app, db}) => {
         })
     });
     
-    app.post('/comment/deleteAll', access(3), (req, res)=>{
+    app.post('/comment/deleteAll', access(5), (req, res)=>{
         db.api.comment.deleteAll((err, rows)=>{
             
             if(err) {
@@ -410,7 +410,7 @@ module.exports = ({app, db}) => {
         })
     });
 
-    app.post('/comment/block/:id', access(3), (req, res)=>{
+    app.post('/comment/block/:id', access(5), (req, res)=>{
         db.api.comment.block(req.params.id, (err, row)=>{
 
             if(err) {
@@ -420,7 +420,7 @@ module.exports = ({app, db}) => {
         })
     });
 
-    app.post('/comment/unblock/:id', access(3), (req, res)=>{
+    app.post('/comment/unblock/:id', access(5), (req, res)=>{
         db.api.comment.unblock(req.params.id, (err, row)=>{
 
             if(err) {
@@ -456,7 +456,7 @@ module.exports = ({app, db}) => {
         })
     })
 
-    app.post('/comment/add', access(3), (req, res)=>{
+    app.post('/comment/add', access(5), (req, res)=>{
         for(var i in req.body){
             if(req.body[i] == null) {
                 delete req.body[i] 
@@ -505,7 +505,7 @@ module.exports = ({app, db}) => {
         })
     });
 
-    app.post('/student-control/block/:id', access(3), (req, res) =>{
+    app.post('/student-control/block/:id', access(5), (req, res) =>{
         db.api.studentcontrol.block(req.params.id, (err, row)=>{
             
             if(err) {
@@ -515,7 +515,7 @@ module.exports = ({app, db}) => {
         })
     });
     
-    app.post('/student-control/unblock/:id', access(3), (req, res)=>{
+    app.post('/student-control/unblock/:id', access(5), (req, res)=>{
         db.api.studentcontrol.unblock(req.params.id, (err, row)=>{
 
             if(err) {
@@ -525,7 +525,7 @@ module.exports = ({app, db}) => {
         })
     });
 
-    app.post('/student-control/delete/:id', access(3), (req, res)=>{
+    app.post('/student-control/delete/:id', access(5), (req, res)=>{
         db.api.studentcontrol.deleteById(req.params.id, (err, rows)=>{
 
             if(err) {
@@ -568,7 +568,7 @@ module.exports = ({app, db}) => {
         })
     })
 
-    app.post('/student-control/add', access(3), (req, res)=>{
+    app.post('/student-control/add', access(5), (req, res)=>{
         for(var i in req.body){
             if(req.body[i] == null) {
                 delete req.body[i] 
@@ -614,7 +614,7 @@ module.exports = ({app, db}) => {
         })
     });
 
-    app.post('/form/block/:id', access(3), (req, res) =>{
+    app.post('/form/block/:id', access(5), (req, res) =>{
         db.api.form.block(req.params.id, (err, row)=>{
             
             if(err) {
@@ -624,7 +624,7 @@ module.exports = ({app, db}) => {
         })
     });
     
-    app.post('/form/unblock/:id', access(3), (req, res)=>{
+    app.post('/form/unblock/:id', access(5), (req, res)=>{
         db.api.form.unblock(req.params.id, (err, row)=>{
 
             if(err) {
@@ -634,7 +634,7 @@ module.exports = ({app, db}) => {
         })
     });
 
-    app.post('/form/delete/:id', access(3), (req, res)=>{
+    app.post('/form/delete/:id', access(5), (req, res)=>{
         db.api.form.deleteById(req.params.id, (err, rows)=>{
 
             if(err) {
@@ -672,7 +672,7 @@ module.exports = ({app, db}) => {
 
     })
 
-    app.post('/form/add', access(3), (req, res)=>{
+    app.post('/form/add', access(5), (req, res)=>{
         for(var i in req.body){
             if(req.body[i] == null) {
                 delete req.body[i] 
@@ -699,7 +699,7 @@ module.exports = ({app, db}) => {
     // free-time routes
     // -----------------------------
     
-    app.get('/free-time/all', access(2), (req, res)=>{
+    app.get('/free-time/all', access(3), (req, res)=>{
         db.api.freetime.all((err, rows)=>{
             
             if(rows) return res.json({body: rows, err:null})
@@ -710,7 +710,18 @@ module.exports = ({app, db}) => {
         })
     });
 
-    app.post('/free-time/block/:id', access(3), (req, res) =>{
+    app.get('/free-time/available', access(2), (req, res) =>{
+        db.api.freetime.available((err, rows)=>{
+            
+            if(rows) return res.json({body: rows, err:null})
+            if(err) {
+                dev.report(err);
+                return res.status(404).end("Nothing Found !");
+            }
+        })
+    })
+
+    app.post('/free-time/block/:id', access(2), (req, res) =>{
         db.api.freetime.block(req.params.id, (err, row)=>{
             
             if(err) {
@@ -720,7 +731,7 @@ module.exports = ({app, db}) => {
         })
     });
     
-    app.post('/free-time/unblock/:id', access(3), (req, res)=>{
+    app.post('/free-time/unblock/:id', access(2), (req, res)=>{
         db.api.freetime.unblock(req.params.id, (err, row)=>{
 
             if(err) {
@@ -730,7 +741,7 @@ module.exports = ({app, db}) => {
         })
     });
 
-    app.post('/free-time/delete/:id', access(3), (req, res)=>{
+    app.post('/free-time/delete/:id', access(7), (req, res)=>{
         db.api.freetime.deleteById(req.params.id, (err, rows)=>{
 
             if(err) {
@@ -769,7 +780,7 @@ module.exports = ({app, db}) => {
 
     })
 
-    app.post('/free-time/add', access(3), (req, res)=>{
+    app.post('/free-time/add', access(5), (req, res)=>{
         for(var i in req.body){
             if(req.body[i] == null) {
                 delete req.body[i] 

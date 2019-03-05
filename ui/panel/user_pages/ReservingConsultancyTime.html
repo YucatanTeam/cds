@@ -2,15 +2,16 @@
 <!-- set actions and bind content  -->
 <div class="row">
 <Card image="/public/img/privacy.png" col="s12 m10 offset-m1 l10 offset-l1">
-    {#await getinfos}
+    {#await getfreetims}
         <Loading small/>
-    {:then infos}
+    {:then freetimes}
 
     <!-- ======== THIS MODAL WILL TRIGGER ON EACH ACTION ======== -->
             <div id="modalshow" class="modal">
                 <div class="modal-content">
                     <h4>رزرو وقت مشاوره</h4>
                         {#if objModal}
+
                                 رزرو مشاوره در روز 
                                 <div>{objModal.date}</div>
                                 در ساعت
@@ -20,12 +21,11 @@
                                 تومان.
 
 
-
-                                <!-- TODO : implement payment process.... -->
                             <a class="btn waves-effect waves-light black-text yellow" on:click="pay(objModal.id)">
                                 پرداخت
                                 <i class="material-icons left">send</i>
                             </a>
+
                         {/if}                 
                 </div>
                 <div class="modal-footer">
@@ -35,7 +35,7 @@
 
         <Table highlight rows={3}
             on:modal="open(event)"
-            content={infos}
+            content={freetimes}
             search={["id", "time", "date", "price"]}
             actions={[
                 {icon: "account_balance", tooltip: "رزرو", action(obj, component) {
@@ -54,27 +54,18 @@
 <script>
 export default {
     data(){
-        var mob = {data: null};
         return {
             objModal: null,
-            mob,
-            getinfos: utils.fetch(`/free-time/all`)
+            getfreetims: utils.fetch(`/free-time/available`)
             .then(response => {
-                var mobs = response.body;
-                    mob.data = mobs;
+                var freetimes = response.body;
                     var rows = [];
-                    for(var mb of mobs) {
-                            var info = {
-                                id : mb.id,
-                                date: mb.date,
-                                time: mb.time,
-                                price: mb.price
-                            }
+                    for(var ft of freetimes) {
                             // [ show description ]
-                            info.actions = [
+                            ft.actions = [
                                 [2].includes(cdsuser.access)
                             ]
-                            rows.push(info);
+                            rows.push(ft);
                     }
                     return rows;
                 })
@@ -83,12 +74,8 @@ export default {
     },
     methods:{
         open({obj}){
-                const mob = this.get().mob.data
-                for(var mb of mob){
-                    if(obj.id === mb.id) {
-                        this.set({objModal: mb}) 
-                    }
-                }
+                
+                this.set({objModal: obj})
                 var elems = document.querySelector('.modal');
                 var instances = M.Modal.init(elems, {});
                 instances.open();
@@ -99,8 +86,40 @@ export default {
             instances.close();
         },
         pay(id){
-            console.log(id)
-        }
+
+            const user_id = cdsuser.id
+            const freetime_id = id
+            const transaction_id = null
+            
+            // block this free-time to avoid conflict payment issues
+            utils.fetch(`/free-time/block/${id}`, {})
+                .then((res)=>{
+                    if(res.status!=200){
+                        utils.toast("something went wrong !")
+                        utils.reload()
+                    } else{
+                        utils.toast("در حال اتصال به درگاه...")
+                        utils.reload() // TODO remove later
+                    }
+                }).catch(err=>{
+                    utils.toast('مشکل اتصال به درگاه ...')
+                    utils.reload()
+                })
+
+
+
+            // TODO payment api
+            // ...
+            // redirect => PaymentRedirect.html
+            //          on:valid:
+            //             on:success >> msg success
+            //             on:failur >> msg failur and update status to 1
+            //          on:invalid:
+            //             alert >> no payment process exists
+
+
+
+}
     },
     components: {
         Loading: "../../tags/Loading.html",

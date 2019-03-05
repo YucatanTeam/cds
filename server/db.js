@@ -338,6 +338,15 @@ const db = {
                     }
                 });
             },
+            available(cb){
+                db.connection.query(`SELECT id, date, time, price FROM freetime WHERE status = 1 ORDER BY created_at DESC;`, [], (err, rows)=>{
+                    if(rows){
+                        return cb(err, rows);
+                    } else {
+                        return cb(err, false);
+                    }
+                });
+            },
             getById(id, cb){
                 db.connection.query(`SELECT * FROM freetime WHERE id = ?`, [id], (err, rows)=>{
                     if(rows.length === 1){
