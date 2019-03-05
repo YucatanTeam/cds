@@ -380,7 +380,7 @@ const db = {
             RESERVE API
         */
        reserve:{
-        all(cb){ // TODO fetch from transactions when implemented completely !!
+        all(cb){ // TODO fetch from transactions when portal and payment process implemented completely !!
             db.connection.query(`SELECT reserve.id, reserve.user_id, reserve.transactions_id, user.firstname, user.lastname
                                     freetime.price, transaction.paid
                                     FROM reserve
