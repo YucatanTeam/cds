@@ -1,0 +1,23 @@
+<input type="button" on:click=boo() value="boo"/>
+<p>{boobox}</p>
+
+
+<script>
+
+function getPage() {
+    return document.getElementById("dynamic").getAttribute("page");
+}
+
+export default {
+    data() {
+        return {
+            boobox: "",
+        }
+    },
+    methods: {
+        boo() {
+            this.set({boobox: `boooo ${getPage()}!`})
+        }
+    }
+}
+</script>

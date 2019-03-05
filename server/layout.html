@@ -1,0 +1,39 @@
+<svelte:head>
+    <title>{title}</title>
+    <meta name="robots" content="index,follow" /> <!-- TODO gist.github.com/lancejpollard/1978404 -->
+    <meta charset="UTF-8">
+    <link href="/public/css/icon.css" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="/ssr/bundle.css"  media="screen,projection"/>
+    <link type="text/css" rel="stylesheet" href="/css/{page}"  media="screen,projection"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+</svelte:head>
+
+
+<p class="pre">header</p>
+<div id="static">
+    {@html content}
+</div>
+<div id="dynamic" page="{page}"></div>
+<div><script src="/ssr/bundle.js"></script></div>
+<p class="pre">footer</p>
+
+
+<style>
+    p.pre {
+        color: coral;
+        font-family: monospace;
+    }
+</style>
+
+<script>
+    export default {
+        data() {
+            return {
+                content: "<p>No content</>",
+                title: "Document",
+                page: "",
+            }
+        }
+    }
+</script>
