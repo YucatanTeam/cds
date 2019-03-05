@@ -400,7 +400,7 @@ module.exports = ({app, db}) => {
         })
     });
     
-    app.post('/comment/deleteAll', access(5), (req, res)=>{
+    app.post('/comment/deleteAll', access(7), (req, res)=>{
         db.api.comment.deleteAll((err, rows)=>{
             
             if(err) {
@@ -439,7 +439,7 @@ module.exports = ({app, db}) => {
                 dev.report(err);
                 return res.status(404).end("Nothing Found !");
             }
-            var newcomment = { // TODO : validate and sanitize here
+            var newcomment = {
                 id : req.body.id ? req.body.id : cmnt.id,
                 content : req.body.content ? req.body.content : cmnt.content,
                 name : req.body.name ? req.body.name : cmnt.name,
@@ -464,7 +464,7 @@ module.exports = ({app, db}) => {
             } 
         }
             
-            var newcomment = { // TODO : validate and sanitize here
+            var newcomment = {
                 cuid: cuid(),
                 content : req.body.content,
                 name : req.body.name,
@@ -545,7 +545,7 @@ module.exports = ({app, db}) => {
                 return res.status(404).end("Nothing Found !");
             }
 
-            var newinfo = { // TODO : validate and sanitize here
+            var newinfo = {
                 id : req.body.info_id ? req.body.info_id : info.id,
                 country : req.body.country ? req.body.country : info.country,
                 university : req.body.university ? req.body.university : info.university,
@@ -576,7 +576,7 @@ module.exports = ({app, db}) => {
             } 
         }
             
-        var newinfo = { // TODO : validate and sanitize here
+        var newinfo = {
             cuid: cuid(),
             country : req.body.country,
             university : req.body.university,
@@ -655,7 +655,7 @@ module.exports = ({app, db}) => {
                 return res.status(404).end("Nothing Found !");
             }
 
-            var newdatum = { // TODO : validate and sanitize here
+            var newdatum = {
                 id : req.body.datum_id ? req.body.datum_id : datum.id,
                 name : req.body.name ? req.body.name : datum.name,
                 iframe : req.body.iframe ? req.body.iframe : datum.iframe
@@ -680,7 +680,7 @@ module.exports = ({app, db}) => {
             } 
         }
 
-        var newdatum = { // TODO : validate and sanitize here
+        var newdatum = {
             cuid: cuid(),
             name : req.body.name,
             iframe : req.body.iframe
@@ -762,7 +762,7 @@ module.exports = ({app, db}) => {
                 return res.status(404).end("Nothing Found !");
             }
 
-            var newfreetime = { // TODO : validate and sanitize here
+            var newfreetime = {
                 id : req.body.ft_id ? req.body.ft_id : ft.id,
                 date : req.body.date ? req.body.date : ft.date,
                 time : req.body.time ? req.body.time : ft.time,
@@ -788,7 +788,7 @@ module.exports = ({app, db}) => {
             } 
         }
 
-        var newfreetime = { // TODO : validate and sanitize here
+        var newfreetime = {
             
             date : req.body.date,
             time : req.body.time,
