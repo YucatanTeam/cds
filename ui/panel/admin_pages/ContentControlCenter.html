@@ -3,11 +3,11 @@
          <form id="post">
             <div class="file-field input-field">
                 <div class="btn waves-effect waves-light black-text yellow">
-                    <span>image</span>
+                    <span>Pick</span>
                     <input id="cover" type="file">
                 </div>
                 <div class="file-path-wrapper">
-                    <input disabled placeholder="Add image" class="file-path validate" type="text">
+                    <input disabled placeholder="Pick a cover" class="file-path validate" type="text">
                 </div>
             </div>
             <Input col="s12" label="Persian Page title" id="ftitle" type="text" />
@@ -129,13 +129,14 @@ export default {
     methods: {
         post(){
             var formdata= new FormData();
-            formdata.append("cover",`${document.getElementById("cover").files[0]}`);
+            if(document.getElementById("cover").files[0])
+                formdata.append("cover",`${document.getElementById("cover").files[0]}`);
             formdata.append("title",`${document.getElementById("ftitle").value}`);
             formdata.append("en_title",`${document.getElementById("title").value}`);
             formdata.append("telegram",`${document.getElementById("telegram").checked}`)
             formdata.append("comment",`${document.getElementById("comments").checked}`)
-            formdata.append("tags",`${document.getElementById("tags").value}`) // TODO fix this
-            formdata.append("feditor"`${this.get().feditor.getData()}`);
+            formdata.append("tags",`${document.getElementById("tags").value}`)
+            formdata.append("feditor",`${this.get().feditor.getData()}`);
             formdata.append("eneditor",`${this.get().eneditor.getData()}`);
             // TODO append CKEditor content
             fetch('/page/add',{

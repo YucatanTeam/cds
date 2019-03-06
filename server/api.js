@@ -45,19 +45,17 @@ module.exports = ({app, db}) => {
             page: req.params.page,
             title: req.params.page,
             content: `<p>Welcome to ${req.params.page}</p>`
-        })
-        const page = `<html><head>${head}</head><body>${html}</body></html>`
-        console.log("PAGE>", page);
-        res.set('Content-Type', 'text/html').send(page)
+        });
+        const page = `<html><head>${head}</head><body>${html}</body></html>`;
+        res.set('Content-Type', 'text/html').send(page);
     })
     app.use("/css/:page", (req, res) => {
         const {css} = Layout.render({
             page: req.params.page,
             title: req.params.page,
             content: `<p>Welcome to ${req.params.page}</p>`
-        })
-        console.log("CSS>", css.code);
-        res.set('Content-Type', 'text/css').send(css.code)
+        });
+        res.set('Content-Type', 'text/css').send(css.code);
     })
     
     /*
@@ -263,8 +261,8 @@ module.exports = ({app, db}) => {
         form.maxFieldsSize = 0.5 * 1024 * 1024; // 512 KB
         form.parse(req, function (err, fields, files) {
             if(err || !files.file0) return res.status(400).end("Bad Request !");
-
             var file0 = files.file0.path;
+            console.log(file0)
             if(!validate.avatar(files.file0)) {
                 fs.unlink(file0, dev.report);
                 return res.status(400).end("Bad Request !");
@@ -282,12 +280,15 @@ module.exports = ({app, db}) => {
                     fs.unlink(file0, dev.report);
                     return res.status(500).end("Internal Server Error !");
                 }
+                const avatarp = avatar.split("/");
+                avatar = avatarp[avatarp.length - 1];
                 db.api.user.changeAvatar(req.user.id, avatar, function (err) {
                     if (err) {
                         dev.report(err);
                         fs.unlink(file0, dev.report);
                         return res.status(500).end("Internal Server Error !");
                     }
+                    fs.unlink(file0, dev.report);
                     return res.status(200).end("OK");
                 });
             });
@@ -295,7 +296,7 @@ module.exports = ({app, db}) => {
     })
 
     app.get('/user/avatar', access(1), (req, res) => {
-        res.sendFile(req.user.avatar ? req.user.avatar : cwd + "/www/public/img/noavatar.png");
+        res.sendFile(req.user.avatar ? cwd + "/avatar/" + req.user.avatar : cwd + "/www/public/img/noavatar.png");
     })
 
     // --------------
