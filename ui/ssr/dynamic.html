@@ -5,6 +5,9 @@
 <script>
 
 function getPage() {
+    // we have access to the dynamic div in layout.html
+    // cause we included the bundle.js of dynamic.html
+    // (bundled main.js inside ssr folder which is inside www/ssr folder)
     return document.getElementById("dynamic").getAttribute("page");
 }
 

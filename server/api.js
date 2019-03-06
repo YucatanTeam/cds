@@ -1,16 +1,13 @@
 const fs = require("fs");
 const cuid = require("cuid"); // use this to create a cuid in insertaion ops
 require('svelte/ssr/register'); // for svelte server side rendering
+const Layout = require('./layout.html');
 const express = require('express')
 const passport = require('passport');
-
 const formidable = require('formidable');
 const sharp = require('sharp');
-
 const validate = require("./validate.js");
-
 const slug = require('limax')
-
 const cwd = process.cwd();
 
 
@@ -42,10 +39,6 @@ function access(level, redirect) {
 
 module.exports = ({app, db}) => {
     const dev = require('./dev.js')({app, db});
-
-
-
-    const Layout = require('./layout.html');
 
     app.use("/content/:page", (req, res) => {
         const {head, html} = Layout.render({
