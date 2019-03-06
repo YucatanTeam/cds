@@ -201,7 +201,7 @@ module.exports = ({app, db}) => {
                 dev.report(err);
                 return res.status(500).end("Internal server error !");
             } else if(!user){
-                return res.status(409).end("This email exists !");
+                return res.status(409).end("Email exists !");
             }
             user.fname = req.body.firstname;
             user.lname = req.body.lastname;
@@ -228,7 +228,7 @@ module.exports = ({app, db}) => {
                 dev.report(err);
                 return res.status(500).end("Internal Server Error !");
             } else if(!user) {
-                return res.status(409).end("Conflict !"); // email existed
+                return res.status(409).end("Email exists !"); // email existed
             }
             user.firstname = req.body.firstname;
             user.lastname = req.body.lastname;
