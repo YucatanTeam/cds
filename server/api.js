@@ -52,19 +52,17 @@ module.exports = ({app, db}) => {
             page: req.params.page,
             title: req.params.page,
             content: `<p>Welcome to ${req.params.page}</p>`
-        })
-        const page = `<html><head>${head}</head><body>${html}</body></html>`
-        console.log("PAGE>", page);
-        res.set('Content-Type', 'text/html').send(page)
+        });
+        const page = `<html><head>${head}</head><body>${html}</body></html>`;
+        res.set('Content-Type', 'text/html').send(page);
     })
     app.use("/css/:page", (req, res) => {
         const {css} = Layout.render({
             page: req.params.page,
             title: req.params.page,
             content: `<p>Welcome to ${req.params.page}</p>`
-        })
-        console.log("CSS>", css.code);
-        res.set('Content-Type', 'text/css').send(css.code)
+        });
+        res.set('Content-Type', 'text/css').send(css.code);
     })
     
     /*
