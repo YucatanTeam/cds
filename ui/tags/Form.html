@@ -2,7 +2,7 @@
 
     {#if response} 
         {#if !response.err}
-            <span class="new badge green left" data-badge-caption=" ">Done ! {response.body === null ? "" : response.body}</span>
+            <span class="new badge green left" data-badge-caption=" ">Done !</span>
         {:else}
             <span class="new badge red left" data-badge-caption=" ">{response.err}</span> 
         {/if}

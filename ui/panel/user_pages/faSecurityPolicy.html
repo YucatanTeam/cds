@@ -1,42 +1,44 @@
 <div class="row">
 	<Card image="/user/avatar" col="s12 m10 offset-m1 l8 offset-l2">
-		<h4>Hello {user.firstname ? user.firstname : ""} !</h4>
-		<p><span class="red-text"><I>format_quote</I></span> Here you can use <span class="red-text">WHO AM I</span> button
-			to check your identity!</p><br>
-		<Modal id="who am i" buttons={[function Agree(c) {console.log(c)}]}>
-			<h4>You are</h4>
-			<p>{user.firstname} {user.lastname} the {user.access === 2 ? "user" : user.access === 3 ? "mod" : user.access === 5 ? "admin" : user.access === 7 ? "dev" : "WHO ARE YOU ?! "}</p>
-		</Modal>
-		<button class="btn white red-text waves-effect waves-gray" on:click=logout()>log me out!</button>
+		<h4>درود - 
+    {user.firstname ? user.firstname : ""}
+    </h4>
+		<p><span class="red-text"><I>format_quote</I></span> در اینجا میتوانید هویت خود را چک کنید
+		<Modal id="من که هستم ؟" buttons={[function Agree(c) {console.log(c)}]}>
+			<h4>شما</h4>
+			<p>{user.firstname} {user.lastname} <span class="red-text">{user.access === 2 ? "user" : user.access === 3 ? "mod" : user.access === 5 ? "admin" : user.access === 7 ? "dev" : "WHO ARE YOU ?! "}</span> </p>
+		  <p>سایت هستید</p>
+    </Modal>
+		<button class="btn white red-text waves-effect waves-gray" on:click=logout()>خروج</button>
 	</Card>
 </div>
 <div class="row">
 	<Card col="s12 m10 offset-m1 l8 offset-l2">
-		<h4>Your account.</h4>
-		<p><span class="red-text"><I>format_quote</I></span> Feel free and make some changes to your info.<br></p>
+		<h4>حساب شما</h4>
+		<p><span class="red-text"><I>format_quote</I></span>در زیر میتوانید اطلاعات شخصی خود را به روز رسانی کنید<br></p>
 		<Form bind:response=changeInfo>
 			<Input id="email" label="email" type="email" validate col="s9" />
 			<Input id="firstname" label="first name" type="text" validate col="s9" />
 			<Input id="lastname" label="last name" type="text" validate col="s9" />
 			<Input id="password" label="password" type="password" validate col="s9" />
 			<Input id="confirm" label="confirm" type="password" validate col="s9" />
-			<button class="btn waves-effect waves-light yellow black-text col s4" on:click=updateUser()>update</button>
+			<button class="btn waves-effect waves-light yellow black-text col s4" on:click=updateUser()>به روز رسانی</button>
 		</Form>
 	</Card>
 </div>
 <div class="row">
 	<Card col="s12 m10 offset-m1 l8 offset-l2">
-		<h4><span class="red-text"><I>format_quote</I></span> Change your avatar.</h4>
+		<h4><span class="red-text"><I>format_quote</I></span> آواتار خود را به روز رسانی کنید</h4>
 		<div class="file-field input-field">
 			<div class="btn waves-effect waves-light black-text yellow">
-				<span>image</span>
+				<span>انتخاب آواتار جدید</span>
 				<input id="avatarpicker" type="file">
 			</div>
 			<div class="file-path-wrapper">
 				<input class="file-path validate" type="text">
 			</div>
 		</div>
-        <button class="btn waves-effect waves-light black-text yellow submit" on:click=uploadAvatar()>upload</button>
+        <button class="btn waves-effect waves-light black-text yellow submit" on:click=uploadAvatar()>به روز رسانی</button>
 	</Card>
 </div>
 

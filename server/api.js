@@ -203,8 +203,8 @@ module.exports = ({app, db}) => {
             } else if(!user){
                 return res.status(409).end("Email exists !");
             }
-            user.fname = req.body.firstname;
-            user.lname = req.body.lastname;
+            user.firstname = req.body.firstname;
+            user.lastname = req.body.lastname;
             user.access = 2;
             db.api.user.update(user,function(err){
                 if(err){
