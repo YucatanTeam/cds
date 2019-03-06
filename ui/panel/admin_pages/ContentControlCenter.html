@@ -138,7 +138,7 @@ export default {
             formdata.append("tags",`${document.getElementById("tags").value}`)
             formdata.append("feditor",`${this.get().feditor.getData()}`);
             formdata.append("eneditor",`${this.get().eneditor.getData()}`);
-            // TODO append CKEditor content
+            
             fetch('/page/add',{
                 method: "POST",
                 mode: "same-origin",
