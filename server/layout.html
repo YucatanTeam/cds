@@ -14,8 +14,8 @@
 <div id="static">
     {@html content}
 </div>
-<div id="dynamic" page="{page}"></div>
-<div><script src="/ssr/bundle.js"></script></div>
+<div id="dynamic" page="{page}"></div> <!-- target of main.js to render the dynamic.html content here : see main.js in ui/ssr folder  -->
+<div><script src="/ssr/bundle.js"></script></div> <!-- bundled js of dynamic.html main.js -->
 <p class="pre">footer</p>
 
 

@@ -5,7 +5,6 @@
     <div class="row">
         <Card col="s10 offset-s1 m4 offset-m4 l6 offset-l3" image="/public/img/cds.svg" alt="logo">
             <Form>
-
                 <Input col="s6" label="First name" id="firstname" type="text" />
                 <Input col="s6" label="Last name" id="lastname" type="text" />
                 <Input col="s12" label="Email" id="email" type="email" />
@@ -13,11 +12,7 @@
                     data-empty="Password is required" />
                 <Input col="s12" label="Comfirm Password" id="Cpass" type="password" validate helper
                     data-empty="Comfirmd password is required" />
-                <label>
-                    <input type="checkbox" id="telegram" />
-                    <span>قبول داری؟؟</span>
-                </label><br />
-                <br />
+    
                 <a class="waves-effect waves-light yellow black-text btn" on:click=post()>Register</a>
             </Form>
         </Card>
@@ -37,7 +32,8 @@
         },
         methods: {
             post() {
-
+                // TODO : use badge instead of toast 
+                // TODO : fix all the bugs!
                 var cpass = document.getElementById("Cpass").value;
                 var pass = document.getElementById("password").value;
                 var formdata = {
@@ -47,14 +43,17 @@
                     "password": `${pass}`
                 }
 
-                console.log(formdata.email)
-                if (formdata.email == null || formdata.firstname == null || formdata.lastname == null || formdata.password || Cpass) {
-                    utils.toast("poresh kon")
+                if (formdata.email == null || 
+                    formdata.firstname == null || 
+                    formdata.lastname == null || 
+                    formdata.password == null || 
+                    cpass == null) {
+                        utils.toast("fill all the fields !")
                 }
-                else if (cpass != pass) {
-                    utils.toast("this pss is fucked")
+                if (cpass !== pass) {
+                    utils.toast("Password and Confirm Doesn't Match !")
                 }
-                else {
+
                     fetch("/user/register", {
                         method: "POST",
                         mode: "same-origin",
@@ -71,11 +70,9 @@
                             }
                         }
                         else {
-                            console.log(res.status)
+                            utils.toast("Something went wrong !")
                         }
                     })
-                }
-
             }
         },
         oncreate() {
@@ -85,8 +82,7 @@
         components: {
             Card: "../tags/Card.html",
             Form: "../tags/Form.html",
-            Input: "../tags/Input.html",
-            RequestBtn: "../tags/RequestBtn.html"
+            Input: "../tags/Input.html"
         }
 
     }

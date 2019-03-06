@@ -1,16 +1,13 @@
 const fs = require("fs");
 const cuid = require("cuid"); // use this to create a cuid in insertaion ops
 require('svelte/ssr/register'); // for svelte server side rendering
+const Layout = require('./layout.html');
 const express = require('express')
 const passport = require('passport');
-
 const formidable = require('formidable');
 const sharp = require('sharp');
-
 const validate = require("./validate.js");
-
 const slug = require('limax')
-
 const cwd = process.cwd();
 
 
@@ -42,10 +39,6 @@ function access(level, redirect) {
 
 module.exports = ({app, db}) => {
     const dev = require('./dev.js')({app, db});
-
-
-
-    const Layout = require('./layout.html');
 
     app.use("/content/:page", (req, res) => {
         const {head, html} = Layout.render({
@@ -203,13 +196,12 @@ module.exports = ({app, db}) => {
     })
     /*------Registeration------*/
     app.post('/user/register',function(req,res){
-        console.log(req.body)
         db.api.user.add(req.body.email,req.body.password,function(err,user){
             if(err){
                 dev.report(err);
-                return res.status(500).end("internal server error!");
+                return res.status(500).end("Internal server error !");
             } else if(!user){
-                return res.status(409).end("This email existed");
+                return res.status(409).end("Email exists !");
             }
             user.fname = req.body.firstname;
             user.lname = req.body.lastname;
@@ -236,7 +228,7 @@ module.exports = ({app, db}) => {
                 dev.report(err);
                 return res.status(500).end("Internal Server Error !");
             } else if(!user) {
-                return res.status(409).end("Conflict !"); // email existed
+                return res.status(409).end("Email exists !"); // email existed
             }
             user.firstname = req.body.firstname;
             user.lastname = req.body.lastname;
