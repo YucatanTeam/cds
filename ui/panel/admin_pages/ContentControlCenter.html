@@ -129,7 +129,8 @@ export default {
     methods: {
         post(){
             var formdata= new FormData();
-            formdata.append("cover",`${document.getElementById("cover").files[0]}`);
+            if(document.getElementById("cover").files[0])
+                formdata.append("cover",`${document.getElementById("cover").files[0]}`);
             formdata.append("title",`${document.getElementById("ftitle").value}`);
             formdata.append("en_title",`${document.getElementById("title").value}`);
             formdata.append("telegram",`${document.getElementById("telegram").checked}`)
