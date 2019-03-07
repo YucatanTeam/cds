@@ -1,54 +1,79 @@
-<svelte:head>
-    <title>{title}</title>
-    <meta name="robots" content="index,follow" />
+<!DOCTYPE html>
+<html>
+
+<head>
     <meta charset="UTF-8">
-    <link href="/public/css/icon.css" rel="stylesheet">
-    <link type="text/css" rel="stylesheet" href="/ssr/bundle.css"  media="screen,projection"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-<link rel="stylesheet" type="text/css" href="/public/css/index.css">
+    <title>فرم های cds</title>
+    <link rel="stylesheet" type="text/css" href="/public/css/index.css">
     <link href="/public/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/public/css/bootstrap.css">
     <link href="/public/css/scrolling-nav.css" rel="stylesheet">
+    <script>
+        fetch('form/all', {
+            method: "GET",
+            mode: "same-origin",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            redirect: "follow",
+        })
+        .then(response => {
+            if(response.redirected) {
+                window.location.href = response.url;
+            }
+            return response
+        })
+        .then(response => {
+            var contentType = response.headers.get("content-type");
+            if(contentType && contentType.includes("application/json")) {
+                return response.json().then(json => ({status: response.status, body: json.body}));
+            }
+            return {status: response.status, body: null};
+        })
+        .then(response => {
+            var markup = response;
+            var parser = new DOMParser()
+            var el = parser.parseFromString(markup, "text/html");
+            var forms = document.getElementById("forms")
+            forms.innerHTML = response
+        })
+        .catch(err => {
+            console.log("error!")
+        });
+
+    </script>
 
 
     <style>
         .fa {
 
             font-family: myFirstFont;
-            src: url(/public/Fonts/Homa.woff);
-        }
-        .en{
-            font-family: myFirstFont;
-            src: url(/public/Fonts/AmaranthRegular.ttf);
+            src: url(/public/font/Homa.woff);
         }
 
-
-    </style>
-    <style>
         @media screen and (max-width: 1000px) {
             .mp{
                 width:100%;
                 height: 120px;
             }
-        }
-        @media screen and (max-width: 750px) {
-            .mp{
-                width:100%;
-                height: 100px;
-            }
-        }
-        @media screen and (max-width: 520px) {
-            .mp{
-                width:100%;
-                height: 75px;
-            }
-        }
+            @media screen and (max-width: 750px) {
+                .mp{
+                    width:100%;
+                    height: 100px;
+                }
+                @media screen and (max-width: 520px) {
+                    .mp{
+                        width:100%;
+                        height: 75px;
+                    }
+
 
     </style>
-</svelte:head>
 
-
+</head>
+<body>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top  " id="mainNav">
     <div class=" container fa font-weight-bold "  >
@@ -63,19 +88,29 @@
             </button>
             <div class="dropdown-menu bg-dark text-center" aria-labelledby="dd" >
                 <button class=" nav-link dropdown-item bg-info "  >فارسی</button>
-                <a class="text-light  nav-link" href="/index_en.html"  target="_self" >ENGLISH</a>
+                <a class="text-light  nav-link" href="index_en.html"  target="_self" >ENGLISH</a>
             </div>
         </div>
+
+
+
+
         <button  class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
+
+
+
+
+
+
         <div  class="collapse navbar-collapse text-right" id="navbarResponsive">
             <div class="navbar-nav " >
 
                 <ul class=" navbar-nav " dir="rtl">
                     <li  class="nav-item">
 
-                        <a class="nav-link js-scroll-trigger" href="/index.html">صفحه اصلی</a>
+                        <a class="nav-link js-scroll-trigger" href="index.html">صفحه اصلی</a>
 
                     </li>
                 </ul>
@@ -85,8 +120,8 @@
 
                 <ul class=" navbar-nav " dir="rtl">
                     <li  class="nav-item">
-                        <button type="submit" aria-label="Search" class="s-btn s-btn__primary btn-topbar-primary js-search-submit"><svg aria-hidden="true" class="svg-icon mx0 iconSearch" width="18" height="18" viewBox="0 0 18 18"><path d="M12.86 11.32L18 16.5 16.5 18l-5.18-5.14v-.35a7 7 0 1 1 1.19-1.19h.35zM7 12A5 5 0 1 0 7 2a5 5 0 0 0 0 10z"/></svg></button>
-                        <input name="q" type="text" placeholder="  جست و جو" value=""   />
+                        <button type="submit" aria-label="Search..." class="s-btn s-btn__primary btn-topbar-primary js-search-submit"><svg aria-hidden="true" class="svg-icon mx0 iconSearch" width="18" height="18" viewBox="0 0 18 18"><path d="M12.86 11.32L18 16.5 16.5 18l-5.18-5.14v-.35a7 7 0 1 1 1.19-1.19h.35zM7 12A5 5 0 1 0 7 2a5 5 0 0 0 0 10z"/></svg></button>
+                        <input name="q" type="text" placeholder="  جست و جو..." value=""   />
                     </li>
                 </ul>
             </div>
@@ -98,6 +133,7 @@
 
 <div style="background-image: url(/public/img/home.jpg);background-repeat: no-repeat;background-size:cover;padding-top: 1px;padding-bottom: 20%;">
     <div    class="container fa " >
+
         <div class="row" style=" padding: 20px;background-color: rgba(0,0,0,0.4)  ; margin-top: 25% ;">
             <div style="width: 50%" class="col-md-6 ">
                 <div ><img src="/public/img/cds.svg" ></div>
@@ -106,29 +142,19 @@
             </div>
             <div style="width: 50%" class="col-md-6 text-right">
                 <div class="border-right " style=" color: white;font-size: 1.2vw;direction: rtl;margin-top: 5%;padding-right: 3%">
-                    <p style="font-size:1.3vw;color:white;margin-top: 15%;margin-bottom: 5%;direction: rtl">
-                        <a class="font-weight-bold text-light js-scroll-trigger nav-link " style="margin-top: 3%;"   href="#p"> {title} </a>
-                    </p>
+
+                    <span>404 - Not Found!</span>
+                    
                 </div>
             </div>
+
         </div>
     </div>
 </div>
 
-
-
-
-<div id="p" class="container text-center en border border-primary rounded" style="font-size:1vw;color:black;margin-top: 5%;margin-bottom: 5%;direction: rtl;padding: 2%">
-    {@html content}
+<div id="forms" class="container text-center en border border-primary rounded" style="font-size:1vw;color:black;margin-top: 5%;margin-bottom: 5%;direction: rtl;padding: 2%">
+پیدا نشد!
 </div>
-
-{#if comment}
-    <div id="dynamic" page="{page}"></div> <!-- target of main.js to render the dynamic.html content here : see main.js in ui/ssr folder  -->
-    <div><script src="/ssr/bundle.js"></script></div> <!-- bundled js of dynamic.html main.js -->
-{/if}
-
-
-
 
 <div style="background-color: #6790CF;padding-top: 3%;padding-bottom: 1%">
     <div class="container "  >
@@ -183,27 +209,28 @@
         </div>
     </div>
 </div>
+
 <div class="text-center " style="padding-bottom: 0.5%;padding-top: 0.5%;background-color: #1E1E26">
     <div style="font-size:0.7vw; " class=" font-weight-bold">
         <p style="color:#6790CF;margin-bottom: 0.1%" >کلیه حقوق مرتبط به این وبسایت متعلّق به موسسه اعزام دانشجو کندو دانش آوران سام می‌باشد</p>
-        <p style="color:#6790CF;margin-bottom: 0.1%" >Copyright©2015, All Rights Reserved</p>
+        <p style="color:#6790CF;margin-bottom: 0.1%" >cds.org.ir, Copyright©2015, All Rights Reserved</p>
         <span style="color:#6790CF" >Design by : <a style="font-size:0.9vw;color:white;" target="_blank" href="#">BOOMHUNK</a></span></div>
 </div>
-<div><script src="/public/vendor/jquery/jquery.min.js"></script></div>
-<div><script src="/public/vendor/bootstrap/js/bootstrap.bundle.min.js"></script></div>
-<div><script src="/public/vendor/jquery-easing/jquery.easing.min.js"></script></div>
-<div><script src="/public/js/scrolling-nav.js"></script></div>
+
+<script src="/public/vendor/jquery/jquery.min.js"></script>
+<script src="/public/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/public/vendor/jquery-easing/jquery.easing.min.js"></script>
+<script src="/public/js/scrolling-nav.js"></script>
+
+</body>
+</html>
 
 
-<script>
-    export default {
-        data() {
-            return {
-                content: "<p>No content</>",
-                title: "Document",
-                page: "",
-                comment: false,
-            }
-        }
-    }
-</script>
+
+
+
+
+
+
+
+

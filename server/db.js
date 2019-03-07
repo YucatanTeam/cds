@@ -188,9 +188,15 @@ const db = {
             getById(id, cb){
         
             },
+            getByTitle(title, cb){
+                db.connection.query(`SELECT * FROM page WHERE title = ?`, [title], cb);
+            },
+            getByEnTitle(en_title, cb){
+                db.connection.query(`SELECT * FROM page WHERE en_title = ?`, [en_title], cb);                
+            },
             add(page, cb){
-                db.connection.query("INSERT INTO page ( tags, cover, title, en_title, content, en_content, status, comment ) values ( ?, ?, ?, ?, ?, ?, ?, ? )",
-                [page.tags, page.cover, page.title, page.en_title, page.content, page.en_content, 1, page.comment], cb);
+                db.connection.query("INSERT INTO page ( tags, route_id, cover, title, en_title, content, en_content, status, comment ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ? )",
+                [page.tags, page.route, page.cover, page.title, page.en_title, page.content, page.en_content, 1, page.comment], cb);
             },
             update(body, cb){
                
