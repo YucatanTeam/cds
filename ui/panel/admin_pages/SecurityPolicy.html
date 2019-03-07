@@ -5,7 +5,7 @@
 			to check your identity!</p><br>
 		<Modal id="who am i" buttons={[function Agree(c) {console.log(c)}]}>
 			<h4>You are</h4>
-			<p>{user.firstname} {user.lastname}</p>
+			<p>{user.firstname} {user.lastname} the {user.access === 2 ? "user" : user.access === 3 ? "mod" : user.access === 5 ? "admin" : user.access === 7 ? "dev" : "WHO ARE YOU ?! "}</p>
 		</Modal>
 		<button class="btn white red-text waves-effect waves-gray" on:click=logout()>log me out!</button>
 	</Card>
@@ -13,10 +13,7 @@
 <div class="row">
 	<Card col="s12 m10 offset-m1 l8 offset-l2">
 		<h4>Your account.</h4>
-		<p><span class="red-text"><I>format_quote</I></span> Feel free and make some changes to your info.<br>
-			Password must contain at least one lowercase alphabetical character,<br>
-			one uppercase alphabetical character, one numeric character,<br>
-			one special character and must be eight characters or longer.<br></p>
+		<p><span class="red-text"><I>format_quote</I></span> Feel free and make some changes to your info.<br></p>
 		<Form bind:response=changeInfo>
 			<Input id="email" label="email" type="email" validate col="s9" />
 			<Input id="firstname" label="first name" type="text" validate col="s9" />

@@ -4,14 +4,14 @@
 <div class="container">
     <div class="row">
         <Card col="s10 offset-s1 m4 offset-m4 l6 offset-l3" image="/public/img/cds.svg" alt="logo">
-            <Form>
+            <Form bind:response>
                 <Input col="s6" label="First name" id="firstname" type="text" />
                 <Input col="s6" label="Last name" id="lastname" type="text" />
                 <Input col="s12" label="Email" id="email" type="email" />
                 <Input col="s12" label="Password" id="password" type="password" validate helper
                     data-empty="Password is required" />
                 <Input col="s12" label="Comfirm Password" id="Cpass" type="password" validate helper
-                    data-empty="Comfirmd password is required" />
+                    data-empty="Comfirm password is required" />
     
                 <a class="waves-effect waves-light yellow black-text btn" on:click=post()>Register</a>
             </Form>
@@ -32,10 +32,10 @@
         },
         methods: {
             post() {
-                // TODO : use badge instead of toast 
-                // TODO : fix all the bugs!
+                var canPost = true;
                 var cpass = document.getElementById("Cpass").value;
                 var pass = document.getElementById("password").value;
+
                 var formdata = {
                     "firstname": `${document.getElementById("firstname").value}`,
                     "lastname": `${document.getElementById("lastname").value}`,
@@ -43,17 +43,17 @@
                     "password": `${pass}`
                 }
 
-                if (formdata.email == null || 
-                    formdata.firstname == null || 
-                    formdata.lastname == null || 
-                    formdata.password == null || 
-                    cpass == null) {
-                        utils.toast("fill all the fields !")
-                }
-                if (cpass !== pass) {
-                    utils.toast("Password and Confirm Doesn't Match !")
-                }
 
+                if (formdata.firstname === "" || 
+                    formdata.lastname === "" ||
+                    formdata.email === "" ||
+                    formdata.password === "" ||
+                    cpass !== pass) {
+                        this.set({ response: { err: "fill all the fields exactly as it wants !", body: null } })
+                        canPost = false
+                } 
+
+                if(canPost){
                     fetch("/user/register", {
                         method: "POST",
                         mode: "same-origin",
@@ -65,6 +65,7 @@
                         body: JSON.stringify(formdata)
                     }).then(res => {
                         if (res.status == 200) {
+                            this.set({ response: { err: null, body: res.body } });
                             if (res.redirected) {
                                 window.location.href = res.url;
                             }
@@ -73,6 +74,9 @@
                             utils.toast("Something went wrong !")
                         }
                     })
+                }
+
+                    
             }
         },
         oncreate() {

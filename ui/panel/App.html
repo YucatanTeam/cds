@@ -36,6 +36,7 @@
 	import ApplyProcess from "./user_pages/ApplyProcess.html";
 	import ReservingConsultancyTime from "./user_pages/ReservingConsultancyTime.html";
 	import Consultations from "./user_pages/Consultations.html";
+	import faSecurityPolicy from "./user_pages/faSecurityPolicy.html";
 
 
 	const utils = {
@@ -136,7 +137,7 @@
 					}),
 				title: "CDS-PANEL",
 				routes: {
-					"Security Policy":					{access: [2, 3, 5, 7], icon: "security", page: SecurityPolicy},
+					"Security Policy":					{access: [3, 5, 7], icon: "security", page: SecurityPolicy},
 					"Access Control Center":			{access: [5, 7], icon: "account_circle", page: AccessControlCenter},
 					"Comment Control Center":			{access: [3, 5, 7], icon: "comment", page: CommentControlCenter},
 					"Consultation Schedule":			{access: [3, 5, 7], icon: "event", page: ConsultationSchedule},
@@ -146,9 +147,10 @@
 					"Portal Control Center":			{access: [5, 7], icon: "account_balance", page: PortalControlCenter},
 					"Reserved Consultations":			{access: [5, 7], icon: "av_timer", page: ReservedConsultations},
 					"Content Center":					{access: [3, 5, 7], icon: "subject", page: ContentControllCenter},
+					"حساب کاربری":						{access: [2], icon: "security", page: faSecurityPolicy},		
 					"پروسه اپلای" : 		    		{access: [2], icon: "airplanemode_active", page: ApplyProcess},
 					"تراکنش ها و رزرو های انجام شده": {access: [2], icon: "receipt", page: Consultations},	
-					"دریافت زمان مشاوره" : 		   	   {access: [2], icon: "event", page: ReservingConsultancyTime},		
+					"دریافت زمان مشاوره" : 		   	   {access: [2], icon: "event", page: ReservingConsultancyTime},
 				}
 			};
 		},
