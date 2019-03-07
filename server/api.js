@@ -49,13 +49,8 @@ module.exports = ({app, db}) => {
         const page = `<html><head>${head}</head><body>${html}</body></html>`;
         res.set('Content-Type', 'text/html').send(page);
     })
-    app.get("/css/:page", (req, res) => {
-        const {css} = Layout.render({
-            page: req.params.page,
-            title: req.params.page,
-            content: `<p>Welcome to ${req.params.page}</p>`
-        });
-        res.set('Content-Type', 'text/css').send(css.code);
+    app.get('/imgsrc/:image', access(1), (req, res) => {
+        res.sendFile(cwd + "/images/" + req.params.image);
     })
     
     /*
