@@ -188,8 +188,9 @@ const db = {
             getById(id, cb){
         
             },
-            add(body, cb){
-
+            add(page, cb){
+                db.connection.query("INSERT INTO page ( tags, cover, title, en_title, content, en_content, status, comment ) values ( ?, ?, ?, ?, ?, ?, ?, ? )",
+                [page.tags, page.cover, page.title, page.en_title, page.content, page.en_content, 1, page.comment], cb);
             },
             update(body, cb){
                

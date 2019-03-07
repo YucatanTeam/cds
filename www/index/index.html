@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en" oncontextmenu="return false;">
+<html lang="fa" oncontextmenu="return false;">
 <script>
     document.onkeydown = function(e) {
         if (e.keyCode === 123 || e.ctrlKey &&
@@ -21,8 +21,6 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="/public/css/icon.css" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="/public/css/materialize.min.css"  media="screen,projection"/>
-    <link rel='stylesheet' href='/global.css'>
-	<link rel='stylesheet' href='/bundle.css'>
     <link rel="stylesheet" type="text/css" href="/public/css/index.css">
     <link href="/public/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/public/css/bootstrap.css">
@@ -32,12 +30,12 @@
         .fa {
 
             font-family: myFirstFont;
-            src: url(Fonts/Main.woff);
+            src: url(/public/font/Main.woff);
         }
 
         .en{
             font-family: myFirstFont;
-            src: url(Fonts/AmaranthRegular.ttf);
+            src: url(/public/font/AmaranthRegular.ttf);
         }
     </style>
 
@@ -78,7 +76,11 @@
             </button>
             <div class="dropdown-menu bg-dark text-center" aria-labelledby="dd" >
                 <button class=" nav-link dropdown-item bg-info "  >فارسی</button>
+<<<<<<< HEAD
                 <a class="text-light  nav-link" href="./en/index_en.html"  target="_self" >ENGLISH</a>
+=======
+                <a class="text-light  nav-link" href="en/index_en.html"  target="_self" >ENGLISH</a>
+>>>>>>> 2cc7d0b203e85340aef9848bf774e9fa08deb280
             </div>
         </div>
 
