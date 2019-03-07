@@ -6,7 +6,6 @@ import { terser } from 'rollup-plugin-terser';
 const pages = [
 	'panel',
 	'login',
-	'index',
 	'ssr',
 	'register'
 ]

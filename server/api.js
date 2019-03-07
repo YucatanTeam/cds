@@ -40,7 +40,7 @@ function access(level, redirect) {
 module.exports = ({app, db}) => {
     const dev = require('./dev.js')({app, db});
 
-    app.use("/content/:page", (req, res) => {
+    app.get("/content/:page", (req, res) => {
         const {head, html} = Layout.render({
             page: req.params.page,
             title: req.params.page,
@@ -49,7 +49,7 @@ module.exports = ({app, db}) => {
         const page = `<html><head>${head}</head><body>${html}</body></html>`;
         res.set('Content-Type', 'text/html').send(page);
     })
-    app.use("/css/:page", (req, res) => {
+    app.get("/css/:page", (req, res) => {
         const {css} = Layout.render({
             page: req.params.page,
             title: req.params.page,
