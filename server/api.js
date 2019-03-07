@@ -103,7 +103,7 @@ module.exports = ({app, db}) => {
     app.post('/auth/login', passport.authenticate('local-login'), (req, res) => {
         return res.redirect("/panel");
     });
-    // TODO register route here
+    
     app.get('/auth/logout', access(0), (req, res) => {
         req.logout();
         return res.redirect('/');
@@ -220,7 +220,7 @@ module.exports = ({app, db}) => {
             })
         })
     })
-    app.post('/user/add', access(5), (req, res) => { // TODO what access should it be ?
+    app.post('/user/add', access(5), (req, res) => {
         db.api.user.add(req.body.email, req.body.password ,(err, user) => {
             if(err) {
                 dev.report(err);
@@ -320,7 +320,6 @@ module.exports = ({app, db}) => {
     // post: /page/:page_id/unblock
     //      json-body{}
 
-    // TODO use access guard
     app.get("/route/all", (req, res) => {
         db.api.route.getAll((err, rows) => {
             if(err) {
