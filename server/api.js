@@ -41,15 +41,27 @@ module.exports = ({app, db}) => {
     const dev = require('./dev.js')({app, db});
 
     app.get("/content/:page", (req, res) => {
-        const {head, html} = Layout.render({
-            page: req.params.page,
-            title: req.params.page,
-            content: `<p>Welcome to ${req.params.page}</p>`
+        const reqpage = req.params.page.split(" ").join("-");
+        db.api.page.getByTitle(reqpage, (err, rows) => {
+            if(err) {
+                dev.report(err);
+                return res.status(500).end("Internal Server Error !");
+            }
+            if(rows.length < 1) {
+                return res.redirect("/404.html");
+            }
+            const row = rows[0];
+            const {head, html} = Layout.render({
+                page: reqpage,
+                title: reqpage,
+                content: row.content,
+            });
+            const page = `<html><head>${head}</head><body>${html}</body></html>`;
+            res.set('Content-Type', 'text/html').send(page);
+
         });
-        const page = `<html><head>${head}</head><body>${html}</body></html>`;
-        res.set('Content-Type', 'text/html').send(page);
     })
-    app.get('/imgsrc/:image', access(1), (req, res) => {
+    app.get('/imgsrc/:image', (req, res) => {
         res.sendFile(cwd + "/images/" + req.params.image);
     })
     
@@ -116,7 +128,7 @@ module.exports = ({app, db}) => {
             lastname: req.user.lastname,
             email: req.user.email
         }
-        setTimeout(e=>res.json({body: user, err:null}), 100) // TODO remove setTimeout
+        res.json({body: user, err:null})
     })
 
     app.get('/user/all', access(5), (req, res) => {
@@ -356,18 +368,24 @@ module.exports = ({app, db}) => {
         var form = new formidable.IncomingForm();
         form.uploadDir = cwd + "/images/";
         form.keepExtensions = true;
-        form.maxFieldsSize = 25 * 1024 * 1024; // 512 KB
+        form.maxFieldsSize = 25 * 1024 * 1024; // 25 MB
         form.parse(req, function (err, fields, files) {
 
             if(err) return res.status(400).end("Bad Request !");
 
-            var cover = files.cover.path;
-            cover = cover.split("/");
-            cover = cover[cover.length - 1];
+            var cover;
+            if(files.cover) {
+                cover = files.cover.path;
+                cover = cover.split("/");
+                cover = cover[cover.length - 1];
+            } else {
+                cover = null;
+            }
 
             var page = {
                 cover,
                 tags: fields.tags,
+                route: fields.route ? parseInt(fields.route) : null,
                 title: fields.title,
                 en_title: fields.en_title,
                 content: fields.feditor,
