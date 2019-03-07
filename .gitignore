@@ -4,4 +4,6 @@ www/*/*.js
 www/*/*.css
 www/*/*.map
 avatar/
+images/
 !avatar/.avatar
+!images/.image
