@@ -41,7 +41,7 @@ module.exports = ({app, db}) => {
     const dev = require('./dev.js')({app, db});
 
     app.get("/content/:page", (req, res) => {
-        const reqpage = req.params.page.split(" ").join("-");
+        const reqpage = req.params.page.split("-").join(" ");
         db.api.page.getByTitle(reqpage, (err, rows) => {
             if(err) {
                 dev.report(err);
