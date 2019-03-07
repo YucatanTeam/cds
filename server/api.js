@@ -363,40 +363,30 @@ module.exports = ({app, db}) => {
         form.keepExtensions = true;
         form.maxFieldsSize = 25 * 1024 * 1024; // 512 KB
         form.parse(req, function (err, fields, files) {
-            console.log("fields > ", fields);
-            console.log("files > ", files);
-            return res.send("OK")
-            /*
-            if(err || !files.file0) return res.status(400).end("Bad Request !");
 
-            var file0 = files.file0.path;
-            if(!validate.avatar(files.file0)) {
-                fs.unlink(file0, dev.report);
-                return res.status(400).end("Bad Request !");
-            }
+            if(err) return res.status(400).end("Bad Request !");
 
-            var avatar = file0.split('.');
-            const ext = avatar[avatar.length - 1];
-            avatar[avatar.length - 1] = "sharp";
-            avatar.push(ext);
-            avatar = avatar.join('.');
+            var cover = files.cover.path;
+            cover = cover.split("/");
+            cover = cover[cover.length - 1];
 
-            sharp(file0).resize(300, 200).toFile(avatar, function(err) {
+            var page = {
+                cover,
+                tags: fields.tags,
+                title: fields.title,
+                en_title: fields.en_title,
+                content: fields.feditor,
+                en_content: fields.eneditor,
+                comment: fields.comment === "true",
+            };
+            
+            db.api.page.add(page, function (err) {
                 if (err) {
                     dev.report(err);
-                    fs.unlink(file0, dev.report);
                     return res.status(500).end("Internal Server Error !");
                 }
-                db.api.user.changeAvatar(req.user.id, avatar, function (err) {
-                    if (err) {
-                        dev.report(err);
-                        fs.unlink(file0, dev.report);
-                        return res.status(500).end("Internal Server Error !");
-                    }
-                    return res.status(200).end("OK");
-                });
+                return res.status(200).end("OK");
             });
-            */
         });
     })
 
