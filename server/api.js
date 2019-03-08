@@ -55,6 +55,7 @@ module.exports = ({app, db}) => {
                 page: reqpage,
                 title: reqpage,
                 content: row.content,
+                cover: row.cover,
             });
             const page = `<html><head>${head}</head><body>${html}</body></html>`;
             res.set('Content-Type', 'text/html').send(page);
