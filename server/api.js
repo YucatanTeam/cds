@@ -650,7 +650,7 @@ module.exports = ({app, db}) => {
     // Forms routes
     // ----------------------
 
-    app.get('/form/all', access(3), (req, res) => {
+    app.get('/form/all', (req, res) => {
         db.api.form.all((err, rows)=>{
             
             if(rows) return res.json({body: rows, err:null})
