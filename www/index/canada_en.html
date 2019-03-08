@@ -4,43 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>cds magazine</title>
+    <title>immigration to canada</title>
     <link rel="stylesheet" type="text/css" href="/public/css/index.css">
     <link rel="icon" href="/public/img/cds.ico">
     <link href="/public/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/public/css/bootstrap.css">
     <link href="/public/css/scrolling-nav.css" rel="stylesheet">
     <script>
-        fetch('/route/1/pages', {
-            method: "GET",
-            mode: "same-origin",
-            credentials: "same-origin",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            redirect: "follow",
-        })
-        .then(response => {
-            if(response.redirected) {
-                window.location.href = response.url;
-            }
-            return response
-        })
-        .then(response => {
-            var contentType = response.headers.get("content-type");
-            if(contentType && contentType.includes("application/json")) {
-                return response.json().then(json => ({status: response.status, body: json.body}));
-            }
-            return {status: response.status, body: null};
-        })
-        .then(response => {
-            console.log(response.body)
-        })
-        .catch(err => {
-            var forms = document.getElementById("forms")
-                forms.innerHTML = "خطا در سرور!"
-        });
+        
 
+        
     </script>
     <style>
         .fa {
@@ -137,7 +110,14 @@
             <div style="width: 50%" class="col-md-6 text-right">
                 <div class="border-right " style=" color: white;font-size: 1.2vw;direction: rtl;margin-top: 5%;padding-right: 3%">
 
-                    <span>cds posts</span>
+                    
+
+
+
+
+
+
+
                     
                 </div>
             </div>
@@ -145,13 +125,6 @@
         </div>
     </div>
 </div>
-
-
-
-<div id="posts" class="container text-center en border border-primary rounded" style="font-size:1vw;color:black;margin-top: 5%;margin-bottom: 5%;direction: rtl;padding: 2%">
-</div>
-
-
 
 <div id="cnc"  style="background-color: #6790CF;padding-top: 3%;padding-bottom: 1%;margin-top: 7%">
     <div class="container "  >
