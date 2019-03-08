@@ -96,7 +96,7 @@
 
 
 
-<div style="background-image: url(/public/img/home.jpg);background-repeat: no-repeat;background-size:cover;padding-top: 1px;padding-bottom: 20%;">
+<div style="background-image: url({cover?"/imgsrc/"+cover:"/public/img/home.jpg"});background-repeat: no-repeat;background-size:cover;padding-top: 1px;padding-bottom: 20%;">
     <div    class="container fa " >
         <div class="row" style=" padding: 20px;background-color: rgba(0,0,0,0.4)  ; margin-top: 25% ;">
             <div style="width: 50%" class="col-md-6 ">
@@ -123,6 +123,7 @@
 </div>
 
 {#if comment}
+    <h5>Comments :</h5>
     <div id="dynamic" page="{page}"></div> <!-- target of main.js to render the dynamic.html content here : see main.js in ui/ssr folder  -->
     <div><script src="/ssr/bundle.js"></script></div> <!-- bundled js of dynamic.html main.js -->
 {/if}
@@ -174,6 +175,7 @@
                 title: "Document",
                 page: "",
                 comment: false,
+                cover: null,
             }
         }
     }
