@@ -77,6 +77,9 @@ module.exports = ({app, db}) => {
     app.get("/dev/ping", access(7), (req, res) => { // developer pong the name!
         return res.end("pong " + req.user.firstname);
     });
+    app.get("/dev/crash", access(7), (req, res) => { // developer pong the name!
+        return res.end(notDefinedVariable);
+    });
     
     app.get("/dev/ping/:id/:name", access(7), (req, res) => { // example for route controll
         return res.status(200).send(`hello ${req.params.name} (${req.params.id})`);
