@@ -18,6 +18,8 @@ https://www.instagram.com/candoezam/ -->
 
         console.log(i);
         while(i>0 && j<5){
+            j++;
+        if(j>=5){break;}
             var div2 = document.createElement("div");
             var div3 = document.createElement("div");
             title = res.body[i].title;
@@ -34,27 +36,16 @@ https://www.instagram.com/candoezam/ -->
             div3.appendChild(img);
             div3.appendChild(p);
             console.log(res.body[i]);
+            
             i--;
-            j++;
+            
         }
     });
 
 
 
 </script>
-<script>
-    document.onkeydown = function(e) {
-        if (e.keyCode === 123 || e.ctrlKey &&
-            (e.keyCode === 67 ||
-                e.keyCode === 86 ||
-                e.keyCode === 85 ||
-                e.keyCode === 117)) {
-            return false;
-        } else {
-            return true;
-        }
-    };
-</script>
+
 <head>
     <meta name="robots" content="index,follow" />
     <meta charset="UTF-8">
