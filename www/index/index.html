@@ -4,6 +4,45 @@ https://www.instagram.com/candoezam/ -->
 
 <html lang="fa" oncontextmenu="return false;">
 <script>
+    fetch("/page/all").then(res=>{
+        return res.json();
+    }).then(res=>{
+        console.log(res.body);
+        var div = document.getElementById("mainDiv");
+        var title="";
+        var img = new Image();
+        
+        
+        var i = res.body.length -1;
+        var j = 0;
+
+        console.log(i);
+        while(i>0 && j<5){
+            var div2 = document.createElement("div");
+            var div3 = document.createElement("div");
+            title = res.body[i].title;
+            var text = document.createTextNode(title);
+            var p = document.createElement("P");
+            div2.setAttribute("class","col-3");
+            div3.setAttribute("class","text-right")
+            div3.setAttribute("style","margin-top: -0.2%");
+            p.appendChild(text);
+            p.setAttribute("style","font-size:1vw;color:black;margin-bottom: 5%");
+            div.appendChild(div2);
+            div2.appendChild(div3);
+            img.src=`/imgsrc/${res.body[i].cover}`
+            div3.appendChild(img);
+            div3.appendChild(p);
+            console.log(res.body[i]);
+            i--;
+            j++;
+        }
+    });
+
+
+
+</script>
+<script>
     document.onkeydown = function(e) {
         if (e.keyCode === 123 || e.ctrlKey &&
             (e.keyCode === 67 ||
@@ -32,7 +71,7 @@ https://www.instagram.com/candoezam/ -->
         .fa {
 
             font-family: myFirstFont;
-            src: url(/public/font/Main.woff);
+            src: url(http://cdn.font-store.ir/shahab.css);
         }
 
         .en{
@@ -472,33 +511,7 @@ https://www.instagram.com/candoezam/ -->
         </div>
         <div class="col-10 " style="">
             <hr class=""noshade style="margin-bottom: 1%;">
-            <div class="row" >
-
-                <div class="col-3">
-                    <div class="text-right" style="margin-top: -0.2%;">
-                        <img style="width:100%;height: auto;margin-bottom: 5%" src="/public/img/news.png">
-                        <p style="font-size:1vw;color:black;margin-bottom: 5%">تیتر خبر</p>
-                        <p style="font-size:0.8vw;color:black;margin-bottom: 5%;margin-bottom: -0.1%"">لورم ایپسوم یا طرح‌نما به متنی آزمایشی و بی‌معنی در صنعت چاپ، صفحه‌آرایی و طراحی گرافیک گفته می‌شود. طراح گرافیک از این متن به عنوان عنصری  </p>
-                    </div>
-                </div><div class="col-3">
-                    <div class="text-right" style="margin-top: -0.2%;">
-                        <img style="width:100%;height: auto;margin-bottom: 5%" src="/public/img/news.png">
-                        <p style="font-size:1vw;color:black;margin-bottom: 5%">تیتر خبر</p>
-                        <p style="font-size:0.8vw;color:black;margin-bottom: 5%;margin-bottom: -0.1%"">لورم ایپسوم یا طرح‌نما به متنی آزمایشی و بی‌معنی در صنعت چاپ، صفحه‌آرایی و طراحی گرافیک گفته می‌شود. طراح گرافیک از این متن به عنوان عنصری  </p>
-                    </div>
-                </div><div class="col-3">
-                    <div class="text-right" style="margin-top: -0.2%;">
-                        <img style="width:100%;height: auto;margin-bottom: 5%" src="/public/img/news.png">
-                        <p style="font-size:1vw;color:black;margin-bottom: 5%">تیتر خبر</p>
-                        <p style="font-size:0.8vw;color:black;margin-bottom: 5%;margin-bottom: -0.1%"">لورم ایپسوم یا طرح‌نما به متنی آزمایشی و بی‌معنی در صنعت چاپ، صفحه‌آرایی و طراحی گرافیک گفته می‌شود. طراح گرافیک از این متن به عنوان عنصری  </p>
-                    </div>
-                </div><div class="col-3">
-                    <div class="text-right" style="margin-top: -0.2%;">
-                        <img style="width:100%;height: auto;margin-bottom: 5%" src="/public/img/news.png">
-                        <p style="font-size:1vw;color:black;margin-bottom: 5%">تیتر خبر</p>
-                        <p style="font-size:0.8vw;color:black;margin-bottom: 5%;margin-bottom: -0.1%"">لورم ایپسوم یا طرح‌نما به متنی آزمایشی و بی‌معنی در صنعت چاپ، صفحه‌آرایی و طراحی گرافیک گفته می‌شود. طراح گرافیک از این متن به عنوان عنصری  </p>
-                    </div>
-                </div>
+            <div class="row" id="mainDiv">
 
 
 
