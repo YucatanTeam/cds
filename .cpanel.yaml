@@ -1,0 +1,7 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/mafizir/repositories/cds
+    - export BACKUPPATH=/home/mafizir/backup/
+    - /bin/cp -R $DEPLOYPATH/avatar $BACKUPPATH/avatar
+    - /bin/cp -R $DEPLOYPATH/images $BACKUPPATH/images
