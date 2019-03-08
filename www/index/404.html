@@ -4,48 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>فرم های cds</title>
+    <title>Not Found</title>
     <link rel="stylesheet" type="text/css" href="/public/css/index.css">
     <link href="/public/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/public/css/bootstrap.css">
     <link href="/public/css/scrolling-nav.css" rel="stylesheet">
-    <script>
-        fetch('form/all', {
-            method: "GET",
-            mode: "same-origin",
-            credentials: "same-origin",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            redirect: "follow",
-        })
-        .then(response => {
-            if(response.redirected) {
-                window.location.href = response.url;
-            }
-            return response
-        })
-        .then(response => {
-            var contentType = response.headers.get("content-type");
-            if(contentType && contentType.includes("application/json")) {
-                return response.json().then(json => ({status: response.status, body: json.body}));
-            }
-            return {status: response.status, body: null};
-        })
-        .then(response => {
-            var markup = response;
-            var parser = new DOMParser()
-            var el = parser.parseFromString(markup, "text/html");
-            var forms = document.getElementById("forms")
-            forms.innerHTML = response
-        })
-        .catch(err => {
-            console.log("error!")
-        });
-
-    </script>
-
-
     <style>
         .fa {
 
@@ -201,12 +164,6 @@
             </div>
 
         </div>
-        <div class="" style="margin-top: -0.1%;margin-bottom: -1%">
-            <a href="https://telegram.me/Candoezam"><img style="height: 3vw;margin-left: 40%" src="/public/img/Telegram.png"></a>
-            <a href="https://www.instagram.com/candoezam/"><img style="height: 3vw;margin-left: 2%" src="/public/img/instagram.png"></a>
-            <a href="#"><img style="height: 2.5vw;margin-left: 2%" src="/public/img/rss.png"></a>
-
-        </div>
     </div>
 </div>
 
@@ -216,6 +173,7 @@
         <p style="color:#6790CF;margin-bottom: 0.1%" >cds.org.ir, Copyright©2015, All Rights Reserved</p>
         <span style="color:#6790CF" >Design by : <a style="font-size:0.9vw;color:white;" target="_blank" href="#">BOOMHUNK</a></span></div>
 </div>
+
 
 <script src="/public/vendor/jquery/jquery.min.js"></script>
 <script src="/public/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
