@@ -10,9 +10,35 @@
     <link rel="stylesheet" type="text/css" href="/public/css/bootstrap.css">
     <link href="/public/css/scrolling-nav.css" rel="stylesheet">
     <script>
-        
-
-
+        fetch('/route/1/pages', {
+            method: "GET",
+            mode: "same-origin",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            redirect: "follow",
+        })
+        .then(response => {
+            if(response.redirected) {
+                window.location.href = response.url;
+            }
+            return response
+        })
+        .then(response => {
+            var contentType = response.headers.get("content-type");
+            if(contentType && contentType.includes("application/json")) {
+                return response.json().then(json => ({status: response.status, body: json.body}));
+            }
+            return {status: response.status, body: null};
+        })
+        .then(response => {
+            console.log(response.body)
+        })
+        .catch(err => {
+            var forms = document.getElementById("forms")
+                forms.innerHTML = "خطا در سرور!"
+        });
 
     </script>
     <style>
@@ -146,37 +172,14 @@
             </div>
 
         </div>
-        <hr noshade >
-        <div class="row en"  >
-            <div class="col-4 mp" >
-                <iframe style="width: 100%;height: 100%" src="https://maps.google.com/maps?q=Aachen&t=&z=17&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
-
-            </div>
-            <div class="col-4 text-center">
-                <p style="font-size:1.25vw;color:#240B3B;margin-top: 10%;margin-bottom: -0.1%">Address:</p>
-                <p style="font-size:1.25vw;color:#240B3B;margin-bottom: -0.1%">Kühlwetterstraße 8.</p>
-                <p style="font-size:1.25vw;color:#240B3B;margin-bottom: -0.1%">Room Number 0227</p>
-                <p style="font-size:1.25vw;color:#240B3B;margin-bottom: -0.1%">52072 Aachen</p>
-                <p style="font-size:1.25vw;color:#240B3B;margin-bottom: -0.1%">Germany</p>
-            </div>
-            <div class="col-4  text-left" >
-                <p style="font-size:1vw;color:#240B3B;">Contact:01573 8947230-02418025258</p>
-                <p style="font-size:1vw;color:#240B3B;margin-top: 0.1%;margin-bottom: -0.1%">Business Hours:</p>
-                <p style="font-size:1vw;color:#240B3B;margin-bottom: -0.1%">Mon 7:00PM - 9:30AM</p>
-                <p style="font-size:1vw;color:#240B3B;margin-bottom: -0.1%">Wed 7:00-9:30PM</p>
-                <p style="font-size:1vw;color:#240B3B;margin-bottom: -0.1%">Sat 10:00AM-6:30PM</p>
-                <p style="font-size:1vw;color:#240B3B;">Sun 10:00 AM - 6:30 PM </p>
-            </div>
-
-        </div>
     </div>
 </div>
 
 <div class="text-center " style="padding-bottom: 0.5%;padding-top: 0.5%;background-color: #1E1E26">
     <div style="font-size:0.7vw; " class=" font-weight-bold">
         <p style="color:#6790CF;margin-bottom: 0.1%" >کلیه حقوق مرتبط به این وبسایت متعلّق به موسسه اعزام دانشجو کندو دانش آوران سام می‌باشد</p>
-        <p style="color:#6790CF;margin-bottom: 0.1%" >cds.org.ir, Copyright©2015, All Rights Reserved</p>
-        <span style="color:#6790CF" >Design by : <a style="font-size:0.9vw;color:white;" target="_blank" href="#">BOOMHUNK</a></span></div>
+        <p style="color:#6790CF;margin-bottom: 0.1%" >Copyright©2015, All Rights Reserved</p>
+        <span style="color:#6790CF" >Developed by : <a style="font-size:0.9vw;color:white;" target="_blank" href="/content/contact-us">SHIFWO</a></span></div>
 </div>
 
 
