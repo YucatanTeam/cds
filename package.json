@@ -3,10 +3,10 @@
   "scripts": {
     "query": "node bin/query.js",
     "test": "nodemon bin/main.js 3000",
-    "start": "node bin/main.js",
+    "start": "node bin/main.js --scripts-prepend-node-path",
     "initch": "chmod +x bin/* && bin/init.js",
     "init": "node bin/init.js",
-    "build": "rollup -c",
+    "build": "rollup -c --scripts-prepend-node-path",
     "autobuild": "rollup -c -w",
     "dev": "run-p test autobuild"
   },
