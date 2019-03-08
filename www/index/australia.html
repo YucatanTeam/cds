@@ -12,12 +12,22 @@
                 return res.json()
             }
         }).then(res=>{
-            console.log(res)
             var div = document.getElementById("id");
-                var title = document.createElement("h3");
-                var p = document.createElement("P");
-                var a = document.createElement("a");
-
+            var title = "";
+        
+            for (var i of res.body){
+                var a = document.createElement("A");
+                title = i.title;
+                var p = document.createTextNode(`● ${title}`);
+                var br = document.createElement("br");
+                a.appendChild(p);
+                div.appendChild(br);
+                div.appendChild(a);
+                a.setAttribute("href",`/content/${i.title.split(" ").join("-")}`);
+                a.setAttribute("class", "text-light");
+                a.setAttribute("style","margin-top: 3%")
+                console.log(title);
+            }
         })
     )
 </script>
@@ -140,45 +150,8 @@
                 </div>
                 <div style="width: 50%" class="col-md-6 text-right">
                     <div class="border-right "
-                        style=" color: white;font-size: 1.2vw;direction: rtl;margin-top: 5%;padding-right: 3%">
-
-
-
-                        <a class="text-light" style="margin-top: 3%" href="36.html">● نظام آموزشی استرالیا</a>
-                        <br>
-                        <a class="text-light" style="margin-top: 3%" href="37.html"">● لیست دانشگاه های استرالیا</a>
-                    <br>
-                    <a class=" text-light" style="margin-top: 3%" href="38.html">● شهریه دانشگاه های استرالیا</a>
-                        <br>
-                        <a class="text-light" style="margin-top: 3%" href="39.html">● شرایط زبان استرالیا </a>
-                        <br>
-                        <a class="text-light" style="margin-top: 3%" href="40.html">● شرایط اخذ پذیرش تحصیلی از استرالیا
-                        </a>
-                        <br>
-                        <a class="text-light" style="margin-top: 3%" href="41.html">● پذیرش برای مقطع دکتری</a>
-                        <br>
-                        <a class="text-light" style="margin-top: 3%" href="42.html">● پذیرش برای مقطع کارشناسی ارشد</a>
-                        <br>
-                        <a class="text-light" style="margin-top: 3%" href="43.html">● پذیرش برای مقطع کارشناسی</a>
-                        <br>
-                        <a class="text-light" style="margin-top: 3%" href="44.html">● پرسش های متداول در مورد تحصیل در
-                            استرالیا</a>
-                        <br>
-                        <a class="text-light" style="margin-top: 3%" href="http://ilts.ir/fa/Main">● خدمات ترجمه
-                            استرالیا</a>
-                        <br>
-                        <a class="text-light" style="margin-top: 3%" href="45.html">● تحصیل و کار در استرالیا</a>
-                        <br>
-                        <a class="text-light" style="margin-top: 3%" href="46.html">● مدارک مورد نیاز برای پذیرش و
-                            ویزا</a>
-                        <br>
-                        <a class="text-light" style="margin-top: 3%" href="47.html">● نحوه امتیازبندی متقاضیان اقامت در
-                            استرالیا</a>
-                        <br>
-                        <a class="text-light" style="margin-top: 3%" href="48.html">● دکتر شفیعی و توصیه های مهم در مورد
-                            تحصیل و...در استرالیا</a>
-
-                        <br>
+                        style=" color: white;font-size: 1.2vw;direction: rtl;margin-top: 5%;padding-right: 3%" id="id">
+                
                     </div>
                 </div>
 
