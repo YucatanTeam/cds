@@ -345,6 +345,15 @@ module.exports = ({app, db}) => {
             return res.json({body: rows, err:null});
         })
     })
+    app.get("/route/:route/pages",function(req,res){
+        db.api.route.getPages(req.params.route,function(err,row){
+            if(err){
+                dev.report(err);
+                return res.status(500).end("internal server err");
+            }
+            res.json({body: row,err:null})
+        });
+    });
     app.post("/page/:page/route/remove", (req, res) => {
         db.api.page.removeRoute(req.params.page, (err, rows) => {
             if(err) {

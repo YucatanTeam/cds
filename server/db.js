@@ -223,7 +223,12 @@ const db = {
             },
             getById(id, cb){
                 
+            },
+            getPages(routeId,cb){
+                db.connection.query(`SELECT * FROM page WHERE route_id = ?`,[routeId],cb);
+
             }
+
         },
         /* --------------------
             STUDENT CONTROL API
