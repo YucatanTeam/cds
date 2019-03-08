@@ -5,7 +5,14 @@ const Layout = require('./layout.html');
 const express = require('express')
 const passport = require('passport');
 const formidable = require('formidable');
-const sharp = require('sharp');
+// const sharp = require('sharp');
+function sharp(file) {
+    return { resize(nx, ny) {
+        return { toFile(newfile, cb) {
+            fs.rename(file, newfile, cb);
+        }}
+    }}
+}
 const validate = require("./validate.js");
 const slug = require('limax')
 const cwd = process.cwd();
@@ -100,6 +107,9 @@ module.exports = ({app, db}) => {
     // ------------
     app.get("/dev/ping", access(7), (req, res) => { // developer pong the name!
         return res.end("pong " + req.user.firstname);
+    });
+    app.get("/dev/crash", access(7), (req, res) => { // developer pong the name!
+        return res.end(notDefinedVariable);
     });
     
     app.get("/dev/ping/:id/:name", access(7), (req, res) => { // example for route controll
@@ -294,7 +304,7 @@ module.exports = ({app, db}) => {
         form.parse(req, function (err, fields, files) {
             if(err || !files.file0) return res.status(400).end("Bad Request !");
             var file0 = files.file0.path;
-            console.log(file0)
+
             if(!validate.avatar(files.file0)) {
                 fs.unlink(file0, dev.report);
                 return res.status(400).end("Bad Request !");

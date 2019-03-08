@@ -38,6 +38,8 @@ const PORT = process.env.PORT || process.argv[2] || 8080; // we'll use this in p
 const SECRET = process.env.SECRET || "force"; // we'll use this in production
 
 app.listen(PORT)
+// app.listen()
+
 console.log(`server is running on http://127.0.0.1:${PORT}/`)
 console.log(`PID ${PID}`)
 
