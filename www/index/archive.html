@@ -1,6 +1,19 @@
 <!DOCTYPE html>
 <html>
+<script>
 
+    fetch("/post/all").then(res=>{
+        return res.json();
+    }).then(res=>{
+        var div = document.getElementById("posts");
+        var body = res.body;
+        
+        for(var i of body){
+            
+        }
+    });
+
+</script>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">

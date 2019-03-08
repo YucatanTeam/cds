@@ -1,41 +1,41 @@
 <!DOCTYPE html>
 <html lang="fa" oncontextmenu="return false;">
 <script>
-    fetch("/page/all").then(res=>{
+    fetch("/page/all").then(res => {
         return res.json();
-    }).then(res=>{
+    }).then(res => {
         console.log(res.body);
         var div = document.getElementById("mainDiv");
-        var title="";
+        var title = "";
         var img = new Image();
-        
-        
-        var i = res.body.length -1;
+
+
+        var i = res.body.length - 1;
         var j = 0;
 
         console.log(i);
-        while(i>0 && j<5){
+        while (i > 0 && j < 5) {
             j++;
-        if(j>=5){break;}
+            if (j >= 5) { break; }
             var div2 = document.createElement("div");
             var div3 = document.createElement("div");
             title = res.body[i].title;
             var text = document.createTextNode(title);
             var p = document.createElement("P");
-            div2.setAttribute("class","col-3");
-            div3.setAttribute("class","text-right")
-            div3.setAttribute("style","margin-top: -0.2%");
+            div2.setAttribute("class", "col-3");
+            div3.setAttribute("class", "text-right")
+            div3.setAttribute("style", "margin-top: -0.2%");
             p.appendChild(text);
-            p.setAttribute("style","font-size:1vw;color:black;margin-bottom: 5%");
+            p.setAttribute("style", "font-size:1vw;color:black;margin-bottom: 5%");
             div.appendChild(div2);
             div2.appendChild(div3);
-            img.src=`/imgsrc/${res.body[i].cover}`
+            img.src = `/imgsrc/${res.body[i].cover}`
             div3.appendChild(img);
             div3.appendChild(p);
             console.log(res.body[i]);
-            
+
             i--;
-            
+
         }
     });
 
@@ -63,7 +63,7 @@
             src: url(http://cdn.font-store.ir/shahab.css);
         }
 
-        .en{
+        .en {
             font-family: myFirstFont;
             src: url(/public/font/AmaranthRegular.ttf);
         }
@@ -71,404 +71,519 @@
 
     <style>
         @media screen and (max-width: 1000px) {
-            .mp{
-                width:100%;
+            .mp {
+                width: 100%;
                 height: 120px;
             }
+
             @media screen and (max-width: 750px) {
-                .mp{
-                    width:100%;
+                .mp {
+                    width: 100%;
                     height: 100px;
                 }
+
                 @media screen and (max-width: 520px) {
-                    .mp{
-                        width:100%;
+                    .mp {
+                        width: 100%;
                         height: 75px;
                     }
 
-        @media screen and (min-width: 1750px) {
-            .es{
-                font-weight: bold;
-            }
+                    @media screen and (min-width: 1750px) {
+                        .es {
+                            font-weight: bold;
+                        }
     </style>
 </head>
+
 <body id="wbhome">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top  " id="mainNav">
-    <div class=" container fa font-weight-bold "  >
+        <div class=" container fa font-weight-bold ">
 
-        <span class="font-weight-bold navbar-brand js-scroll-trigger" >CDS </span>
-
-
-
-        <div class="dropdown text-center" >
-            <button class="btn btn-dark dropdown-toggle" type="button" id="dd" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                زبان
-            </button>
-            <div class="dropdown-menu bg-dark text-center" aria-labelledby="dd" >
-                <button class=" nav-link dropdown-item bg-info "  >فارسی</button>
-                <a class="text-light  nav-link" href="index_en.html"  target="_self" >ENGLISH</a>
-            </div>
-        </div>
+            <span class="font-weight-bold navbar-brand js-scroll-trigger">CDS </span>
 
 
 
-
-        <button  class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-
-
-
-
-
-        <div  class="collapse navbar-collapse text-right" id="navbarResponsive">
-            <div style="margin-left:10%">
-
-                <ul class=" navbar-nav " dir="rtl">
-                    <li  class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="#wbhome">صفحه اصلی</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="#cs">خدمات کندو</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="#con">مشاوره مهاجرت</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="/content/گواه-نوشت-کندو">گواه نوشت کندو</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="#per">دوره های زبان</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link js-scroll-trigger" href="#cnc">تماس با کندو</a>
-                    </li>
-
-                </ul>
-
-            </div>
-            <div dir="rtl" class="ml-auto">
-
-                <ul class=" navbar-nav " dir="rtl">
-                    <li  class="nav-item">
-                        <button type="submit" aria-label="Search..." class="s-btn s-btn__primary btn-topbar-primary js-search-submit"><svg aria-hidden="true" class="svg-icon mx0 iconSearch" width="18" height="18" viewBox="0 0 18 18"><path d="M12.86 11.32L18 16.5 16.5 18l-5.18-5.14v-.35a7 7 0 1 1 1.19-1.19h.35zM7 12A5 5 0 1 0 7 2a5 5 0 0 0 0 10z"/></svg></button>
-                        <input name="q" type="text" placeholder="  جست و جو..." value=""   />
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</nav>
-
-<div style="background-image: url(/public/img/home.jpg);background-repeat: no-repeat;background-size:cover;padding-top: 1px;padding-bottom: 20%;">
-    <div    class="container fa " >
-
-        <div class="row" style=" padding: 20px;background-color: rgba(0,0,0,0.4)  ; margin-top: 25% ;">
-            <div style="width: 50%" class="col-md-6">
-                <div style=" color: white; text-align: center">
-                    <p style="font-size:2.5vw;font-weight: bold;text-shadow: 2px 2px 2px #29ABE2 ;margin-bottom: -0.1%">موسسه اعزام دانشجو کندو</p>
-                    <p style="font-size:2.5vw;font-weight: bold;text-shadow: 2px 2px 2px #29ABE2">دانش آوران سام</p>
-                    <p style="font-size:1.5vw;text-shadow: 2px 2px 2px #29ABE2;margin-bottom: -0.1%">مهاجرت به</p>
-                    <p style="font-size:1.5vw;text-shadow: 2px 2px 2px #29ABE2"> استرالیا ، کانادا ، نیوزلند و سایر کشور ها</p>
-                    <a href="forms.html" style="width:auto;font-size:1.3vw;margin-top: 7%;box-shadow:inset 0 0 15px #29ABE2" type="button" class="btn-light btn">درخواست مشاوره رایگان</a>
+            <div class="dropdown text-center">
+                <button class="btn btn-dark dropdown-toggle" type="button" id="dd" data-toggle="dropdown"
+                    aria-haspopup="true" aria-expanded="false">
+                    زبان
+                </button>
+                <div class="dropdown-menu bg-dark text-center" aria-labelledby="dd">
+                    <button class=" nav-link dropdown-item bg-info ">فارسی</button>
+                    <a class="text-light  nav-link" href="index_en.html" target="_self">ENGLISH</a>
                 </div>
+            </div>
+
+
+
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+
+
+
+
+
+            <div class="collapse navbar-collapse text-right" id="navbarResponsive">
+                <div style="margin-left:10%">
+
+                    <ul class=" navbar-nav " dir="rtl">
+                        <li class="nav-item">
+                            <a class="nav-link js-scroll-trigger" href="#wbhome">صفحه اصلی</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link js-scroll-trigger" href="#cs">خدمات کندو</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link js-scroll-trigger" href="#con">مشاوره مهاجرت</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link js-scroll-trigger" href="/content/گواه-نوشت-کندو">گواه نوشت کندو</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link js-scroll-trigger" href="#per">دوره های زبان</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link js-scroll-trigger" href="#cnc">تماس با کندو</a>
+                        </li>
+
+                    </ul>
+
+                </div>
+                <div dir="rtl" class="ml-auto">
+
+                    <ul class=" navbar-nav " dir="rtl">
+                        <li class="nav-item">
+                            <button type="submit" aria-label="Search..."
+                                class="s-btn s-btn__primary btn-topbar-primary js-search-submit"><svg aria-hidden="true"
+                                    class="svg-icon mx0 iconSearch" width="18" height="18" viewBox="0 0 18 18">
+                                    <path
+                                        d="M12.86 11.32L18 16.5 16.5 18l-5.18-5.14v-.35a7 7 0 1 1 1.19-1.19h.35zM7 12A5 5 0 1 0 7 2a5 5 0 0 0 0 10z" />
+                                    </svg></button>
+                            <input name="q" type="text" placeholder="  جست و جو..." value="" />
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div
+        style="background-image: url(/public/img/home.jpg);background-repeat: no-repeat;background-size:cover;padding-top: 1px;padding-bottom: 20%;">
+        <div class="container fa ">
+
+            <div class="row" style=" padding: 20px;background-color: rgba(0,0,0,0.4)  ; margin-top: 25% ;">
+                <div style="width: 50%" class="col-md-6">
+                    <div style=" color: white; text-align: center">
+                        <p
+                            style="font-size:2.5vw;font-weight: bold;text-shadow: 2px 2px 2px #29ABE2 ;margin-bottom: -0.1%">
+                            موسسه اعزام دانشجو کندو</p>
+                        <p style="font-size:2.5vw;font-weight: bold;text-shadow: 2px 2px 2px #29ABE2">دانش آوران سام</p>
+                        <p style="font-size:1.5vw;text-shadow: 2px 2px 2px #29ABE2;margin-bottom: -0.1%">مهاجرت به</p>
+                        <p style="font-size:1.5vw;text-shadow: 2px 2px 2px #29ABE2"> استرالیا ، کانادا ، نیوزلند و سایر
+                            کشور ها</p>
+                        <a href="forms.html"
+                            style="width:auto;font-size:1.3vw;margin-top: 7%;box-shadow:inset 0 0 15px #29ABE2"
+                            type="button" class="btn-light btn">درخواست مشاوره رایگان</a>
+                    </div>
+                </div>
+<<<<<<< HEAD
+                <div style="width: 50%" class="col-md-6 ">
+                    <div><img src="/public/img/cds.svg"></div>
+                    <div style="text-align: center;"><span
+                            style="font-size:3vw;color: white;text-shadow: 0.15vw 0.15vw 0.15vw #29ABE2;font-weight: bold;">We
+                            Build Careers</span>
+                    </div>
+=======
             </div>
             <div style="width: 50%" class="col-md-6 ">
                 <div ><img src="/public/img/cds.png" class="rounded float-right" width="300" height = "300"></div>
                 <div style="text-align: center;" ><span style="font-size:3vw;color: white;text-shadow: 0.15vw 0.15vw 0.15vw #29ABE2;font-weight: bold;">We Build Careers</span>
+>>>>>>> 40ed77eeae1dc8b5abab33f22a81d6344e606f4e
                 </div>
             </div>
         </div>
     </div>
-</div>
 
-<div id="con" class="container fa " style="margin-top: 10%">
-    <div id="cds" class="row mt-auto">
+    <div id="con" class="container fa " style="margin-top: 10%">
+        <div id="cds" class="row mt-auto">
 
-        <button onclick="window.location.href='newsland.html'" class="col img-fluid" style="text-align: center ;padding: 20px;margin-left: 5%; border-radius:10px;background-image: url(/public/img/nland.jpg);background-size: cover;box-shadow:  1vw 1vw 1vw #343A40">
-            <div style="margin-top: 160%">
-                <span  style="font-size:2vw;color:white;">مهاجرت به نیوزلند</span>
-            </div>
-        </button>
+            <button onclick="window.location.href='newsland.html'" class="col img-fluid"
+                style="text-align: center ;padding: 20px;margin-left: 5%; border-radius:10px;background-image: url(/public/img/nland.jpg);background-size: cover;box-shadow:  1vw 1vw 1vw #343A40">
+                <div style="margin-top: 160%">
+                    <span style="font-size:2vw;color:white;">مهاجرت به نیوزلند</span>
+                </div>
+            </button>
 
 
-        <button onclick="window.location.href='canada.html'" class="col img-fluid" style="text-align: center;margin-left: 5%;padding: 20px; border-radius:10px;background-image: url(/public/img/canada.jpg);background-size: cover;box-shadow:  1vw 1vw 1vw #343A40">
-            <div style="margin-top: 160%">
-                <span style="font-size:2vw;color:white;" >مهاجرت به کانادا</span>
-            </div>
-        </button>
+            <button onclick="window.location.href='canada.html'" class="col img-fluid"
+                style="text-align: center;margin-left: 5%;padding: 20px; border-radius:10px;background-image: url(/public/img/canada.jpg);background-size: cover;box-shadow:  1vw 1vw 1vw #343A40">
+                <div style="margin-top: 160%">
+                    <span style="font-size:2vw;color:white;">مهاجرت به کانادا</span>
+                </div>
+            </button>
 
-        <div onclick="window.location.href='australia.html'" class="col img-fluid" style="text-align: center;margin-left: 5%;margin-right:5%; padding: 20px; border-radius:10px;background-image: url(/public/img/aust.jpg);background-size: cover;box-shadow:  1vw 1vw 1vw #343A40;">
-            <div style="margin-top: 160%">
-                <span style="font-size:2vw;color:white;" >مهاجرت به استرالیا</span>
+            <div onclick="window.location.href='australia.html'" class="col img-fluid"
+                style="text-align: center;margin-left: 5%;margin-right:5%; padding: 20px; border-radius:10px;background-image: url(/public/img/aust.jpg);background-size: cover;box-shadow:  1vw 1vw 1vw #343A40;">
+                <div style="margin-top: 160%">
+                    <span style="font-size:2vw;color:white;">مهاجرت به استرالیا</span>
 
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div id="" class="container fa" style="text-align: center;margin-top: 10%">
+    <div id="" class="container fa" style="text-align: center;margin-top: 10%">
 
-    <span style="font-size:2.5vw">تحصیل در سایر کشور ها</span>
+        <span style="font-size:2.5vw">تحصیل در سایر کشور ها</span>
 
-</div>
+    </div>
 
-<div style="background-color: #9CC0E4;padding-top: 1.5%;padding-bottom: 1.5%">
-    <div class="container fa">
-        <div class="row">
-            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" style="width: 100%">
-                 <div class="carousel-inner">
-                    <div class="carousel-item active" >
-                        <div class="row" style="margin-left: 10%;margin-right: 10%">
-                            <div class="col-3" style="text-align: center">
-                                <div >
-                                    <img  onclick="window.location.href='/content/مجارستان'" style="width:34%;height: auto;" src="/public/img/Flags/hungary_fluttering_flag_64.png">
+    <div style="background-color: #9CC0E4;padding-top: 1.5%;padding-bottom: 1.5%">
+        <div class="container fa">
+            <div class="row">
+                <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" style="width: 100%">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <div class="row" style="margin-left: 10%;margin-right: 10%">
+                                <div class="col-3" style="text-align: center">
+                                    <div>
+                                        <img onclick="window.location.href='/content/مجارستان'"
+                                            style="width:34%;height: auto;"
+                                            src="/public/img/Flags/hungary_fluttering_flag_64.png">
+                                    </div>
+                                    <div>
+                                        <a style="font-size:1.1vw;color:black;" href="/content/مجارستان"
+                                            role="button">مجارستان</a>
+                                    </div>
                                 </div>
-                                <div >
-                                    <a style="font-size:1.1vw;color:black;" href="/content/مجارستان" role="button">مجارستان</a>
+                                <div class="col-3" style="text-align: center">
+                                    <div>
+                                        <img onclick="window.location.href='/content/ایتالیا'"
+                                            style="width:34%;height: auto;"
+                                            src="/public/img/Flags/italy_fluttering_flag_64.png">
+                                    </div>
+                                    <div>
+                                        <a style="font-size:1.1vw;color:black;" href="/content/ایتالیا"
+                                            role="button">ایتالیا</a>
+                                    </div>
+                                </div>
+                                <div class="col-3" style="text-align: center">
+                                    <div>
+                                        <img onclick="window.location.href='/content/لهستان'"
+                                            style="width:34%;height: auto;margin-bottom: -1%"
+                                            src="/public/img/Flags/poland_fluttering_flag_64.png">
+                                    </div>
+                                    <div>
+                                        <a style="font-size:1.1vw;color:black;margin-top: -1%" href="/content/مجارستان"
+                                            role="button">لهستان</a>
+                                    </div>
+                                </div>
+                                <div class="col-3" style="text-align: center">
+                                    <div>
+                                        <img onclick="window.location.href='/content/سوئد'"
+                                            style="width:34%;height: auto;"
+                                            src="/public/img/Flags/sweden_fluttering_flag_64.png">
+                                    </div>
+                                    <div>
+                                        <a style="font-size:1.1vw;color:black;" href="/content/سوئد"
+                                            role="button">سوئد</a>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-3" style="text-align: center">
-                                <div >
-                                    <img onclick="window.location.href='/content/ایتالیا'" style="width:34%;height: auto;" src="/public/img/Flags/italy_fluttering_flag_64.png">
+                        </div>
+
+
+
+                        <div class="carousel-item">
+                            <div class="row" style="margin-left: 10%;margin-right: 10%">
+                                <div class="col-3" style="text-align: center">
+                                    <div>
+                                        <img onclick="window.location.href='/content/سوئیس'"
+                                            style="width:34%;height: auto;"
+                                            src="/public/img/Flags/switzerland_fluttering_flag_64.png">
+                                    </div>
+                                    <div>
+                                        <a href="/content/سوئیس" style="font-size:1.1vw;color: black">سوئیس</a>
+                                    </div>
                                 </div>
-                                <div >
-                                    <a style="font-size:1.1vw;color:black;" href="/content/ایتالیا" role="button">ایتالیا</a>
+                                <div class="col-3" style="text-align: center">
+                                    <div>
+                                        <img onclick="window.location.href='/content/ارمنستان'"
+                                            style="width:34%;height: auto;"
+                                            src="/public/img/Flags/armenia_fluttering_flag_64.png">
+                                    </div>
+                                    <div>
+                                        <a href="/content/ارمنستان" style="font-size:1.1vw;color: black">ارمنستان</a>
+                                    </div>
+                                </div>
+                                <div class="col-3" style="text-align: center">
+                                    <div>
+                                        <img onclick="window.location.href='/content/اتریش'"
+                                            style="width:34%;height: auto;"
+                                            src="/public/img/Flags/austria_fluttering_flag_64.png">
+                                    </div>
+                                    <div>
+                                        <a href="/content/اتریش" style="font-size:1.1vw;color: black">اتریش</a>
+                                    </div>
+                                </div>
+                                <div class="col-3" style="text-align: center">
+                                    <div>
+                                        <img onclick="window.location.href='/content/بلاروس'"
+                                            style="width:34%;height: auto;"
+                                            src="/public/img/Flags/belarus_fluttering_flag_64.png">
+                                    </div>
+                                    <div>
+                                        <a href="/content/بلاروس" style="font-size:1.1vw;color: black">بلاروس</a>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-3" style="text-align: center">
-                                <div >
-                                    <img  onclick="window.location.href='/content/لهستان'" style="width:34%;height: auto;margin-bottom: -1%" src="/public/img/Flags/poland_fluttering_flag_64.png">
+                        </div>
+
+
+                        <div class="carousel-item">
+                            <div class="row" style="margin-left: 10%;margin-right: 10%">
+                                <div class="col-3" style="text-align: center">
+                                    <div>
+                                        <img onclick="window.location.href='/content/چین'"
+                                            style="width:34%;height: auto;"
+                                            src="/public/img/Flags/china_fluttering_flag_64.png">
+                                    </div>
+                                    <div>
+                                        <a href="/content/چین" style="font-size:1.1vw;color: black">چین</a>
+                                    </div>
                                 </div>
-                                <div >
-                                    <a style="font-size:1.1vw;color:black;margin-top: -1%" href="/content/مجارستان" role="button">لهستان</a>
+                                <div class="col-3" style="text-align: center">
+                                    <div>
+                                        <img onclick="window.location.href='/content/قبرس'"
+                                            style="width:34%;height: auto;"
+                                            src="/public/img/Flags/cyprus_fluttering_flag_64.png">
+                                    </div>
+                                    <div>
+                                        <a href="/content/قبرس" style="font-size:1.1vw;color: black">قبرس</a>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-3" style="text-align: center">
-                                <div >
-                                    <img onclick="window.location.href='/content/سوئد'" style="width:34%;height: auto;" src="/public/img/Flags/sweden_fluttering_flag_64.png">
+                                <div class="col-3" style="text-align: center">
+                                    <div>
+                                        <img onclick="window.location.href='/content/آلمان'"
+                                            style="width:34%;height: auto;"
+                                            src="/public/img/Flags/germany_fluttering_flag_64.png">
+                                    </div>
+                                    <div>
+                                        <a href="/content/آلمان" style="font-size:1.1vw;color: black">آلمان</a>
+                                    </div>
                                 </div>
-                                <div >
-                                    <a style="font-size:1.1vw;color:black;" href="/content/سوئد" role="button">سوئد</a>
+                                <div class="col-3" style="text-align: center">
+                                    <div>
+                                        <img onclick="window.location.href='/content/اکراین'"
+                                            style="width:34%;height: auto;"
+                                            src="/public/img/Flags/ukraine_fluttering_flag_64.png">
+                                    </div>
+                                    <div>
+                                        <a href="/content/اکراین" style="font-size:1.1vw;color: black">اکراین</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
 
+                    <a style="" class="carousel-control-prev " href="#carouselExampleIndicators" role="button"
+                        data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 
-                    <div class="carousel-item">
-                        <div class="row" style="margin-left: 10%;margin-right: 10%">
-                            <div class="col-3" style="text-align: center">
-                                <div>
-                                    <img onclick="window.location.href='/content/سوئیس'" style="width:34%;height: auto;" src="/public/img/Flags/switzerland_fluttering_flag_64.png">
-                                </div>
-                                <div>
-                                    <a href="/content/سوئیس" style="font-size:1.1vw;color: black">سوئیس</a>
-                                </div>
-                            </div>
-                            <div class="col-3" style="text-align: center">
-                                <div>
-                                    <img onclick="window.location.href='/content/ارمنستان'" style="width:34%;height: auto;" src="/public/img/Flags/armenia_fluttering_flag_64.png">
-                                </div>
-                                <div>
-                                    <a href="/content/ارمنستان" style="font-size:1.1vw;color: black">ارمنستان</a>
-                                </div>
-                            </div>
-                            <div class="col-3" style="text-align: center">
-                                <div>
-                                    <img  onclick="window.location.href='/content/اتریش'" style="width:34%;height: auto;" src="/public/img/Flags/austria_fluttering_flag_64.png">
-                                </div>
-                                <div>
-                                    <a href="/content/اتریش" style="font-size:1.1vw;color: black">اتریش</a>
-                                </div>
-                            </div>
-                            <div class="col-3" style="text-align: center">
-                                <div>
-                                    <img onclick="window.location.href='/content/بلاروس'" style="width:34%;height: auto;" src="/public/img/Flags/belarus_fluttering_flag_64.png">
-                                </div>
-                                <div>
-                                    <a href="/content/بلاروس" style="font-size:1.1vw;color: black">بلاروس</a>
-                                </div>
-                            </div>
-                        </div>
+
+    <div id="per" class="container fa" style="margin-top: 10%">
+        <div class="row mt-auto">
+            <div onclick="window.location.href='/content/دوره-های-زبان-در-انگلیس'" class="col img-fluid"
+                style="text-align: center ;margin-left: 5%; border-radius:10px;background-image: url(/public/img/len.jpg);background-size: contain;background-repeat:no-repeat;">
+                <div style="margin-top: 95%">
+                    <span style="font-size:1.1vw;color:black;">دوره های زبان در انگلیس</span>
+                </div>
+            </div>
+
+            <div onclick="window.location.href='/content/دوره-های-زبان-در-مالزی'" class="col img-fluid"
+                style="text-align: center;margin-left: 5%; border-radius:10px;background-image: url(/public/img/lma.jpg);background-size: contain;background-repeat:no-repeat;">
+                <div style="margin-top: 95%">
+                    <span style="font-size:1.1vw;color:black;">دوره های زبان در مالزی</span>
+                </div>
+            </div>
+
+            <div onclick="window.location.href='/content/دوره-های-زبان-در-مالتا'" class="col img-fluid"
+                style="text-align: center;margin-left: 5%; border-radius:10px;background-image: url(/public/img/lmt.jpg);background-size: contain;background-repeat:no-repeat;">
+                <div style="margin-top: 95%">
+                    <span style="font-size:1.1vw;color:black;"> دوره های زبان در مالتا</span>
+                </div>
+            </div>
+
+            <div onclick="window.location.href='/content/دوره-های-زبان-در-سوئیس'" class="col img-fluid"
+                style="text-align: center;margin-left: 5%;margin-right:5%; border-radius:10px;background-image: url(/public/img/lsw.jpg);background-size: contain;background-repeat:no-repeat;">
+                <div style="margin-top: 95%;margin-bottom:8%">
+                    <span style="font-size:1.1vw;color:black;">دوره های زبان در سوئیس</span>
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <div id="wcs" class="container fa" style="margin-top: 10%">
+        <div id="cds" class="row mt-auto">
+            <div onclick="window.location.href='/content/نگارش-و-ویرایش-رزومه'" class="col img-fluid"
+                style="text-align: center ;margin-left: 5%; border-radius:10px;background-image: url(/public/img/cv.jpg);background-size: contain;background-repeat:no-repeat;">
+                <div style="margin:30% 50% 5% 5%">
+                    <span style="font-size:1.3vw;color:black;">نگارش و ویرایش رزومه</span>
+                </div>
+            </div>
+
+
+            <div onclick="window.location.href='/content/نگارش-و-ویراش-sop'" class="col img-fluid"
+                style="text-align: center;margin-left: 5%;margin-right:5%; border-radius:10px;background-image: url(/public/img/sop.jpg);background-size: contain;background-repeat:no-repeat;">
+                <div style="margin:30% 5% 10% 50%;direction: rtl">
+                    <span style="font-size:1.3vw;color:black">نگارش و ویرایش SOP</span>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+
+    <div id="cs"
+        style="background-color: #9CC0E4 ;margin-top: 10%;margin-bottom: 10%;padding-top: 2%;padding-bottom: 2%">
+        <div class="fa" style="width: 80%;margin-left: 10%">
+            <div class="text-right" style="margin-left: 5%;margin-right: 5%;">
+                <p style="font-size: 2.5vw">خدمات موسسه کندو</p>
+                <p style="font-size: 1.5vw">ارائه مشاوره ی تحصیلی رایگان برای بررسی مدارک تحصیلی و سوابق کاری جهت تعیین
+                    امکان پذیرش از دانشگاه های این کشور تا ارائه تمامی خدمات پذیرش تحصیلی شامل موارد ذیل</p>
+            </div>
+            <div class="row " style="margin-top: 5%">
+                <div class="col" style="text-align: center ;margin-left: 5%;">
+                    <div style="direction: rtl" class="text-center">
+                        <img style="width: 60%;margin-bottom: 10%" src="/public/img/p1.jpg">
+                        <p class="es" style="font-size:0.85vw;color:black;margin-bottom: -0.1%">● اقدام برای بورس
+                            دانشجویی(دوره دکترا و کارشناسی ارشد تحقیقاتی)</p>
+                        <p style="font-size:1vw;color:black;margin-bottom: -0.1%">● خدمات ویزای توریستی برای اقوام درجه
+                            یک متقاضی</p>
+                        <p style="font-size:1vw;color:black;margin-bottom: -0.1%">● رزرو خوابگاه یا اقامتگاه موقت</p>
+                        <p style="font-size:1vw;color:black;">● تهیه بیمه دانشجویی</p>
                     </div>
+                </div>
+
+                <div class="col " style="text-align: center;margin-left: 5%;">
+                    <div style="direction: rtl" class="text-center">
+                        <img style="width: 60%;margin-bottom: 10%" src="/public/img/p2.jpg">
+                        <p class="es" style="font-size:0.85vw;color:black;margin-bottom: -0.1%">● ارسال تقاضای پذیرش به
+                            چندین دانشگاه بدون افزایش نرخ قرارداد</p>
+                        <p style="font-size:1vw;color:black;;margin-bottom: -0.1%">● بررسی مدارک مالی متقاضی و اطمینان
+                            از صحت انها</p>
+                        <p class="es" style="font-size:0.85vw;color:black;margin-bottom: -0.1%">● اقدام برای تمامی بورس
+                            های موجود بدون افزایش نرخ قرارداد</p>
+                        <p style="font-size:1vw;color:black">● تکمیل تمامی فرمهای درخواست ویزا توسط موسسه</p>
 
 
-                    <div class="carousel-item">
-                        <div class="row" style="margin-left: 10%;margin-right: 10%">
-                            <div class="col-3" style="text-align: center">
-                                <div>
-                                    <img onclick="window.location.href='/content/چین'" style="width:34%;height: auto;"  src="/public/img/Flags/china_fluttering_flag_64.png">
-                                </div>
-                                <div>
-                                    <a href="/content/چین" style="font-size:1.1vw;color: black">چین</a>
-                                </div>
-                            </div>
-                            <div class="col-3" style="text-align: center">
-                                <div>
-                                    <img onclick="window.location.href='/content/قبرس'" style="width:34%;height: auto;" src="/public/img/Flags/cyprus_fluttering_flag_64.png">
-                                </div>
-                                <div>
-                                    <a href="/content/قبرس" style="font-size:1.1vw;color: black">قبرس</a>
-                                </div>
-                            </div>
-                            <div class="col-3" style="text-align: center">
-                                <div>
-                                    <img onclick="window.location.href='/content/آلمان'" style="width:34%;height: auto;" src="/public/img/Flags/germany_fluttering_flag_64.png">
-                                </div>
-                                <div>
-                                    <a  href="/content/آلمان" style="font-size:1.1vw;color: black">آلمان</a>
-                                </div>
-                            </div>
-                            <div class="col-3" style="text-align: center">
-                                <div>
-                                    <img onclick="window.location.href='/content/اکراین'" style="width:34%;height: auto;" src="/public/img/Flags/ukraine_fluttering_flag_64.png">
-                                </div>
-                                <div>
-                                    <a href="/content/اکراین" style="font-size:1.1vw;color: black">اکراین</a>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
-
-                <a style="" class="carousel-control-prev " href="#carouselExampleIndicators" role="button" data-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Previous</span>
-                </a>
-                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Next</span>
-                </a>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<div id="per" class="container fa" style="margin-top: 10%">
-    <div  class="row mt-auto">
-        <div  onclick="window.location.href='/content/دوره-های-زبان-در-انگلیس'" class="col img-fluid" style="text-align: center ;margin-left: 5%; border-radius:10px;background-image: url(/public/img/len.jpg);background-size: contain;background-repeat:no-repeat;">
-            <div style="margin-top: 95%">
-                <span style="font-size:1.1vw;color:black;" >دوره های زبان در انگلیس</span>
-            </div>
-        </div>
-
-        <div onclick="window.location.href='/content/دوره-های-زبان-در-مالزی'" class="col img-fluid" style="text-align: center;margin-left: 5%; border-radius:10px;background-image: url(/public/img/lma.jpg);background-size: contain;background-repeat:no-repeat;">
-            <div style="margin-top: 95%">
-                <span style="font-size:1.1vw;color:black;" >دوره های زبان در مالزی</span>
-            </div>
-        </div>
-
-        <div onclick="window.location.href='/content/دوره-های-زبان-در-مالتا'" class="col img-fluid" style="text-align: center;margin-left: 5%; border-radius:10px;background-image: url(/public/img/lmt.jpg);background-size: contain;background-repeat:no-repeat;">
-            <div style="margin-top: 95%">
-                <span style="font-size:1.1vw;color:black;" > دوره های زبان در مالتا</span>
-            </div>
-        </div>
-
-        <div onclick="window.location.href='/content/دوره-های-زبان-در-سوئیس'" class="col img-fluid" style="text-align: center;margin-left: 5%;margin-right:5%; border-radius:10px;background-image: url(/public/img/lsw.jpg);background-size: contain;background-repeat:no-repeat;">
-            <div style="margin-top: 95%;margin-bottom:8%">
-                <span style="font-size:1.1vw;color:black;" >دوره های زبان در سوئیس</span>
-
-            </div>
-        </div>
-
-
-    </div>
-</div>
-
-<div id="wcs"  class="container fa" style="margin-top: 10%">
-    <div id="cds" class="row mt-auto">
-        <div  onclick="window.location.href='/content/نگارش-و-ویرایش-رزومه'" class="col img-fluid" style="text-align: center ;margin-left: 5%; border-radius:10px;background-image: url(/public/img/cv.jpg);background-size: contain;background-repeat:no-repeat;">
-            <div style="margin:30% 50% 5% 5%">
-                <span style="font-size:1.3vw;color:black;" >نگارش و ویرایش رزومه</span>
-            </div>
-        </div>
-
-
-        <div onclick="window.location.href='/content/نگارش-و-ویراش-sop'" class="col img-fluid" style="text-align: center;margin-left: 5%;margin-right:5%; border-radius:10px;background-image: url(/public/img/sop.jpg);background-size: contain;background-repeat:no-repeat;">
-            <div style="margin:30% 5% 10% 50%;direction: rtl">
-                <span style="font-size:1.3vw;color:black" >نگارش و ویرایش SOP</span>
-            </div>
-        </div>
-
-
-    </div>
-</div>
-
-<div id="cs" style="background-color: #9CC0E4 ;margin-top: 10%;margin-bottom: 10%;padding-top: 2%;padding-bottom: 2%">
-    <div class="fa" style="width: 80%;margin-left: 10%">
-        <div class="text-right" style="margin-left: 5%;margin-right: 5%;">
-            <p style="font-size: 2.5vw">خدمات موسسه کندو</p>
-            <p style="font-size: 1.5vw">ارائه مشاوره ی تحصیلی رایگان برای بررسی مدارک تحصیلی و سوابق کاری جهت تعیین امکان پذیرش از دانشگاه های این کشور تا ارائه تمامی خدمات پذیرش تحصیلی شامل موارد ذیل</p>
-        </div>
-        <div class="row " style="margin-top: 5%" >
-            <div class="col" style="text-align: center ;margin-left: 5%;">
-                <div style="direction: rtl" class="text-center">
-                    <img style="width: 60%;margin-bottom: 10%" src="/public/img/p1.jpg">
-                    <p class="es" style="font-size:0.85vw;color:black;margin-bottom: -0.1%">● اقدام برای بورس دانشجویی(دوره دکترا و کارشناسی ارشد تحقیقاتی)</p>
-                    <p style="font-size:1vw;color:black;margin-bottom: -0.1%">● خدمات ویزای توریستی برای اقوام درجه یک متقاضی</p>
-                    <p style="font-size:1vw;color:black;margin-bottom: -0.1%">● رزرو خوابگاه یا اقامتگاه موقت</p>
-                    <p style="font-size:1vw;color:black;">● تهیه بیمه دانشجویی</p>
+                <div class="col " style="text-align: center;margin-left: 5%;margin-right:5%;">
+                    <div style="direction: rtl" class="text-center">
+                        <img style="width: 60%;margin-bottom: 10%" src="/public/img/p3.jpg">
+                        <p class="es" style="font-size:0.85vw;color:black;margin-bottom: -0.1%">● راهنمایی در نگارش
+                            رزومه،نامه انگیزه تحصیلی و گواهی کار</p>
+                        <p style="font-size:1vw;color:black;margin-bottom: -0.1%">● تکمیل فرم های تقاضای پذیرش توسط
+                            موسسه</p>
+                        <p style="font-size:1vw;color:black;margin-bottom: -0.1%">● کپی برابر اصل نمودن رایگان تمامی
+                            مدارک</p>
+                        <p style="font-size:1vw;color:black">● ترجمه رسمی کلیه مدارک مورد نیاز</p>
+                    </div>
                 </div>
             </div>
-
-            <div class="col " style="text-align: center;margin-left: 5%;">
-                <div style="direction: rtl" class="text-center">
-                    <img style="width: 60%;margin-bottom: 10%" src="/public/img/p2.jpg">
-                    <p class="es" style="font-size:0.85vw;color:black;margin-bottom: -0.1%">● ارسال تقاضای پذیرش به چندین دانشگاه بدون افزایش نرخ قرارداد</p>
-                    <p style="font-size:1vw;color:black;;margin-bottom: -0.1%">● بررسی مدارک مالی متقاضی و اطمینان از صحت انها</p>
-                    <p class="es" style="font-size:0.85vw;color:black;margin-bottom: -0.1%">● اقدام برای تمامی بورس های موجود بدون افزایش نرخ قرارداد</p>
-                    <p style="font-size:1vw;color:black">● تکمیل تمامی فرمهای درخواست ویزا توسط موسسه</p>
+            <div class=" dropdown  text-center" style="font-size: 1.5vw">
+                <button style="width: 80%" class="btn-dark  dropdown-toggle  js-scroll-trigger" type="button"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">سایر خدمات</button>
+                <div style="width: 80%;font-size: 1vw;direction: rtl"
+                    class="dropdown-menu bg-dark  text-center text-light" aria-labelledby="dd">
+                    <a class="nav-link js-scroll-trigger text-light" href="/content/فرم-قرارداد-کندو">فرم قرارداد
+                        کندو</a>
+                    <a class="nav-link js-scroll-trigger text-light"
+                        href="/content/مجوز-های-وزارت-علوم-تحقیقات-و-فناوری">مجوز های وزارت علوم تحقیقات و فناوری</a>
+                    <a class="nav-link js-scroll-trigger text-light" href="/content/موسسات-مجاز-اعزام-دانشجو">موسسات
+                        مجاز اعزام دانشجو</a>
+                    <a class="nav-link js-scroll-trigger text-light" href="/content/پذیرش-های-کندو">پذیرش های کندو</a>
+                    <a class="nav-link js-scroll-trigger text-light" href="/content/هزینه-های-اعزام-دانشجو">هزینه های
+                        اعزام دانشجو</a>
+                    <a class="nav-link js-scroll-trigger text-light" href="/content/نماینده-در-خارج-کشور">نماینده در
+                        خارج کشور</a>
+                    <a class="nav-link js-scroll-trigger text-light" href="/content/ارز-دانشجویی">ارز دانشجویی</a>
+                    <a class="nav-link js-scroll-trigger text-light" href="/content/تعرفه-خدمات-اعزام-دانشجو">تعرفه
+                        خدمات اعزام دانشجو</a>
+                    <a class="nav-link js-scroll-trigger text-light" href="/content/شماره-حساب-های-کندو">شماره حساب های
+                        کندو</a>
+                    <a class="nav-link js-scroll-trigger text-light" href="/content/سمینار-های-cds">سمینار های CDS</a>
+                    <a class="nav-link js-scroll-trigger text-light" href="/content/فرم-ارزشیابی-و-ثبت-نام-کندو">فرم
+                        ارزیابی و ثبت نام کندو</a>
 
 
                 </div>
             </div>
-
-            <div class="col " style="text-align: center;margin-left: 5%;margin-right:5%;">
-                <div style="direction: rtl" class="text-center">
-                    <img style="width: 60%;margin-bottom: 10%" src="/public/img/p3.jpg">
-                    <p class="es" style="font-size:0.85vw;color:black;margin-bottom: -0.1%">● راهنمایی در نگارش رزومه،نامه انگیزه تحصیلی و گواهی کار</p>
-                    <p style="font-size:1vw;color:black;margin-bottom: -0.1%">● تکمیل فرم های تقاضای پذیرش توسط موسسه</p>
-                    <p style="font-size:1vw;color:black;margin-bottom: -0.1%">● کپی برابر اصل نمودن رایگان تمامی مدارک</p>
-                    <p style="font-size:1vw;color:black">● ترجمه رسمی کلیه مدارک مورد نیاز</p>
-                </div>
-            </div>
-        </div>
-        <div class=" dropdown  text-center" style="font-size: 1.5vw" >
-            <button style="width: 80%" class="btn-dark  dropdown-toggle  js-scroll-trigger" type="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">سایر خدمات</button>
-            <div style="width: 80%;font-size: 1vw;direction: rtl" class="dropdown-menu bg-dark  text-center text-light" aria-labelledby="dd" >
-                <a class="nav-link js-scroll-trigger text-light"  href="/content/فرم-قرارداد-کندو">فرم قرارداد کندو</a>
-                <a class="nav-link js-scroll-trigger text-light" href="/content/مجوز-های-وزارت-علوم-تحقیقات-و-فناوری">مجوز های وزارت علوم تحقیقات و فناوری</a>
-                <a class="nav-link js-scroll-trigger text-light" href="/content/موسسات-مجاز-اعزام-دانشجو">موسسات مجاز اعزام دانشجو</a>
-                <a class="nav-link js-scroll-trigger text-light" href="/content/پذیرش-های-کندو">پذیرش های کندو</a>
-                <a class="nav-link js-scroll-trigger text-light" href="/content/هزینه-های-اعزام-دانشجو">هزینه های اعزام دانشجو</a>
-                <a class="nav-link js-scroll-trigger text-light" href="/content/نماینده-در-خارج-کشور">نماینده در خارج کشور</a>
-                <a class="nav-link js-scroll-trigger text-light" href="/content/ارز-دانشجویی">ارز دانشجویی</a>
-                <a class="nav-link js-scroll-trigger text-light" href="/content/تعرفه-خدمات-اعزام-دانشجو">تعرفه خدمات اعزام دانشجو</a>
-                <a class="nav-link js-scroll-trigger text-light" href="/content/شماره-حساب-های-کندو">شماره حساب های کندو</a>
-                <a class="nav-link js-scroll-trigger text-light" href="/content/سمینار-های-cds">سمینار های CDS</a>
-                <a class="nav-link js-scroll-trigger text-light" href="/content/فرم-ارزشیابی-و-ثبت-نام-کندو">فرم ارزیابی و ثبت نام کندو</a>
-
-
-            </div>
         </div>
     </div>
-</div>
 
-<div  style="border-top: solid 2px #6B5A90;border-bottom: solid 2px #6B5A90 ;padding-bottom: 1%" >
-    <div  class="row fa" style="margin-top: 2%;width: 80%;margin-left: 12.5%">
+    <div style="border-top: solid 2px #6B5A90;border-bottom: solid 2px #6B5A90 ;padding-bottom: 1%">
+        <div class="row fa" style="margin-top: 2%;width: 80%;margin-left: 12.5%">
 
-        <div style="width: 50%" class="col-md-8">
-            <div class="text-right">
-                <p style="font-size:1.2vw;color:#380B61;margin-bottom: -0.1%">موسسه کندو دانش آوران سام از سال 1390 تاکنون با مجوز رسمی از وزارت علوم و تحقیقات و فناوری در سه حوزه کشور های کانادا،استرالیا و نیوزلند فعالیت کرده و به علاقمندان به تحصیل در این کشور ها خدمات دانشجویی ارائه می نماید</p>
-                <p style="font-size:1.2vw;color:#380B61;margin-bottom: -0.1%">مشاورین متخصص و با تجربه ی کندو شما را در تمامی مراحل از مشاوره ی ابتدایی در مورد شرایط عمومی تحصیل و زندگی در استرالیا ، نیوزلند و کانادا و کمک به انتخاب رشته تحصیلی با توجه به بازار کار این کشور ها و شرایط اقامتی آنها ، تا اقدام جهت اخذ پذیرش ، بورس و ویزای تحصیلی همراهی خواهند نمود</p>
-                <p style="font-size:1.2vw;color:#380B61;margin-bottom: -0.1%">اخذ پذیرش،اقامت و اعزام دانشجو به خارج از مهم ترین اهداف موسسه کندودانش اوران سام میباشد.موسسه کندو دارای مجوز رسمی از وزارت علوم،تحقیقات وفناوری با برخورداری از نمایندگان و مشاوران مجرب دانشگاهی و با سابقه مدیریتی بالا در داخل و خارج از ایران و سابقه چندین ساله در زمینه اخذ پذیرش،اقامت و اعزام دانشجو به خارح از کشور فعالیت خود را آغاز نموده است .اطلاع رسانی درست و دقیق ،مشاوره در زمینه پذیرش تحصیلی کشور های مختلف و اعزام دانشجو به کشور های کانادا ،استرالیا ،نیوزلند و سایر کشور ها از طریق موسسات مجاز همکار در امر اعزام دانشجو به دانشگاه های مورد تایید وزارت علوم، از مهم ترین خدمات کندو است.امید اس که رسالت این موسسه به عنوان یکی برترین موسسات اعزام دانشجو در جهت ارائه بهترین خدمات به متقاضیان گرامی،به خوبی تداوم یافته و در این مسیر شما را تا آخرین مرحله برای ادامه تحصیل،اسکان،اقامت،دوره کالج زبان،ویزای تحصیلی،بورسیه تحصیلی و خدمات متنوع دیگر برای همه ی سنین ور مقاطع مختلف تحصیلی همراهی نمایید.</p>
+            <div style="width: 50%" class="col-md-8">
+                <div class="text-right">
+                    <p style="font-size:1.2vw;color:#380B61;margin-bottom: -0.1%">موسسه کندو دانش آوران سام از سال 1390
+                        تاکنون با مجوز رسمی از وزارت علوم و تحقیقات و فناوری در سه حوزه کشور های کانادا،استرالیا و
+                        نیوزلند فعالیت کرده و به علاقمندان به تحصیل در این کشور ها خدمات دانشجویی ارائه می نماید</p>
+                    <p style="font-size:1.2vw;color:#380B61;margin-bottom: -0.1%">مشاورین متخصص و با تجربه ی کندو شما را
+                        در تمامی مراحل از مشاوره ی ابتدایی در مورد شرایط عمومی تحصیل و زندگی در استرالیا ، نیوزلند و
+                        کانادا و کمک به انتخاب رشته تحصیلی با توجه به بازار کار این کشور ها و شرایط اقامتی آنها ، تا
+                        اقدام جهت اخذ پذیرش ، بورس و ویزای تحصیلی همراهی خواهند نمود</p>
+                    <p style="font-size:1.2vw;color:#380B61;margin-bottom: -0.1%">اخذ پذیرش،اقامت و اعزام دانشجو به خارج
+                        از مهم ترین اهداف موسسه کندودانش اوران سام میباشد.موسسه کندو دارای مجوز رسمی از وزارت
+                        علوم،تحقیقات وفناوری با برخورداری از نمایندگان و مشاوران مجرب دانشگاهی و با سابقه مدیریتی بالا
+                        در داخل و خارج از ایران و سابقه چندین ساله در زمینه اخذ پذیرش،اقامت و اعزام دانشجو به خارح از
+                        کشور فعالیت خود را آغاز نموده است .اطلاع رسانی درست و دقیق ،مشاوره در زمینه پذیرش تحصیلی کشور
+                        های مختلف و اعزام دانشجو به کشور های کانادا ،استرالیا ،نیوزلند و سایر کشور ها از طریق موسسات
+                        مجاز همکار در امر اعزام دانشجو به دانشگاه های مورد تایید وزارت علوم، از مهم ترین خدمات کندو
+                        است.امید اس که رسالت این موسسه به عنوان یکی برترین موسسات اعزام دانشجو در جهت ارائه بهترین خدمات
+                        به متقاضیان گرامی،به خوبی تداوم یافته و در این مسیر شما را تا آخرین مرحله برای ادامه
+                        تحصیل،اسکان،اقامت،دوره کالج زبان،ویزای تحصیلی،بورسیه تحصیلی و خدمات متنوع دیگر برای همه ی سنین
+                        ور مقاطع مختلف تحصیلی همراهی نمایید.</p>
 
+                </div>
             </div>
+<<<<<<< HEAD
+            <div style="width: 50%" class="col-md-4 align-items-center">
+                <div><img src="/public/img/cds.svg"></div>
+                <div style="text-align: center;">
+                    <span style="font-size:2vw;color: #1F1F39;text-shadow: 3px 3px 3px #29ABE2;font-weight: bold;">We
+                        Build Careers</span>
+                </div>
+                <div class="text-center ">
+                    <p style="font-size:1vw;color:black;margin-bottom: -0.1%">کندو دانش آوران سام</p>
+                    <p style="font-size:1vw;color:black;margin-bottom: -0.1%">موسسه اعزام دانشجو به خارج از کشور</p>
+                    <p style="font-size:1vw;color:black;margin-bottom: -0.1%">با مجوز رسمی شماره67386-17-42 از وزارت
+                        علوم تحقیقات و فناوری</p>
+                    <a style="width:auto;font-size:0.8vw;margin-top: 2%;box-shadow:inset 0 0 15px #6B5A90" href="#cnc"
+                        class="btn-light btn js-scroll-trigger">تماس با ما</a>
+                </div>
+=======
         </div>
         <div style="width: 50%" class="col-md-4 align-items-center">
             <div ><img src="/public/img/2.png" class="rounded float-right" width="250" height = "250" ></div>
@@ -480,81 +595,118 @@
                 <p style="font-size:1vw;color:black;margin-bottom: -0.1%">موسسه اعزام دانشجو به خارج از کشور</p>
                 <p style="font-size:1vw;color:black;margin-bottom: -0.1%">با مجوز رسمی شماره67386-17-42 از وزارت علوم تحقیقات و فناوری</p>
                 <a  style="width:auto;font-size:0.8vw;margin-top: 2%;box-shadow:inset 0 0 15px #6B5A90" href="#cnc" class="btn-light btn js-scroll-trigger">تماس با ما</a>
+>>>>>>> 40ed77eeae1dc8b5abab33f22a81d6344e606f4e
             </div>
         </div>
     </div>
-</div>
 
 
-<div class="container" style="margin-top: 3%;">
-    <div  class="row fa">
-        <div class="col-2 text-right" style="margin-top: 6%">
-            <p style="font-size:0.7vw;color:#343A40;margin-bottom: 5% "><a  href="http://scholarship.saorg.ir/sfs-docs/%D8%AE%D8%B1%D8%AF%D8%A7%D8%AF95.pdf" target="_blank" style="text-underline:#1F1F39;" >فهرست موسسات مجاز وزارت علوم</a></p>
-            <p style="font-size:0.7vw;color:#343A40;margin-bottom: 5%"> <a href="https://www.msrt.ir/fa/pages/Home.aspx" target="_blank" >وزارت علوم و تحقیقات و فناوری</a></p>
-            <p style="font-size:0.7vw;color:#343A40;margin-bottom: 5%"><a href="https://ut.ac.ir/fa" target="_blank">دانشگاه تهران</a></>
-            <p style="font-size:0.7vw;color:#343A40;margin-bottom: 5%"><a href="http://ieltstehran.com/" target="_blank">تهران آیلتس</a></p>
-            <p style="font-size:0.7vw;color:#343A40;margin-bottom: 5%"><a href="http://www.idp.com/global/studyabroad" target="_blank">آی.دی.پی</a></p>
-            <p style="font-size:0.7vw;color:#343A40;margin-bottom: 5%"><a href="http://www.ets.org/" target="_blank">ایی.تی.اس</a></p>
-            <p style="font-size:0.7vw;color:#343A40;margin-bottom: 5%"><a href="http://www.ssri.ir/" target="_blank">انجمن موسسات اعزام دانشجو</a></p>
-            <p style="font-size:0.7vw;color:#343A40;"><a href="http://ilts.ir/fa/Main" target="_blank">ILTS شرکت بین المللی ترجمه</a></p>
-        </div>
-        <div class="col-10 " style="">
-            <hr class=""noshade style="margin-bottom: 1%;">
-            <div class="row" id="mainDiv">
-
-
+    <div class="container" style="margin-top: 3%;">
+        <div class="row fa">
+            <div class="col-2 text-right" style="margin-top: 6%">
+                <p style="font-size:0.7vw;color:#343A40;margin-bottom: 5% "><a
+                        href="http://scholarship.saorg.ir/sfs-docs/%D8%AE%D8%B1%D8%AF%D8%A7%D8%AF95.pdf" target="_blank"
+                        style="text-underline:#1F1F39;">فهرست موسسات مجاز وزارت علوم</a></p>
+                <p style="font-size:0.7vw;color:#343A40;margin-bottom: 5%"> <a
+                        href="https://www.msrt.ir/fa/pages/Home.aspx" target="_blank">وزارت علوم و تحقیقات و فناوری</a>
+                </p>
+                <p style="font-size:0.7vw;color:#343A40;margin-bottom: 5%"><a href="https://ut.ac.ir/fa"
+                        target="_blank">دانشگاه تهران</a></>
+                    <p style="font-size:0.7vw;color:#343A40;margin-bottom: 5%"><a href="http://ieltstehran.com/"
+                            target="_blank">تهران آیلتس</a></p>
+                    <p style="font-size:0.7vw;color:#343A40;margin-bottom: 5%"><a
+                            href="http://www.idp.com/global/studyabroad" target="_blank">آی.دی.پی</a></p>
+                    <p style="font-size:0.7vw;color:#343A40;margin-bottom: 5%"><a href="http://www.ets.org/"
+                            target="_blank">ایی.تی.اس</a></p>
+                    <p style="font-size:0.7vw;color:#343A40;margin-bottom: 5%"><a href="http://www.ssri.ir/"
+                            target="_blank">انجمن موسسات اعزام دانشجو</a></p>
+                    <p style="font-size:0.7vw;color:#343A40;"><a href="http://ilts.ir/fa/Main" target="_blank">ILTS شرکت
+                            بین المللی ترجمه</a></p>
             </div>
-            <p style="font-size:0.7vw;color:#343A40;margin-bottom: -0.1%"><a href="archive.html" target="_blank">آرشیو</a></p>
-            <hr noshade style="margin-top: -0.1%">
+            <div class="col-10 " style="">
+                <hr class="" noshade style="margin-bottom: 1%;">
+                <div class="row" id="mainDiv">
+
+
+<<<<<<< HEAD
+
+
+
+
+                </div>
+                <p style="font-size:0.7vw;color:#343A40;margin-bottom: -0.1%"><a href="archive.html"
+                        target="_blank">آرشیو</a></p>
+                <hr noshade style="margin-top: -0.1%">
+=======
+>>>>>>> 40ed77eeae1dc8b5abab33f22a81d6344e606f4e
+            </div>
+
+
+<<<<<<< HEAD
+
+
+
         </div>
-
-
+=======
+>>>>>>> 40ed77eeae1dc8b5abab33f22a81d6344e606f4e
     </div>
-</div>
 
 
-<div id="cnc" style="background-color: #6790CF;padding-top: 3%;padding-bottom: 1%;margin-top: 7%">
-    <div class="container "  >
-        <div class="row fa" >
-            <div class="col-4 mp" >
-                <iframe style="width: 100%;height: 100%" src="https://maps.google.com/maps?q=%D8%B3%D8%A7%D8%B1%DB%8C%20%D9%85%DB%8C%D8%AF%D8%A7%D9%86%20%D8%A7%D9%85%D8%A7%D9%85%20%D8%A8%D8%A7%D9%86%DA%A9%20%D9%85%D9%87%D8%B1&t=&z=17&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
+    <div id="cnc" style="background-color: #6790CF;padding-top: 3%;padding-bottom: 1%;margin-top: 7%">
+        <div class="container ">
+            <div class="row fa">
+                <div class="col-4 mp">
+                    <iframe style="width: 100%;height: 100%"
+                        src="https://maps.google.com/maps?q=%D8%B3%D8%A7%D8%B1%DB%8C%20%D9%85%DB%8C%D8%AF%D8%A7%D9%86%20%D8%A7%D9%85%D8%A7%D9%85%20%D8%A8%D8%A7%D9%86%DA%A9%20%D9%85%D9%87%D8%B1&t=&z=17&ie=UTF8&iwloc=&output=embed"
+                        frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
 
-            </div>
-            <div class="col-4 text-center">
-                <p style="font-size:1vw;color:#240B3B;margin-top: 15%">نشانی:ساری- میدان امام-ساختمان برلیان-طبقه اول-بالای بانک تجارت،واحد شماره 19</p>
-                <p style="font-size:1vw;color:#240B3B;">لطفا قبل از آمدن به موسسه با کارشناسان موسسه تماس بگیرید</p>
+                </div>
+                <div class="col-4 text-center">
+                    <p style="font-size:1vw;color:#240B3B;margin-top: 15%">نشانی:ساری- میدان امام-ساختمان برلیان-طبقه
+                        اول-بالای بانک تجارت،واحد شماره 19</p>
+                    <p style="font-size:1vw;color:#240B3B;">لطفا قبل از آمدن به موسسه با کارشناسان موسسه تماس بگیرید</p>
 
-            </div>
-            <div class="col-4 text-right" style="direction: rtl">
-                <p style="font-size:1vw;color:#240B3B;margin-bottom: -0.1%">موسسه اعزام دانشجو کندو دکتر عزیزی</p>
-                <p style="font-size:1vw;color:#240B3B;">با مجوز وزارت علوم</p>
-                <p style="font-size:1vw;color:#240B3B;margin-top: 0.1%;margin-bottom: -0.1%">شماره های تماس جهت تعیین وقت</p>
-                <p style="font-size:1vw;color:#240B3B;margin-bottom: -0.1%">011333675000</p>
-                <p style="font-size:1vw;color:#240B3B;">09030612326</p>
-                <p style="font-size:1vw;color:#240B3B;">(زمان حضور آقای دکتر عزیزی: عصر های یک شنبه،سه شنبه و پنج شنبه از ساعت 16 الی 20)</p>
+                </div>
+                <div class="col-4 text-right" style="direction: rtl">
+                    <p style="font-size:1vw;color:#240B3B;margin-bottom: -0.1%">موسسه اعزام دانشجو کندو دکتر عزیزی</p>
+                    <p style="font-size:1vw;color:#240B3B;">با مجوز وزارت علوم</p>
+                    <p style="font-size:1vw;color:#240B3B;margin-top: 0.1%;margin-bottom: -0.1%">شماره های تماس جهت
+                        تعیین وقت</p>
+                    <p style="font-size:1vw;color:#240B3B;margin-bottom: -0.1%">011333675000</p>
+                    <p style="font-size:1vw;color:#240B3B;">09030612326</p>
+                    <p style="font-size:1vw;color:#240B3B;">(زمان حضور آقای دکتر عزیزی: عصر های یک شنبه،سه شنبه و پنج
+                        شنبه از ساعت 16 الی 20)</p>
+                </div>
+
             </div>
 
         </div>
+<<<<<<< HEAD
+=======
         <div class="" style="margin-top: -0.1%;margin-bottom: -1%">
             <a href="https://telegram.me/Candoezam"><img style="height: 3vw;margin-left: 45%" src="/public/img/Telegram.png"></a>
             <a href="https://www.instagram.com/candoezam/"><img style="height: 3vw;margin-left: 4%" src="/public/img/instagram.png"></a>
 
         </div>
 
+>>>>>>> 40ed77eeae1dc8b5abab33f22a81d6344e606f4e
     </div>
-</div>
-<div class="text-center" style="padding-bottom: 0.5%;padding-top: 0.5%;background-color: #1E1E26">
-    <div style="font-size:0.7vw; " class=" font-weight-bold">
-        <p style="color:#6790CF;margin-bottom: 0.1%" >کلیه حقوق مرتبط به این وبسایت متعلّق به موسسه اعزام دانشجو کندو دانش آوران سام می‌باشد</p>
-        <p style="color:#6790CF;margin-bottom: 0.1%" >Copyright©2015, All Rights Reserved</p>
-        <span style="color:#6790CF" >Developed by : <a style="font-size:0.9vw;color:white;" target="_blank" href="/content/contact-us">SHIFOWO</a></span></div>
-</div>
+    <div class="text-center" style="padding-bottom: 0.5%;padding-top: 0.5%;background-color: #1E1E26">
+        <div style="font-size:0.7vw; " class=" font-weight-bold">
+            <p style="color:#6790CF;margin-bottom: 0.1%">کلیه حقوق مرتبط به این وبسایت متعلّق به موسسه اعزام دانشجو کندو
+                دانش آوران سام می‌باشد</p>
+            <p style="color:#6790CF;margin-bottom: 0.1%">Copyright©2015, All Rights Reserved</p>
+            <span style="color:#6790CF">Developed by : <a style="font-size:0.9vw;color:white;" target="_blank"
+                    href="/content/contact-us">SHIFOWO</a></span>
+        </div>
+    </div>
 
 
-    
+
     <script src="/public/vendor/jquery/jquery.min.js"></script>
     <script src="/public/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="/public/vendor/jquery-easing/jquery.easing.min.js"></script>
     <script src="/public/js/scrolling-nav.js"></script>
 </body>
+
 </html>
