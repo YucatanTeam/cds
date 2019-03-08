@@ -1398,7 +1398,7 @@ var app = (function () {
 
 		var card_initial_data = {
 		 	col: "s10 offset-s1 m4 offset-m4 l6 offset-l3",
-		 	image: "/public/img/cds.svg",
+		 	image: "/public/img/cds.png",
 		 	alt: "logo"
 		 };
 		var card = new Card({
