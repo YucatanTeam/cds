@@ -62,6 +62,30 @@ module.exports = ({app, db}) => {
 
         });
     })
+
+    app.get("/en/content/:page", (req, res) => {
+        const reqpage = req.params.page.split("-").join(" ");
+        db.api.page.getByEnTitle(reqpage, (err, rows) => {
+            if(err) {
+                dev.report(err);
+                return res.status(500).end("Internal Server Error !");
+            }
+            if(rows.length < 1) {
+                return res.redirect("/404.html");
+            }
+            const row = rows[0];
+            const {head, html} = Layout.render({
+                page: reqpage,
+                en_title: reqpage,
+                en_content: row.content,
+                cover: row.cover,
+            });
+            const page = `<html><head>${head}</head><body>${html}</body></html>`;
+            res.set('Content-Type', 'text/html').send(page);
+
+        });
+    })
+
     app.get('/imgsrc/:image', (req, res) => {
         res.sendFile(cwd + "/images/" + req.params.image);
     })
