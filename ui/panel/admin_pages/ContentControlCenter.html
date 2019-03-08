@@ -2,7 +2,7 @@
    
          <form id="post">
             <div class="file-field input-field">
-                <div class="btn waves-effect waves-light black-text yellow">
+                <div class="btn waves-effect waves-light black-text red">
                     <span>Pick</span>
                     <input id="cover" type="file">
                 </div>
@@ -91,7 +91,7 @@
 export default {
     data() {
         return { 
-            instans:null,
+            chips:null,
             feditor:null,
             eneditor:null,
             utils,
@@ -130,14 +130,23 @@ export default {
     oncreate(){
         var elems = document.querySelectorAll('.chips');
         var instances = M.Chips.init(elems,{
+            data:[]
         });
-        
+        this.set({
+            chips:instances
+        })
     },
     methods: {
         post(){
+            var chipsTag = this.get().chips[0].chipsData;
+            var s=[];
+            for (var i of chipsTag){
+                    s.push(i.tag)
+            }
+            s = s.join(",");
             var formdata= new FormData();
             if(document.getElementById("cover").files[0])
-                formdata.append("cover", document.getElementById("cover").files[0]);
+            formdata.append("cover", document.getElementById("cover").files[0]);
             formdata.append("title",`${document.getElementById("ftitle").value}`);
             formdata.append("en_title",`${document.getElementById("title").value}`);
             formdata.append("telegram",`${document.getElementById("telegram").checked}`)
@@ -145,6 +154,7 @@ export default {
             formdata.append("tags",`${document.getElementById("tags").value}`)
             formdata.append("feditor",`${this.get().feditor.getData()}`);
             formdata.append("eneditor",`${this.get().eneditor.getData()}`);
+            formdata.append("tags",s);
             const dr = this.get().defaultRoute;
             if(dr)
                 formdata.append("route", dr.id);

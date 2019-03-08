@@ -111,7 +111,7 @@ module.exports = ({app, db}) => {
     app.post('/auth/login', passport.authenticate('local-login'), (req, res) => {
         return res.redirect("/panel");
     });
-    // TODO register route here
+    
     app.get('/auth/logout', access(0), (req, res) => {
         req.logout();
         return res.redirect('/');
@@ -228,7 +228,7 @@ module.exports = ({app, db}) => {
             })
         })
     })
-    app.post('/user/add', access(5), (req, res) => { // TODO what access should it be ?
+    app.post('/user/add', access(5), (req, res) => {
         db.api.user.add(req.body.email, req.body.password ,(err, user) => {
             if(err) {
                 dev.report(err);
@@ -328,7 +328,6 @@ module.exports = ({app, db}) => {
     // post: /page/:page_id/unblock
     //      json-body{}
 
-    // TODO use access guard
     app.get("/route/all", (req, res) => {
         db.api.route.getAll((err, rows) => {
             if(err) {
@@ -347,6 +346,15 @@ module.exports = ({app, db}) => {
             return res.json({body: rows, err:null});
         })
     })
+    app.get("/route/:route/pages",function(req,res){
+        db.api.route.getPages(req.params.route,function(err,row){
+            if(err){
+                dev.report(err);
+                return res.status(500).end("internal server err");
+            }
+            res.json({body: row,err:null})
+        });
+    });
     app.post("/page/:page/route/remove", (req, res) => {
         db.api.page.removeRoute(req.params.page, (err, rows) => {
             if(err) {
@@ -652,7 +660,7 @@ module.exports = ({app, db}) => {
     // Forms routes
     // ----------------------
 
-    app.get('/form/all', access(3), (req, res) => {
+    app.get('/form/all', (req, res) => {
         db.api.form.all((err, rows)=>{
             
             if(rows) return res.json({body: rows, err:null})
