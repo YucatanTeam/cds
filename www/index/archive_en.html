@@ -11,36 +11,48 @@
     <link rel="stylesheet" type="text/css" href="/public/css/bootstrap.css">
     <link href="/public/css/scrolling-nav.css" rel="stylesheet">
     <script>
-        fetch('/route/1/pages', {
-            method: "GET",
-            mode: "same-origin",
-            credentials: "same-origin",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            redirect: "follow",
-        })
-        .then(response => {
-            if(response.redirected) {
-                window.location.href = response.url;
-            }
-            return response
-        })
-        .then(response => {
-            var contentType = response.headers.get("content-type");
-            if(contentType && contentType.includes("application/json")) {
-                return response.json().then(json => ({status: response.status, body: json.body}));
-            }
-            return {status: response.status, body: null};
-        })
-        .then(response => {
-            console.log(response.body)
-        })
-        .catch(err => {
-            var forms = document.getElementById("forms")
-                forms.innerHTML = "خطا در سرور!"
-        });
-
+document.addEventListener("DOMContentLoaded", e =>
+    fetch("/page/all").then(res=>{
+        if(res.status != 200){throw "err";}
+        else{return res.json();} 
+    }).then(res=>{
+        var div = document.getElementById("posts");//posts
+        var body = res.body;
+        var img = new Image();
+        for(var i of body){
+            console.log(i.en_title)
+            img.src = i.cover;
+            var div1 = document.createElement("div");//card body
+            var div0 = document.createElement("div");//card
+            var h5 = document.createElement("h5");
+            var a = document.createElement("a");
+            img.setAttribute("class","card-img-top");
+            div.appendChild(img);
+            div1.setAttribute("class","card-body");
+            h5.setAttribute("class","card-title");
+            a.setAttribute("href",`en/content/${i.en_title.split(" ").join("-")}`);
+            div0.setAttribute("class","card");
+            div0.setAttribute("style","width: 18rem");
+            var p2 = document.createTextNode("More...");
+            var p = document.createTextNode(`${i.en_title}`);
+            a.appendChild(p2)
+            h5.appendChild(p);
+            a.setAttribute("class","btn btn-primary");
+            div1.appendChild(h5);
+            div1.appendChild(a);
+            div0.appendChild(img);
+            div0.appendChild(div1);
+            div.appendChild(div0);
+            var br = document.createElement("br");
+            var divider = document.createElement("hr");
+            
+            div.appendChild(br);
+            div.appendChild(divider);
+            div.appendChild(br);
+            
+        }
+    })
+);
     </script>
     <style>
         .fa {
