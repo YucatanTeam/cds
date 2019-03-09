@@ -255,7 +255,7 @@ var app = (function () {
 	                return response.json()
 	            })
 	            .then(response => {
-	                console.log(reponse.body);
+	                console.log(response.body);
 	            })
 	        .catch(err => console.log(err));
 
