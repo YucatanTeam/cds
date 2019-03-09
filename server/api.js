@@ -2,6 +2,7 @@ const fs = require("fs");
 const cuid = require("cuid"); // use this to create a cuid in insertaion ops
 require('svelte/ssr/register'); // for svelte server side rendering
 const Layout = require('./layout.html');
+const enLayout = require('./en_layout.html');
 const express = require('express')
 const passport = require('passport');
 const formidable = require('formidable');
@@ -84,7 +85,7 @@ module.exports = ({app, db}) => {
                 return res.redirect("/404.html");
             }
             const row = rows[0];
-            const {head, html} = Layout.render({
+            const {head, html} = enLayout.render({
                 page: reqpage,
                 en_title: reqpage,
                 en_content: row.en_content,
