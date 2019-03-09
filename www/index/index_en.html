@@ -1,6 +1,49 @@
 <!DOCTYPE html>
 <html lang="fa">
-
+        <script>
+            document.addEventListener("DOMContentLoaded",e=>
+                fetch("/page/all").then(res => {
+                    return res.json();
+                }).then(res => {
+                    console.log(res.body);
+                    var div = document.getElementById("mainDiv");
+                    var title = "";
+                    var img = new Image();
+            
+            
+                    var i = res.body.length - 1;
+                    var j = 0;
+            
+                    console.log(i);
+                    while (i > 0 && j < 5) {
+                        j++;
+                        if (j >= 5) { break; }
+                        var div2 = document.createElement("div");
+                        var div3 = document.createElement("div");
+                        title = res.body[i].en_title;
+                        console.log(title)
+                        var text = document.createTextNode(title);
+                        var p = document.createElement("P");
+                        div2.setAttribute("class", "col-3");
+                        div3.setAttribute("class", "text-right")
+                        div3.setAttribute("style", "margin-top: -0.2%");
+                        p.appendChild(text);
+                        p.setAttribute("style", "font-size:1vw;color:black;margin-bottom: 5%");
+                        div.appendChild(div2);
+                        div2.appendChild(div3);
+                        img.src = `/imgsrc/${res.body[i].cover}`
+                        div3.appendChild(img);
+                        div3.appendChild(p);
+                        console.log(res.body[i]);
+            
+                        i--;
+            
+                    }
+                })
+            
+            )
+            
+            </script>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -471,35 +514,9 @@
 
         <div class="col-10  " style="">
             <hr  noshade style="margin-bottom: 1%;">
-            <div class="row" >
+            <div class="row" id="mainDiv">
 
-                <div class="col-3">
-                    <div class="text-left" style="margin-top: -0.2%;">
-                        <img style="width:100%;height: auto;margin-bottom: 5%" src="/public/img/news.png">
-                        <p style="font-size:1vw;color:black;margin-bottom: 5%"> Title</p>
-                        <p style="font-size:0.8vw;color:black;margin-bottom: 5%">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.  </p>
-                    </div>
-                </div>
-                <div class="col-3">
-                    <div class="text-left" style="margin-top: -0.2%;">
-                        <img style="width:100%;height: auto;margin-bottom: 5%" src="/public/img/news.png">
-                        <p style="font-size:1vw;color:black;margin-bottom: 5%"> Title</p>
-                        <p style="font-size:0.8vw;color:black;margin-bottom: 5%">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.  </p>
-                    </div>
-                </div>
-                <div class="col-3">
-                    <div class="text-left" style="margin-top: -0.2%;">
-                        <img style="width:100%;height: auto;margin-bottom: 5%" src="/public/img/news.png">
-                        <p style="font-size:1vw;color:black;margin-bottom: 5%"> Title</p>
-                        <p style="font-size:0.8vw;color:black;margin-bottom: 5%">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.  </p>
-                    </div>
-                </div>
-                <div class="col-3">
-                    <div class="text-left" style="margin-top: -0.2%;">
-                        <img style="width:100%;height: auto;margin-bottom: 5%" src="/public/img/news.png">
-                        <p style="font-size:1vw;color:black;margin-bottom: 5%"> Title</p>
-                        <p style="font-size:0.8vw;color:black;margin-bottom: 5%;">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.  </p>
-                    </div>
+                
                 </div>
             </div>
             <p class="text-right" style="font-size:0.7vw;color:#343A40;margin-bottom: -0.1%"><a href="archive_en.html" target="_blank">Archives</a></p>

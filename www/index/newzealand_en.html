@@ -1,6 +1,35 @@
 <!DOCTYPE html>
 <html>
+<script>
+        document.addEventListener("DOMContentLoaded", e =>
+        fetch("/route/3/pages").then(res => {
+            if (res.status != 200) {
+                throw "ok is not define";
+            }
+            else {
 
+                return res.json()
+            }
+        }).then(res => {
+            var div = document.getElementById("id");
+            var title = "";
+
+            for (var i of res.body) {
+                var a = document.createElement("A");
+                title = i.en_title;
+
+                var p = document.createTextNode(`● ${title}`);
+                var br = document.createElement("br");
+                a.appendChild(p);
+                div.appendChild(br);
+                div.appendChild(a);
+                a.setAttribute("href", `/en/content/${i.en_title.split(" ").join("-")}`);
+                a.setAttribute("class", "text-light");
+                a.setAttribute("style", "margin-top: 3%")
+            }
+        })
+    )
+</script>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -108,7 +137,7 @@
                 <div ><img src="/public/img/2.png" class="rounded float-right" width="300" height = "300" ></div>
             </div>
             <div style="width: 50%" class="col-md-6 text-right">
-                <div class="border-right " style=" color: white;font-size: 1.2vw;direction: rtl;margin-top: 5%;padding-right: 3%">
+                <div class="border-right " id="id" style=" color: white;font-size: 1.2vw;direction: rtl;margin-top: 5%;padding-right: 3%">
 
                     
 
