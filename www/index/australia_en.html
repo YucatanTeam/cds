@@ -11,7 +11,34 @@
     <link rel="stylesheet" type="text/css" href="/public/css/bootstrap.css">
     <link href="/public/css/scrolling-nav.css" rel="stylesheet">
     <script>
-        
+            document.addEventListener("DOMContentLoaded", e =>
+        fetch("/route/2/pages").then(res => {
+            if (res.status != 200) {
+                throw "ok is not define";
+            }
+            else {
+
+                return res.json()
+            }
+        }).then(res => {
+            var div = document.getElementById("id");
+            var title = "";
+
+            for (var i of res.body) {
+                var a = document.createElement("A");
+                title = i.en_title;
+
+                var p = document.createTextNode(`● ${title}`);
+                var br = document.createElement("br");
+                a.appendChild(p);
+                div.appendChild(br);
+                div.appendChild(a);
+                a.setAttribute("href", `/content/${i.title.split(" ").join("-")}`);
+                a.setAttribute("class", "text-light");
+                a.setAttribute("style", "margin-top: 3%")
+            }
+        })
+    )
 
         
     </script>

@@ -3,7 +3,7 @@
 <script>
 document.addEventListener("DOMContentLoaded", e =>
     fetch("/page/all").then(res=>{
-        if(res.status != 200){throw "ridi";}
+        if(res.status != 200){throw "err";}
         else{return res.json();} 
     }).then(res=>{
         var div = document.getElementById("posts");//posts
@@ -34,8 +34,8 @@ document.addEventListener("DOMContentLoaded", e =>
             div0.appendChild(div1);
             div.appendChild(div0);
             var br = document.createElement("br");
-            var divider = document.createElement("div");
-            divider.setAttribute("class","divider");
+            var divider = document.createElement("hr");
+            
             div.appendChild(br);
             div.appendChild(divider);
             div.appendChild(br);
