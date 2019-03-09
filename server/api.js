@@ -5,6 +5,7 @@ const Layout = require('./layout.html');
 const express = require('express')
 const passport = require('passport');
 const formidable = require('formidable');
+const isWin = process.platform === "win32";
 // const sharp = require('sharp');
 function sharp(file) {
     return { resize(nx, ny) {
@@ -328,7 +329,7 @@ module.exports = ({app, db}) => {
                     fs.unlink(file0, dev.report);
                     return res.status(500).end("Internal Server Error !");
                 }
-                const avatarp = avatar.split("/");
+                const avatarp = isWin ? avatar.split("\\") : avatar.split("/");
                 avatar = avatarp[avatarp.length - 1];
                 db.api.user.changeAvatar(req.user.id, avatar, function (err) {
                     if (err) {
@@ -425,7 +426,7 @@ module.exports = ({app, db}) => {
             var cover;
             if(files.cover) {
                 cover = files.cover.path;
-                cover = cover.split("/");
+                cover = isWin ? cover.split("\\") : cover.split("/");
                 cover = cover[cover.length - 1];
             } else {
                 cover = null;
