@@ -137,7 +137,7 @@ const db = {
             getAll(cb){
                 db.connection.query(`SELECT comment.id, comment.page_id, comment.content, comment.name, comment.email, comment.status, 
                                             comment.cuid, comment.created_at, comment.updated_at, 
-                                            page.slug FROM comment 
+                                            page.title FROM comment 
                                             INNER JOIN page ON comment.page_id=page.id ORDER BY comment.created_at DESC;`, [], (err, rows)=>{
                     if(rows.length >= 1) {
                         return cb(err, rows);

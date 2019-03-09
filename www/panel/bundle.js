@@ -6300,7 +6300,7 @@ var app = (function () {
 		};
 	}
 
-	// (100:4) {:catch err}
+	// (99:4) {:catch err}
 	function create_catch_block$2(component, ctx) {
 		var p, text0, text1_value = ctx.err.message, text1, current;
 
@@ -6309,7 +6309,7 @@ var app = (function () {
 				p = createElement("p");
 				text0 = createText("Error ");
 				text1 = createText(text1_value);
-				addLoc(p, file$g, 100, 8, 6371);
+				addLoc(p, file$g, 99, 8, 6283);
 			},
 
 			m: function mount(target, anchor) {
@@ -6450,9 +6450,9 @@ var app = (function () {
 				addLoc(div0, file$g, 9, 16, 413);
 				addListener(button, "click", click_handler);
 				button.className = "modal-close waves-effect waves-green btn-flat";
-				addLoc(button, file$g, 43, 20, 2808);
+				addLoc(button, file$g, 42, 20, 2720);
 				div1.className = "modal-footer";
-				addLoc(div1, file$g, 42, 16, 2760);
+				addLoc(div1, file$g, 41, 16, 2672);
 				div2.id = div2_id_value = ctx.crudindex===1 ? "modaledit" :  ctx.crudindex===0 ? "modalcreate" : ctx.crudindex===4 ? "modalblock" : ctx.crudindex===5 ? "modalunblock" : "modaldelete";
 				div2.className = "modal";
 				addLoc(div2, file$g, 8, 12, 228);
@@ -6779,7 +6779,7 @@ var app = (function () {
 
 	// (28:36) {#if objModal}
 	function create_if_block_3$2(component, ctx) {
-		var a, text0_value = ctx.objModal.slug, text0, text1, text2, text3, text4, text5, text6, textarea, textarea_value_value, text7, label, current;
+		var a, text0_value = ctx.objModal.title, text0, a_href_value, text1, text2, text3, text4, text5, text6, textarea, textarea_value_value, text7, label, current;
 
 		var input0_initial_data = {
 		 	col: "s12",
@@ -6868,14 +6868,14 @@ var app = (function () {
 				text7 = createText("\r\n                                        ");
 				label = createElement("label");
 				label.textContent = "Content";
-				a.href = "#!";
-				addLoc(a, file$g, 29, 38, 1535);
+				a.href = a_href_value = "/content/" + ctx.objModal.title;
+				addLoc(a, file$g, 28, 38, 1423);
 				textarea.id = "content";
 				textarea.className = "materialize-textarea";
 				textarea.value = textarea_value_value = ctx.crudindex === 1 ? ctx.objModal.content : "";
-				addLoc(textarea, file$g, 35, 40, 2384);
+				addLoc(textarea, file$g, 34, 40, 2296);
 				label.htmlFor = "content";
-				addLoc(label, file$g, 36, 40, 2531);
+				addLoc(label, file$g, 35, 40, 2443);
 			},
 
 			m: function mount(target, anchor) {
@@ -6899,8 +6899,12 @@ var app = (function () {
 			},
 
 			p: function update(changed, ctx) {
-				if ((!current || changed.objModal) && text0_value !== (text0_value = ctx.objModal.slug)) {
+				if ((!current || changed.objModal) && text0_value !== (text0_value = ctx.objModal.title)) {
 					setData(text0, text0_value);
+				}
+
+				if ((!current || changed.objModal) && a_href_value !== (a_href_value = "/content/" + ctx.objModal.title)) {
+					a.href = a_href_value;
 				}
 
 				var input0_changes = {};
@@ -11451,7 +11455,7 @@ var app = (function () {
 	                for(var ft of freetimes) {
 	                        // [ show description ]
 	                        ft.actions = [
-	                            [2].includes(cdsuser.access)
+	                            [7].includes(cdsuser.access)
 	                        ];
 	                        rows.push(ft);
 	                }
@@ -12881,13 +12885,13 @@ var app = (function () {
 						"Live Chat":						{access: [5, 7], icon: "chat", page: LiveChat},
 						"Forms":							{access: [3, 5, 7], icon: "assignment", page: Forms},
 						"Apply Center":						{access: [3, 5, 7], icon: "assignment_ind", page: ApplyCenter},
-						"Portal Control Center":			{access: [5, 7], icon: "account_balance", page: PortalControlCenter},
-						"Reserved Consultations":			{access: [5, 7], icon: "av_timer", page: ReservedConsultations},
+						// "Portal Control Center":			{access: [5, 7], icon: "account_balance", page: PortalControlCenter},
+						// "Reserved Consultations":			{access: [5, 7], icon: "av_timer", page: ReservedConsultations},
 						"Content Center":					{access: [3, 5, 7], icon: "subject", page: ContentControlCenter},
 						"حساب کاربری":						{access: [2], icon: "security", page: FaSecurityPolicy},		
 						"پروسه اپلای" : 		    		{access: [2], icon: "airplanemode_active", page: ApplyProcess},
-						"تراکنش ها و رزرو های انجام شده": {access: [2], icon: "receipt", page: Consultations},	
-						"دریافت زمان مشاوره" : 		   	   {access: [2], icon: "event", page: ReservingConsultancyTime},
+						// "تراکنش ها و رزرو های انجام شده": {access: [2], icon: "receipt", page: Consultations},	
+						"زمان های مشاوره" : 		   	   {access: [2], icon: "event", page: ReservingConsultancyTime},
 					}
 				};
 			}
