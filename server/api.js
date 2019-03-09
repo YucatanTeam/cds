@@ -61,6 +61,7 @@ module.exports = ({app, db}) => {
             const {head, html} = Layout.render({
                 page: reqpage,
                 title: reqpage,
+                tags: row.tags,
                 id: row.id,
                 comment: row.comment,
                 content: row.content,
@@ -88,6 +89,7 @@ module.exports = ({app, db}) => {
                 en_title: reqpage,
                 en_content: row.en_content,
                 id: row.id,
+                tags: row.tags,
                 comment: row.comment,
                 cover: row.cover,
             });

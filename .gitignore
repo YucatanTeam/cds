@@ -1,7 +1,3 @@
 node_modules/
 package-lock.json
 www/*/*.map
-avatar/
-images/
-!avatar/.avatar
-!images/.image
