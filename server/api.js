@@ -86,7 +86,7 @@ module.exports = ({app, db}) => {
             const {head, html} = Layout.render({
                 page: reqpage,
                 en_title: reqpage,
-                en_content: row.content,
+                en_content: row.en_content,
                 id: row.id,
                 comment: row.comment,
                 cover: row.cover,

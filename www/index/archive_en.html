@@ -12,7 +12,7 @@
     <link href="/public/css/scrolling-nav.css" rel="stylesheet">
     <script>
 document.addEventListener("DOMContentLoaded", e =>
-    fetch("/page/all").then(res=>{
+    fetch("/route/4/pages").then(res=>{
         if(res.status != 200){throw "err";}
         else{return res.json();} 
     }).then(res=>{
@@ -20,7 +20,6 @@ document.addEventListener("DOMContentLoaded", e =>
         var body = res.body;
         var img = new Image();
         for(var i of body){
-            console.log(i.en_title)
             img.src = i.cover;
             var div1 = document.createElement("div");//card body
             var div0 = document.createElement("div");//card
@@ -30,7 +29,7 @@ document.addEventListener("DOMContentLoaded", e =>
             div.appendChild(img);
             div1.setAttribute("class","card-body");
             h5.setAttribute("class","card-title");
-            a.setAttribute("href",`en/content/${i.en_title.split(" ").join("-")}`);
+            a.setAttribute("href",`/en/content/${i.en_title.split(" ").join("-")}`);
             div0.setAttribute("class","card");
             div0.setAttribute("style","width: 18rem");
             var p2 = document.createTextNode("More...");

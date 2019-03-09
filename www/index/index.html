@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="fa" oncontextmenu="return false;">
 <script>
-    fetch("/page/all").then(res => {
+    fetch("/route/4/pages").then(res => {
         return res.json();
     }).then(res => {
-        console.log(res.body);
         var div = document.getElementById("mainDiv");
         var title = "";
         var img = new Image();
@@ -13,8 +12,7 @@
         var i = res.body.length - 1;
         var j = 0;
 
-        console.log(i);
-        while (i > 0 && j < 5) {
+        while (i >= 0 && j < 5) {
             j++;
             if (j >= 5) { break; }
             var div2 = document.createElement("div");
@@ -32,7 +30,6 @@
             img.src = `/imgsrc/${res.body[i].cover}`
             div3.appendChild(img);
             div3.appendChild(p);
-            console.log(res.body[i]);
 
             i--;
 

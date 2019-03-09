@@ -2,7 +2,7 @@
 <html>
 <script>
 document.addEventListener("DOMContentLoaded", e =>
-    fetch("/page/all").then(res=>{
+    fetch("/route/4/pages").then(res=>{
         if(res.status != 200){throw "err";}
         else{return res.json();} 
     }).then(res=>{
@@ -10,7 +10,6 @@ document.addEventListener("DOMContentLoaded", e =>
         var body = res.body;
         var img = new Image();
         for(var i of body){
-            console.log(i.title)
             img.src = i.cover;
             var div1 = document.createElement("div");//card body
             var div0 = document.createElement("div");//card
@@ -53,38 +52,6 @@ document.addEventListener("DOMContentLoaded", e =>
     <link href="/public/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/public/css/bootstrap.css">
     <link href="/public/css/scrolling-nav.css" rel="stylesheet">
-    <script>
-        fetch('/route/1/pages', {
-            method: "GET",
-            mode: "same-origin",
-            credentials: "same-origin",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            redirect: "follow",
-        })
-        .then(response => {
-            if(response.redirected) {
-                window.location.href = response.url;
-            }
-            return response
-        })
-        .then(response => {
-            var contentType = response.headers.get("content-type");
-            if(contentType && contentType.includes("application/json")) {
-                return response.json().then(json => ({status: response.status, body: json.body}));
-            }
-            return {status: response.status, body: null};
-        })
-        .then(response => {
-            console.log(response.body)
-        })
-        .catch(err => {
-            var forms = document.getElementById("forms")
-                forms.innerHTML = "خطا در سرور!"
-        });
-
-    </script>
     <style>
         .fa {
 
@@ -190,18 +157,6 @@ document.addEventListener("DOMContentLoaded", e =>
 </div>
 
 <div id="posts" class="container text-center en border border-primary rounded" style="font-size:1vw;color:black;margin-top: 5%;margin-bottom: 5%;direction: rtl;padding: 2%">
-
-
-<div class="card" style="width: 18rem;">
-  <img src="" class="card-img-top" alt="">
-  <div class="card-body">
-    <h5 class="card-title">Card title</h5>
-    <a href="#" class="btn btn-primary">Go somewhere</a>
-  </div>
-</div>
-<hr>
-
-
 </div>
 
 <div style="background-color: #6790CF;padding-top: 3%;padding-bottom: 1%">
