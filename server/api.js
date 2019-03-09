@@ -61,6 +61,8 @@ module.exports = ({app, db}) => {
             const {head, html} = Layout.render({
                 page: reqpage,
                 title: reqpage,
+                id: row.id,
+                comment: row.comment,
                 content: row.content,
                 cover: row.cover,
             });
@@ -85,6 +87,8 @@ module.exports = ({app, db}) => {
                 page: reqpage,
                 en_title: reqpage,
                 en_content: row.content,
+                id: row.id,
+                comment: row.comment,
                 cover: row.cover,
             });
             const page = `<html><head>${head}</head><body>${html}</body></html>`;
@@ -426,6 +430,7 @@ module.exports = ({app, db}) => {
             }
 
             var page = {
+                cuid: cuid(),
                 cover,
                 tags: fields.tags,
                 route: fields.route ? parseInt(fields.route) : null,
@@ -449,8 +454,8 @@ module.exports = ({app, db}) => {
     // --------------
     // comment routes
     // --------------
-    app.get('/comment/getAllRelToAPost/:id', (req, res)=>{
-        db.api.comment.getAllRelToAPost(req.params.id, (err, rows)=>{
+    app.get('/comment/getAllRelToAPage/:id', (req, res)=>{
+        db.api.comment.getAllRelToAPage(req.params.id, (err, rows)=>{
 
             if(rows) return res.json({body: rows, err:null})
             if(err) {

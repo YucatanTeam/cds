@@ -1,25 +1,89 @@
-<input type="button" on:click=boo() value="boo"/>
-<p>{boobox}</p>
 
+
+<div id="comments" class="container text-center en border border-primary rounded" style="font-size:1vw;color:black;margin-top: 5%;margin-bottom: 5%;direction: rtl;padding: 2%">
+
+{comments}
+
+
+
+</div>
+    <div class="card" style="width: 18rem;">
+    <div class="card-body">
+        <form class="form-inline">
+            <div class="form-group mb-2">
+                <label for="email" class="sr-only">Email</label>
+                <input type="email" class="form-control" id="email" placeholder="email">
+            </div>
+            <div class="form-group mx-sm-3 mb-2">
+                <label for="name" class="sr-only">Name</label>
+                <input type="text" class="form-control" id="name" placeholder="name">
+            </div>
+            <div class="form-group mx-sm-3 mb-2">
+                <label for="name" class="sr-only">Content</label>
+                <textarea id="content" class="form-control" placeholder="content"></textarea>
+            </div>
+            <input type="button" class="btn btn-primary mb-2" on:click=post() value="post" />
+        </form>
+    </div>
+</div>
 
 <script>
 
 function getPage() {
-    // we have access to the dynamic div in layout.html
-    // cause we included the bundle.js of dynamic.html
-    // (bundled main.js inside ssr folder which is inside www/ssr folder)
     return document.getElementById("dynamic").getAttribute("page");
 }
 
 export default {
     data() {
         return {
-            boobox: "",
+            id: "",
+            comments: null
         }
     },
+    oncreate(){
+        this.set({id: `${getPage()}`})
+        const {id} = this.get()
+        fetch(`/comment/getAllRelToAPage/${id}`)
+            .then(response => {
+                    return response.json()
+                })
+            .then(response => {
+                this.set({comments: response})
+            })
+    },
     methods: {
-        boo() {
-            this.set({boobox: `boooo ${getPage()}!`})
+        post() {
+            const {id} = this.get()
+            const elname = document.getElementById("name");
+            const elemail = document.getElementById("email");
+            const elcontent = document.getElementById("content");
+
+            const name = elname.value ? elname.value : null;
+            const email = elemail.value ? elemail.value : null;
+            const content = elcontent.value ? elcontent.value : null;
+            const comment = {
+                "name" : name,
+                "email" : email,
+                "content" : content
+            }
+            fetch("/comment/add", {
+                    method: "POST",
+                    mode: "same-origin",
+                    credentials: "same-origin",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    redirect: "follow",
+                    body: JSON.stringify(comment)
+                }).then(response => {
+                    return response.json()
+                })
+                .then(response => {
+                    console.log(reponse.body)
+                })
+            .catch(err => console.log(err))
+
+
         }
     }
 }

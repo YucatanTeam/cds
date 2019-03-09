@@ -153,7 +153,7 @@ const db = {
                 db.connection.query(`DELETE FROM comment WHERE id = ?`, [id], cb ? cb : e=>e);
             },
             deleteAll(cb){
-                db.connection.query(`DELETE * FROM comment`, [], cb ? cb : e=>e);
+                db.connection.query(`TRUNCATE TABLE comment`, [], cb ? cb : e=>e);
             },
             block(id, cb){
                 db.connection.query(`UPDATE comment SET status = 0 WHERE id = ?`, [id], cb ? cb : e=>e);
@@ -195,8 +195,8 @@ const db = {
                 db.connection.query(`SELECT * FROM page WHERE en_title = ?`, [en_title], cb);                
             },
             add(page, cb){
-                db.connection.query("INSERT INTO page ( tags, route_id, cover, title, en_title, content, en_content, status, comment ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ? )",
-                [page.tags, page.route, page.cover, page.title, page.en_title, page.content, page.en_content, 1, page.comment], cb);
+                db.connection.query("INSERT INTO page ( tags, route_id, cover, title, en_title, content, en_content, status, comment, cuid ) values ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )",
+                [page.tags, page.route, page.cover, page.title, page.en_title, page.content, page.en_content, 1, page.comment, page.cuid], cb);
             },
             update(body, cb){
                
@@ -278,7 +278,7 @@ const db = {
                 db.connection.query(`DELETE FROM apply WHERE cuid = ?`, [cuid], cb ? cb : e=>e);
             },
             deleteAll(cb){
-                db.connection.query(`DELETE * FROM apply`, [], cb ? cb : e=>e);
+                db.connection.query(`TRUNCATE TABLE apply`, [], cb ? cb : e=>e);
             },
             add(info, cb){
                 db.connection.query(`INSERT INTO apply(user_id, description, country, university, 
@@ -327,7 +327,7 @@ const db = {
                 db.connection.query(`DELETE FROM forms WHERE cuid = ?`, [cuid], cb ? cb : e=>e);
             },
             deleteAll(cb){
-                db.connection.query(`DELETE * FROM forms`, [], cb ? cb : e=>e);
+                db.connection.query(`TRUNCATE TABLE forms`, [], cb ? cb : e=>e);
             },
             add(datum, cb){
                 db.connection.query(`INSERT INTO forms(name, iframe, cuid) 
@@ -378,7 +378,7 @@ const db = {
                 db.connection.query(`DELETE FROM freetime WHERE id = ?`, [id], cb ? cb : e=>e);
             },
             deleteAll(cb){
-                db.connection.query(`DELETE * FROM freetime`, [], cb ? cb : e=>e);
+                db.connection.query(`TRUNCATE TABLE freetime`, [], cb ? cb : e=>e);
             },
             add(ft, cb){
                 db.connection.query(`INSERT INTO freetime(date, time, price) 
@@ -429,7 +429,7 @@ const db = {
             db.connection.query(`DELETE FROM reserve WHERE id = ?`, [id], cb ? cb : e=>e);
         },
         deleteAll(cb){
-            db.connection.query(`DELETE * FROM reserve`, [], cb ? cb : e=>e);
+            db.connection.query(`TRUNCATE TABLE reserve`, [], cb ? cb : e=>e);
         },
       },
     }

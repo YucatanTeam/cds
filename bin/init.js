@@ -56,8 +56,6 @@ connection.connect(err => {
         title VARCHAR(100) NOT NULL,
         en_title TEXT NOT NULL,
         cover TEXT,
-        slug TEXT NOT NULL,
-        en_slug TEXT NOT NULL,
         content TEXT NOT NULL,
         en_content TEXT NOT NULL,
         status TINYINT NOT NULL DEFAULT 0,
@@ -68,8 +66,8 @@ connection.connect(err => {
         UNIQUE KEY title_key (title)
         )ENGINE=INNODB;` ,[] ,(err, rows) =>{
         errlog("page")(err, rows)
-        if(!err) connection.query(`INSERT INTO page(route_id, tags, title, en_title, slug, en_slug, content, en_content, cuid) 
-        VALUES(1, "govah,cando,certificate", 'گواه فارسی', 'english govah', 'persian_govah' ,'govah', 'govah e khoshgel', 'nice govah', ?);`, [cuid()], (err, rows) => {
+        if(!err) connection.query(`INSERT INTO page(route_id, tags, title, en_title, content, en_content, cuid) 
+        VALUES(1, "govah,cando,certificate", 'گواه فارسی', 'english govah', 'govah e khoshgel', 'nice govah', ?);`, [cuid()], (err, rows) => {
             errlog("first page")(err, rows)
             if(!err) {
     // ============================================= COMMENT INIT SETUP ===============================================================
