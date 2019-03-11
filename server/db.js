@@ -173,6 +173,9 @@ const db = {
             PAGE API
         */
         page:{
+            edit(title,cb){
+                db.connection.query(`UPDATE page WHERE titlre = ?`,[title],cb);
+            },
             block(id, cb){
                 db.connection.query(`UPDATE body SET status = 0 WHERE id = ?`, [id], cb ? cb : e=>e);
             },

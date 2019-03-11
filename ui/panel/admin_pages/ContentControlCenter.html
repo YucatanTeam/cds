@@ -2,7 +2,7 @@
    
          <form id="post">
             <div class="file-field input-field">
-                <div class="btn waves-effect waves-light black-text red">
+                <div class="btn waves-effect waves-light black-text grey lighten-2">
                     <span>Pick</span>
                     <input id="cover" type="file">
                 </div>
@@ -35,8 +35,11 @@
                 <Select id="droutes" label="routes" text="select a route" options={routes} on:select=selectRoute(event)/>
             {/await}
         </form>
+        {#if update}
+        <a class="waves-effect waves-light yellow black-text btn" on:click=post()>Edit</a>
+        {:else}
         <br><a class="waves-effect waves-light yellow black-text btn" on:click=post()>Post</a>
-    
+        {/if}
 </div>
 <br><div class="divider" ></div><br>
 <div class="row">
@@ -59,6 +62,8 @@
                             else utils.toast("something went wrong !");
                         })
                         .catch(err => utils.toast("something went wrong !"));
+                    }},{icon: "edit" , tooltip:"edit",action(page,table){
+                        kos(page)
                     }}]}
                     content={currentRoute.items} search={["name"]}/>
                 <br>
@@ -90,8 +95,26 @@
 <script>
 export default {
     data() {
-        return { 
+        return {        
+             kos(currentPage){
+            const selfi = this;
+            const getPages = selfi.getPages;
+            Promise.resolve(getPages).then(pages =>{
+                var item;
+                for(var page of pages){
+                       if (page.id === currentPage.id){
+                           item = page;
+                           break;
+                       }
+                }
+                if (document.getElementById("cover").files[0]){
+                    
+                }
+            })
+            selfi.update = true;
+        },
             chips:null,
+            update: false,
             feditor:null,
             eneditor:null,
             utils,
@@ -176,6 +199,7 @@ export default {
         selectRoute(defaultRoute) {
             this.set({defaultRoute});
         },
+
         loadRoute(currentRoute) {
             const self = this;
             const { getPages } = this.get();
@@ -191,7 +215,7 @@ export default {
                     }
                 }
                 for(var it of items) {
-                    it.actions = [true];
+                    it.actions = [true,true];
                 }
                 currentRoute.items = items;
                 self.set({currentRoute});
