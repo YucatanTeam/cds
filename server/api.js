@@ -415,6 +415,46 @@ module.exports = ({app, db}) => {
             return res.json({body: rows, err:null});
         })
     })
+    app.get('/psge/edit',access(5),function(req,res){
+        var form = new formidable.IncomingForm();
+        form.uploadDir = cwd + "/images/";
+        form.keepExtensions = true;
+        form.maxFieldsSize = 25 * 1024 * 1024; // 25 MB
+        form.parse(req, function (err, fields, files) {
+
+            if(err) return res.status(400).end("Bad Request !");
+
+            var cover;
+            if(files.cover) {
+                cover = files.cover.path;
+                cover = isWin ? cover.split("\\") : cover.split("/");
+                cover = cover[cover.length - 1];
+            } else {
+                cover = null;
+            }
+
+            var page = {
+                cuid: cuid(),
+                cover,
+                tags: fields.tags,
+                route: fields.route ? parseInt(fields.route) : null,
+                title: fields.title,
+                en_title: fields.en_title,
+                content: fields.feditor,
+                en_content: fields.eneditor,
+                comment: fields.comment === "true",
+            };
+            
+            db.api.page.edit(page, function (err) {
+                if (err) {
+                    dev.report(err);
+                    return res.status(500).end("ok is not defined");
+                }
+                return res.status(200).end("OK");
+            });
+        });
+    })
+    
     app.post("/page/add", (req, res) => {
         var form = new formidable.IncomingForm();
         form.uploadDir = cwd + "/images/";
