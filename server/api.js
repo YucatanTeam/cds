@@ -63,7 +63,9 @@ module.exports = ({app, db}) => {
             const {head, html} = Layout.render({
                 page: reqpage,
                 title: reqpage,
-                tags: row.tags,
+                metatags: row.tags,
+                tags: row.tags.split(","),
+                created: row.created_at,
                 id: row.id,
                 comment: row.comment,
                 content: row.content,
@@ -91,7 +93,9 @@ module.exports = ({app, db}) => {
                 en_title: reqpage,
                 en_content: row.en_content,
                 id: row.id,
-                tags: row.tags,
+                metatags: row.tags,
+                tags: row.tags.split(","),
+                created: row.created_at,
                 comment: row.comment,
                 cover: row.cover,
             });
@@ -556,7 +560,7 @@ module.exports = ({app, db}) => {
         })
     })
 
-    app.post('/comment/add', access(5), (req, res)=>{
+    app.post('/comment/add', (req, res)=>{
         for(var i in req.body){
             if(req.body[i] == null) {
                 delete req.body[i] 
@@ -569,9 +573,9 @@ module.exports = ({app, db}) => {
                 content : req.body.content,
                 name : req.body.name,
                 email : req.body.email,
-                post_id : req.body.post_id
+                page_id : req.body.page_id
             }
-        
+            
         db.api.comment.add(newcomment, (err, row)=>{
             if(err) {
                 dev.report(err);

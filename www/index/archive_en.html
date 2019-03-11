@@ -7,6 +7,8 @@
     <title>cds magazine</title>
     <link rel="stylesheet" type="text/css" href="/public/css/index.css">
     <link rel="icon" href="/public/img/cds.ico">
+    <meta name="description" content="موسسه اعزام دانشجو کندو دانش آوران سام به استرالیا کانادا و نیوزلند" />
+    <meta name="keywords" content="موسسه اعزام دانشجو, موسسه اعزام دانشجو کندو, کندو, دانش آوران سام, سام, استرالیا, نیوزلند, کانادا, cando,candoo, اعزام دانشجو, بابل، کندو بابل" />
     <link href="/public/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/public/css/bootstrap.css">
     <link href="/public/css/scrolling-nav.css" rel="stylesheet">
@@ -20,7 +22,7 @@ document.addEventListener("DOMContentLoaded", e =>
         var body = res.body;
         var img = new Image();
         for(var i of body){
-            img.src = i.cover;
+            img.src = '/imgsrc/'+i.cover;
             var div1 = document.createElement("div");//card body
             var div0 = document.createElement("div");//card
             var h5 = document.createElement("h5");
@@ -198,7 +200,7 @@ document.addEventListener("DOMContentLoaded", e =>
     <div style="font-size:0.7vw; " class=" font-weight-bold">
         <p style="color:#6790CF;margin-bottom: 0.1%" >کلیه حقوق مرتبط به این وبسایت متعلّق به موسسه اعزام دانشجو کندو دانش آوران سام می‌باشد</p>
         <p style="color:#6790CF;margin-bottom: 0.1%" >Copyright©2015, All Rights Reserved</p>
-        <span style="color:#6790CF" >Developed by : <a style="font-size:0.9vw;color:white;" target="_blank" href="/en/content/contact-us">SHIFOWO</a></span></div>
+        <span style="color:#6790CF" >Developed by : <a style="font-size:0.9vw;color:white;" target="_blank" href="/en/content/contact-us">COLDSTOP</a></span></div>
 </div>
 
 

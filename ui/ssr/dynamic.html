@@ -2,12 +2,27 @@
 
 <div id="comments" class="container text-center en border border-primary rounded" style="font-size:1vw;color:black;margin-top: 5%;margin-bottom: 5%;direction: rtl;padding: 2%">
 
-{comments}
-
-
+{#await getcomments}
+        <Loading big/>
+{:then comments}
+    {#each comments as cmnt}
+        {#if cmnt.status === 1}
+            <div class="card border-primary mb-3" style="max-width: 18rem;">
+                <div class="card-header">{cmnt.name} - {cmnt.email}</div>
+                <div class="card-body">
+                    <p class="card-text">{cmnt.content}</p>
+                </div>
+            </div>
+            <hr>
+        {/if}
+    {/each}
+{:catch err}
+    <p>Error {err.message}</p>
+{/await}
 
 </div>
-    <div class="card" style="width: 18rem;">
+
+<div class="card" style="width: 18rem;">
     <div class="card-body">
         <form class="form-inline">
             <div class="form-group mb-2">
@@ -36,24 +51,18 @@ function getPage() {
 export default {
     data() {
         return {
-            id: "",
-            comments: null
+            getcomments:
+                fetch(`/comment/getAllRelToAPage/${getPage()}`)
+                    .then(response => {
+                            return response.json()
+                        })
+                    .then(response => {
+                        return response.body
+                    })
         }
-    },
-    oncreate(){
-        this.set({id: `${getPage()}`})
-        const {id} = this.get()
-        fetch(`/comment/getAllRelToAPage/${id}`)
-            .then(response => {
-                    return response.json()
-                })
-            .then(response => {
-                this.set({comments: response})
-            })
     },
     methods: {
         post() {
-            const {id} = this.get()
             const elname = document.getElementById("name");
             const elemail = document.getElementById("email");
             const elcontent = document.getElementById("content");
@@ -61,10 +70,14 @@ export default {
             const name = elname.value ? elname.value : null;
             const email = elemail.value ? elemail.value : null;
             const content = elcontent.value ? elcontent.value : null;
-            const comment = {
+            if(!name || !email || !content){
+                alert("لطفا تمامی فیلد هارا پر کنید!")
+            } else{
+                const comment = {
                 "name" : name,
                 "email" : email,
-                "content" : content
+                "content" : content,
+                "page_id" : getPage()
             }
             fetch("/comment/add", {
                     method: "POST",
@@ -75,16 +88,20 @@ export default {
                     },
                     redirect: "follow",
                     body: JSON.stringify(comment)
-                }).then(response => {
-                    return response.json()
+                }).then(res => {
+                    if(res.status != 200){
+                        alert("لطفا برای ثبت پیام دوباره تلاش کنید!")
+                    } else{
+                        alert("پیام شما بعد از تایید توسط ادمین نشان داده خواهد شد.")
+                    }
                 })
-                .then(response => {
-                    console.log(response.body)
-                })
-            .catch(err => console.log(err))
-
-
+            .catch(err => alert("خطا در سرور!"))
+            }
+            
         }
+    },
+    components:{
+        Loading: "../tags/Loading.html",
     }
 }
 </script>

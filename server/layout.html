@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <link href="/public/css/icon.css" rel="stylesheet">
     <meta name="description" content="موسسه اعزام دانشجو کندو دانش آوران سام به استرالیا کانادا و نیوزلند" />
-    <meta name="keywords" content={tags} />
+    <meta name="keywords" content={metatags} />
     <link type="text/css" rel="stylesheet" href="/ssr/bundle.css"  media="screen,projection"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -122,6 +122,9 @@
 <div id="p" class="container text-center en border border-primary rounded" style="font-size:1vw;color:black;margin-top: 5%;margin-bottom: 5%;direction: rtl;padding: 2%">
     {@html content}
     <hr>
+    {#each tags as t}
+        <span class="badge badge-pill badge-light"><a href="/content/{page}">{t}</a></span>
+    {/each}
     {#if comment}
         <div id="dynamic" page="{id}"></div> <!-- target of main.js to render the dynamic.html content here : see main.js in ui/ssr folder  -->
         <div><script src="/ssr/bundle.js"></script></div> <!-- bundled js of dynamic.html main.js -->
@@ -181,7 +184,7 @@
                 page: "",
                 id: null,
                 comment: false,
-                cover: null,
+                cover: null
             }
         }
     }
