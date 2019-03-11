@@ -144,8 +144,10 @@
 
 <div id="p" class="container text-center en border border-primary rounded" style="font-size:1vw;color:black;margin-top: 5%;margin-bottom: 5%;direction: rtl;padding: 2%">
     {@html en_content}
-    <!-- TODO : add tags links for seo -->
     <hr>
+    {#each tags as t}
+        <span class="badge badge-pill badge-light"><a href="/content/{page}">{t}</a></span>
+    {/each}
     {#if comment}
         <div id="dynamic" page="{id}"></div> <!-- target of main.js to render the dynamic.html content here : see main.js in ui/ssr folder  -->
         <div><script src="/ssr/bundle.js"></script></div> <!-- bundled js of dynamic.html main.js -->
