@@ -1,8 +1,11 @@
 <svelte:head>
-    <title>{title}</title>
+    <title>{en_title}</title>
     <meta name="robots" content="index,follow" />
     <meta charset="UTF-8">
     <link href="/public/css/icon.css" rel="stylesheet">
+    <meta name="description" content="موسسه اعزام دانشجو کندو دانش آوران سام به استرالیا کانادا و نیوزلند" />
+    <meta name="keywords" content={tags} />
+    <link rel="icon" href="/public/img/cds.ico">
     <link type="text/css" rel="stylesheet" href="/ssr/bundle.css"  media="screen,projection"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
@@ -64,7 +67,7 @@
             </button>
             <div class="dropdown-menu bg-dark text-center" aria-labelledby="dd" >
                 <button class=" nav-link dropdown-item bg-info "  >ENGLISH</button>
-                <a class="text-light  nav-link" href="index.html"  target="_self" >فارسی</a>
+                <a class="text-light  nav-link" href="/index.html"  target="_self" >فارسی</a>
             </div>
         </div>
 
@@ -123,14 +126,12 @@
     <div    class="container fa " >
         <div class="row" style=" padding: 20px;background-color: rgba(0,0,0,0.4)  ; margin-top: 25% ;">
             <div style="width: 50%" class="col-md-6 ">
-                <div ><img src="/public/img/cds.png" class="rounded float-right" width="300" height = "300"></div>
-                <div style="text-align: center;" ><span style="font-size:3vw;color: #1F1F39;text-shadow: 3px 3px 3px #29ABE2;font-weight: bold;">We Build Careers</span>
-                </div>
+                <div><img src="/public/img/cds.png" class="rounded float-right" width="300" height = "300"></div>
             </div>
             <div style="width: 50%" class="col-md-6 text-right">
                 <div class="border-right " style=" color: white;font-size: 1.2vw;direction: rtl;margin-top: 5%;padding-right: 3%">
                     <p style="font-size:1.3vw;color:white;margin-top: 15%;margin-bottom: 5%;direction: rtl">
-                        <a class="font-weight-bold text-light js-scroll-trigger nav-link " style="margin-top: 3%;"   href="#p"> {title} </a>
+                        <a class="font-weight-bold text-light js-scroll-trigger nav-link " style="margin-top: 3%;"   href="#p"> {en_title} </a>
                     </p>
                 </div>
             </div>
@@ -143,13 +144,15 @@
 
 <div id="p" class="container text-center en border border-primary rounded" style="font-size:1vw;color:black;margin-top: 5%;margin-bottom: 5%;direction: rtl;padding: 2%">
     {@html en_content}
+    <hr>
+    {#each tags as t}
+        <span class="badge badge-pill badge-light"><a href="/content/{page}">{t}</a></span>
+    {/each}
+    {#if comment}
+        <div id="dynamic" page="{id}"></div> <!-- target of main.js to render the dynamic.html content here : see main.js in ui/ssr folder  -->
+        <div><script src="/ssr/bundle.js"></script></div> <!-- bundled js of dynamic.html main.js -->
+    {/if}
 </div>
-
-{#if comment}
-    <h5>Comments :</h5>
-    <div id="dynamic" page="{id}"></div> <!-- target of main.js to render the dynamic.html content here : see main.js in ui/ssr folder  -->
-    <div><script src="/ssr/bundle.js"></script></div> <!-- bundled js of dynamic.html main.js -->
-{/if}
 
 
 
@@ -200,8 +203,8 @@
     export default {
         data() {
             return {
-                content: "<p>No content</>",
-                title: "Document",
+                en_content: "<p>No content</>",
+                en_title: "Document",
                 page: "",
                 id: null,
                 comment: false,

@@ -1,5 +1,42 @@
 <!DOCTYPE html>
 <html>
+<script>
+            document.addEventListener("DOMContentLoaded",e=>
+                    fetch('form/all', {
+                            method: "GET",
+                            mode: "same-origin",
+                            credentials: "same-origin",
+                            headers: {
+                                "Content-Type": "application/x-www-form-urlencoded"
+                            },
+                            redirect: "follow",
+                        })
+                        .then(response => {
+                            if(response.redirected) {
+                                window.location.href = response.url;
+                            }
+                            return response
+                        })
+                        .then(response => {
+                            var contentType = response.headers.get("content-type");
+                            if(contentType && contentType.includes("application/json")) {
+                                return response.json().then(json => ({status: response.status, body: json.body}));
+                            }
+                            return {status: response.status, body: null};
+                        })
+                        .then(response => {
+                            var forms = document.getElementById("forms")
+                            for(var i of response.body){
+                                
+                                forms.innerHTML = i.iframe
+                            }
+                        })
+                        .catch(err => {
+                            var forms = document.getElementById("forms")
+                                forms.innerHTML = "خطا در سرور!"
+                        })
+        )
+</script>
 
 <head>
     <meta charset="UTF-8">
@@ -7,47 +44,11 @@
     <title>فرم های cds</title>
     <link rel="stylesheet" type="text/css" href="/public/css/index.css">
     <link rel="icon" href="/public/img/cds.ico">
+    <meta name="description" content="موسسه اعزام دانشجو کندو دانش آوران سام به استرالیا کانادا و نیوزلند" />
+    <meta name="keywords" content="موسسه اعزام دانشجو, موسسه اعزام دانشجو کندو, کندو, دانش آوران سام, سام, استرالیا, نیوزلند, کانادا, cando,candoo, اعزام دانشجو, بابل، کندو بابل" />
     <link href="/public/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/public/css/bootstrap.css">
     <link href="/public/css/scrolling-nav.css" rel="stylesheet">
-    <script>
-        fetch('form/all', {
-            method: "GET",
-            mode: "same-origin",
-            credentials: "same-origin",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            redirect: "follow",
-        })
-        .then(response => {
-            if(response.redirected) {
-                window.location.href = response.url;
-            }
-            return response
-        })
-        .then(response => {
-            var contentType = response.headers.get("content-type");
-            if(contentType && contentType.includes("application/json")) {
-                return response.json().then(json => ({status: response.status, body: json.body}));
-            }
-            return {status: response.status, body: null};
-        })
-        .then(response => {
-            var forms = document.getElementById("forms")
-            for(var i of response.body){
-                
-                forms.innerHTML = i.iframe
-            }
-        })
-        .catch(err => {
-            var forms = document.getElementById("forms")
-                forms.innerHTML = "خطا در سرور!"
-        });
-
-    </script>
-
-
     <style>
         .fa {
 

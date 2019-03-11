@@ -2,6 +2,7 @@ const fs = require("fs");
 const cuid = require("cuid"); // use this to create a cuid in insertaion ops
 require('svelte/ssr/register'); // for svelte server side rendering
 const Layout = require('./layout.html');
+const enLayout = require('./en_layout.html');
 const express = require('express')
 const passport = require('passport');
 const formidable = require('formidable');
@@ -62,7 +63,9 @@ module.exports = ({app, db}) => {
             const {head, html} = Layout.render({
                 page: reqpage,
                 title: reqpage,
-                tags: row.tags,
+                metatags: row.tags,
+                tags: row.tags.split(","),
+                created: row.created_at,
                 id: row.id,
                 comment: row.comment,
                 content: row.content,
@@ -85,12 +88,14 @@ module.exports = ({app, db}) => {
                 return res.redirect("/404.html");
             }
             const row = rows[0];
-            const {head, html} = Layout.render({
+            const {head, html} = enLayout.render({
                 page: reqpage,
                 en_title: reqpage,
                 en_content: row.en_content,
                 id: row.id,
-                tags: row.tags,
+                metatags: row.tags,
+                tags: row.tags.split(","),
+                created: row.created_at,
                 comment: row.comment,
                 cover: row.cover,
             });
@@ -414,6 +419,46 @@ module.exports = ({app, db}) => {
             return res.json({body: rows, err:null});
         })
     })
+    app.get('/psge/edit',access(5),function(req,res){
+        var form = new formidable.IncomingForm();
+        form.uploadDir = cwd + "/images/";
+        form.keepExtensions = true;
+        form.maxFieldsSize = 25 * 1024 * 1024; // 25 MB
+        form.parse(req, function (err, fields, files) {
+
+            if(err) return res.status(400).end("Bad Request !");
+
+            var cover;
+            if(files.cover) {
+                cover = files.cover.path;
+                cover = isWin ? cover.split("\\") : cover.split("/");
+                cover = cover[cover.length - 1];
+            } else {
+                cover = null;
+            }
+
+            var page = {
+                cuid: cuid(),
+                cover,
+                tags: fields.tags,
+                route: fields.route ? parseInt(fields.route) : null,
+                title: fields.title,
+                en_title: fields.en_title,
+                content: fields.feditor,
+                en_content: fields.eneditor,
+                comment: fields.comment === "true",
+            };
+            
+            db.api.page.edit(page, function (err) {
+                if (err) {
+                    dev.report(err);
+                    return res.status(500).end("ok is not defined");
+                }
+                return res.status(200).end("OK");
+            });
+        });
+    })
+    
     app.post("/page/add", (req, res) => {
         var form = new formidable.IncomingForm();
         form.uploadDir = cwd + "/images/";
@@ -555,7 +600,7 @@ module.exports = ({app, db}) => {
         })
     })
 
-    app.post('/comment/add', access(5), (req, res)=>{
+    app.post('/comment/add', (req, res)=>{
         for(var i in req.body){
             if(req.body[i] == null) {
                 delete req.body[i] 
@@ -568,9 +613,9 @@ module.exports = ({app, db}) => {
                 content : req.body.content,
                 name : req.body.name,
                 email : req.body.email,
-                post_id : req.body.post_id
+                page_id : req.body.page_id
             }
-        
+            
         db.api.comment.add(newcomment, (err, row)=>{
             if(err) {
                 dev.report(err);
