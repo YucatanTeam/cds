@@ -1,3 +1,9 @@
 node_modules/
 package-lock.json
 www/*/*.map
+avatar/*
+!avatar/.avatar
+images/*
+!images/.image
+www/*/*.js
+www/*/*.css
