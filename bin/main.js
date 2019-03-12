@@ -38,6 +38,7 @@ const PORT = process.env.PORT || process.argv[2] || 8080; // we'll use this in p
 const SECRET = process.env.SECRET || "force"; // we'll use this in production
 
 module.exports = p => {
+    console.log("plane B");
     if(p) {
         app.listen()
         console.log(`server is running on http://127.0.0.1:/`)

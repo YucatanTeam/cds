@@ -1,1 +1,1 @@
-require("./bin/main.js")(true)
+require("./bin/main.js")(false)

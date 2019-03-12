@@ -419,7 +419,7 @@ module.exports = ({app, db}) => {
             return res.json({body: rows, err:null});
         })
     })
-    app.get('/psge/edit',access(5),function(req,res){
+    app.get('/page/edit',access(5),function(req,res){
         var form = new formidable.IncomingForm();
         form.uploadDir = cwd + "/images/";
         form.keepExtensions = true;

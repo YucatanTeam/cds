@@ -2,7 +2,7 @@
    
          <form id="post">
             <div class="file-field input-field">
-                <div class="btn waves-effect waves-light black-text grey lighten-2">
+                <div class="btn waves-effect waves-light yellow black-text">
                     <span>Pick</span>
                     <input id="cover" type="file">
                 </div>
@@ -36,7 +36,8 @@
             {/await}
         </form>
         {#if update}
-        <a class="waves-effect waves-light yellow black-text btn" on:click=post()>Edit</a>
+        <a class="waves-effect waves-light yellow black-text btn" on:click=edit()>Edit</a>
+        <a class="waves-effect waves-light blue-grey darken-4 btn" on:click=cancel()>Cancel</a>
         {:else}
         <br><a class="waves-effect waves-light yellow black-text btn" on:click=post()>Post</a>
         {/if}
@@ -63,7 +64,7 @@
                         })
                         .catch(err => utils.toast("something went wrong !"));
                     }},{icon: "edit" , tooltip:"edit",action(page,table){
-                        kos(page)
+                        editPage(page)
                     }}]}
                     content={currentRoute.items} search={["name"]}/>
                 <br>
@@ -95,8 +96,10 @@
 <script>
 export default {
     data() {
+        
         return {        
-             kos(currentPage){
+            editcontent: null,//TODO khashayar dadashs boro inaro az svelete estefade kon baadan
+            editPage(currentPage){
             const selfi = this;
             const getPages = selfi.getPages;
             Promise.resolve(getPages).then(pages =>{
@@ -106,13 +109,33 @@ export default {
                            item = page;
                            break;
                        }
+                
                 }
-                if (document.getElementById("cover").files[0]){
-                    
+                console.log(item);
+                
+                document.getElementById("ftitle").value = item.title;
+                selfi.comp.get().feditor.setData(item.content);
+                document.getElementById("title").value = item.en_title;
+                selfi.comp.get().eneditor.setData(item.en_content);
+                var tags = [];
+                if(item.tags != ""){
+                    tags = item.tags.split(" ");
+                    for(var i of tags){
+                        selfi.comp.chips.addChips({
+                            tag:`${i}`
+                            
+                            
+                        })
+                        console.log(i);
+                    }
                 }
+            
+            
             })
-            selfi.update = true;
+            selfi.comp.set({update:true});
         },
+            
+            comp:null,
             chips:null,
             update: false,
             feditor:null,
@@ -151,15 +174,56 @@ export default {
         }
     },
     oncreate(){
+        var self = this
         var elems = document.querySelectorAll('.chips');
         var instances = M.Chips.init(elems,{
             data:[]
         });
         this.set({
-            chips:instances
+            chips:instances,
+            comp : self
         })
     },
     methods: {
+        cancel(){
+            utils.reload(); 
+        },
+            edit(){
+            var chipsTag = this.get().chips[0].chipsData;
+            var s=[];
+            for (var i of chipsTag){
+                    s.push(i.tag)
+            }
+            s = s.join(",");
+            var formdata= new FormData();
+            if(document.getElementById("cover").files[0])
+            formdata.append("cover", document.getElementById("cover").files[0]);
+            formdata.append("title",`${document.getElementById("ftitle").value}`);
+            formdata.append("en_title",`${document.getElementById("title").value}`);
+            formdata.append("telegram",`${document.getElementById("telegram").checked}`)
+            formdata.append("comment",`${document.getElementById("comments").checked}`)
+            formdata.append("tags",`${document.getElementById("tags").value}`)
+            formdata.append("feditor",`${this.get().feditor.getData()}`);
+            formdata.append("eneditor",`${this.get().eneditor.getData()}`);
+            formdata.append("tags",s);
+            const dr = this.get().defaultRoute;
+            if(dr)
+                formdata.append("route", dr.id);
+            fetch('/page/edit',{
+                method: "GET",
+                mode: "same-origin",
+                redirect: "follow",
+                body: formdata
+            }).then(res=>{
+                if(res.status != 200)
+                    utils.toast("err");
+                else{
+                    utils.toast("Sent");
+                    utils.reload();
+                }
+                
+            });
+        },
         post(){
             var chipsTag = this.get().chips[0].chipsData;
             var s=[];
