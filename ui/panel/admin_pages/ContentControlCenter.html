@@ -117,24 +117,15 @@ export default {
                 selfi.comp.get().feditor.setData(item.content);
                 document.getElementById("title").value = item.en_title;
                 selfi.comp.get().eneditor.setData(item.en_content);
-                var tags = [];
-                if(item.tags != ""){
-                    tags = item.tags.split(" ");
-                    for(var i of tags){
-                        selfi.comp.chips.addChips({
-                            tag:`${i}`
-                            
-                            
-                        })
-                        console.log(i);
-                    }
-                }
+         
+                selfi.comp.set({itemId: item.id})
             
             
             })
             selfi.comp.set({update:true});
-        },
             
+        },
+            itemId:null,
             comp:null,
             chips:null,
             update: false,
@@ -206,11 +197,12 @@ export default {
             formdata.append("feditor",`${this.get().feditor.getData()}`);
             formdata.append("eneditor",`${this.get().eneditor.getData()}`);
             formdata.append("tags",s);
+            formdata.append("id",this.get().itemId);
             const dr = this.get().defaultRoute;
             if(dr)
                 formdata.append("route", dr.id);
             fetch('/page/edit',{
-                method: "GET",
+                method: "POST",
                 mode: "same-origin",
                 redirect: "follow",
                 body: formdata

@@ -419,7 +419,7 @@ module.exports = ({app, db}) => {
             return res.json({body: rows, err:null});
         })
     })
-    app.get('/page/edit',access(5),function(req,res){
+    app.post('/page/edit',access(5),function(req,res){
         var form = new formidable.IncomingForm();
         form.uploadDir = cwd + "/images/";
         form.keepExtensions = true;
@@ -447,6 +447,7 @@ module.exports = ({app, db}) => {
                 content: fields.feditor,
                 en_content: fields.eneditor,
                 comment: fields.comment === "true",
+                id:fields.id
             };
             
             db.api.page.edit(page, function (err) {
