@@ -40,6 +40,7 @@ const SECRET = process.env.SECRET || "force"; // we'll use this in production
 module.exports = p => {
     console.log("plane B");
     if(p) {
+        console.log(" adab");
         app.listen()
         console.log(`server is running on http://127.0.0.1:/`)
     } else {
