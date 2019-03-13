@@ -1,14 +1,12 @@
 var request = require('request');
-
-module.export = function bot(Photo,Caption){
+const TBOTURL = process.env.TBOTURL || 'https://api.telegram.org/bot740062919:AAFzZCd9oqNpwVr9X9jF1j8XTECYiEwF5Ck/sendPhoto';
+module.exports = function bot(Photo,Caption, cb){
     request({
         method:"POST",
-        url:'https://api.telegram.org/bot740062919:AAFzZCd9oqNpwVr9X9jF1j8XTECYiEwF5Ck/sendPhoto',
+        url: TBOTURL,
         formData:{
             photo:`${Photo}`,
             caption:`${Caption}`
         }
-    },function(err,res,body){
-        if(err) throw err
-    })
+    },cb) // cb(err, res, body)
 }

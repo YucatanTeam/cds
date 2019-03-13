@@ -36,16 +36,17 @@ db.connection.connect(err => {
 const PID = process.pid;
 const PORT = process.env.PORT || process.argv[2] || 8080; // we'll use this in production
 const SECRET = process.env.SECRET || "force"; // we'll use this in production
-
+const TBOTURL = process.env.TBOTURL || 'https://api.telegram.org/bot740062919:AAFzZCd9oqNpwVr9X9jF1j8XTECYiEwF5Ck/sendPhoto';
+const URL = process.env.URL || "http://127.0.0.1";
 module.exports = p => {
     console.log("plane B");
     if(p) {
         console.log(" adab");
         app.listen()
-        console.log(`server is running on http://127.0.0.1:/`)
+        console.log(`server is running on ${URL}/`)
     } else {
         app.listen(PORT)
-        console.log(`server is running on http://127.0.0.1:${PORT}/`)
+        console.log(`server is running on ${URL}:${PORT}/`)
     }
 }
 

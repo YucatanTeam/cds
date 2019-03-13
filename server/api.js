@@ -6,6 +6,7 @@ const enLayout = require('./en_layout.html');
 const express = require('express')
 const passport = require('passport');
 const formidable = require('formidable');
+const bot = require("./Tbot.js");
 const isWin = process.platform === "win32";
 // const sharp = require('sharp');
 function sharp(file) {
@@ -523,6 +524,19 @@ module.exports = ({app, db}) => {
                 if (err) {
                     dev.report(err);
                     return res.status(500).end("Internal Server Error !");
+                }
+                if(fields.telegram === "true") {
+                    bot(
+                        `${process.env.URL}/imgsrc/${page.cover}`,
+                        `${process.env.URL}/content/${page.title.split(" ").join("-")}`,
+                        (err, response, body) => {
+                            if(err) {
+                                dev.report(err);
+                                return res.status(500).end("Internal Server Error !");
+                            }
+                            console.log(response, body);
+                        }
+                    )
                 }
                 return res.status(200).end("OK");
             });
