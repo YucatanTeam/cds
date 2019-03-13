@@ -110,7 +110,7 @@ module.exports = ({app, db}) => {
     })
     
 
-    app.post("/ckeditor", (req, res) => {
+    app.post("/ckeditor", access(3), (req, res) => {
         var form = new formidable.IncomingForm();
         form.uploadDir = cwd + "/images/";
         form.keepExtensions = true;
@@ -412,7 +412,7 @@ module.exports = ({app, db}) => {
             return res.json({body: rows, err:null});
         })
     })
-    app.post("/route/:route/item/add", (req, res) => {
+    app.post("/route/:route/item/add", access(3), (req, res) => {
         db.api.page.setRoute(req.body.page, req.params.route, (err, rows) => {
             if(err) {
                 dev.report(err);
@@ -430,7 +430,7 @@ module.exports = ({app, db}) => {
             res.json({body: row,err:null})
         });
     });
-    app.post("/page/:page/route/remove", (req, res) => {
+    app.post("/page/:page/route/remove", access(3), (req, res) => {
         db.api.page.removeRoute(req.params.page, (err, rows) => {
             if(err) {
                 dev.report(err);
@@ -489,7 +489,7 @@ module.exports = ({app, db}) => {
         });
     })
     
-    app.post("/page/add", (req, res) => {
+    app.post("/page/add", access(3), (req, res) => {
         var form = new formidable.IncomingForm();
         form.uploadDir = cwd + "/images/";
         form.keepExtensions = true;
