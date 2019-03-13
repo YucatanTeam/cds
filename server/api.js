@@ -109,6 +109,35 @@ module.exports = ({app, db}) => {
         res.sendFile(cwd + "/images/" + req.params.image);
     })
     
+
+    app.post("/ckeditor", (req, res) => {
+        var form = new formidable.IncomingForm();
+        form.uploadDir = cwd + "/images/";
+        form.keepExtensions = true;
+        form.maxFieldsSize = 25 * 1024 * 1024; // 25 MB
+        form.parse(req, function (err, fields, files) {
+            if(err) return res.status(400).json({
+                error: {
+                    message: "Bad Request !"
+                }
+            });
+
+            var cover;
+            if(files.upload) {
+                cover = files.upload.path;
+                cover = isWin ? cover.split("\\") : cover.split("/");
+                cover = cover[cover.length - 1];
+            } else {
+                cover = null;
+            }
+            
+            return res.json({
+                url: `/imgsrc/${cover}`
+            });
+        });
+    })
+
+
     /*
         use res.status(code).end("http message") to send errors to client
         use res.json({body: ...}) to send data to client
