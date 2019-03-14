@@ -13,7 +13,7 @@
     <link href="/public/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="/public/css/bootstrap.css">
     <link href="/public/css/scrolling-nav.css" rel="stylesheet">
-
+    <script src="/public/js/moment.js"></script>
 
     <style>
         .fa {
@@ -125,6 +125,8 @@
     {#each tags as t}
         <span class="badge badge-pill badge-light"><a href="/content/{page}">{t}</a></span>
     {/each}
+    <br>
+    <small class="text-muted" dir="ltr">{created} پست شده حدود </small>
     {#if comment}
         <div id="dynamic" page="{id}"></div> <!-- target of main.js to render the dynamic.html content here : see main.js in ui/ssr folder  -->
         <div><script src="/ssr/bundle.js"></script></div> <!-- bundled js of dynamic.html main.js -->

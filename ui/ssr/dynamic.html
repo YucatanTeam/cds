@@ -1,26 +1,26 @@
 
 
-<div id="comments" class="container text-center en border border-primary rounded" style="font-size:1vw;color:black;margin-top: 5%;margin-bottom: 5%;direction: rtl;padding: 2%">
 
 {#await getcomments}
         <Loading big/>
 {:then comments}
-    {#each comments as cmnt}
-        {#if cmnt.status === 1}
-            <div class="card border-primary mb-3" style="max-width: 18rem;">
-                <div class="card-header">{cmnt.name} - {cmnt.email}</div>
-                <div class="card-body">
-                    <p class="card-text">{cmnt.content}</p>
+    <div id="comments" class="container text-center en border border-primary rounded" style="font-size:1vw;color:black;margin-top: 5%;margin-bottom: 5%;direction: rtl;padding: 2%">
+        {#each comments as cmnt}
+            {#if cmnt.status === 1}
+                <div class="card border-primary mb-3" style="max-width: 18rem;">
+                    <div class="card-header">{cmnt.name} - {cmnt.email}</div>
+                    <div class="card-body">
+                        <p class="card-text">{cmnt.content}</p>
+                    </div>
                 </div>
-            </div>
-            <hr>
-        {/if}
-    {/each}
+                <hr>
+            {/if}
+        {/each}
+    </div>
 {:catch err}
     <p>Error {err.message}</p>
 {/await}
 
-</div>
 
 <div class="card" style="width: 18rem;">
     <div class="card-body">

@@ -2,6 +2,7 @@ const fs = require("fs");
 const cuid = require("cuid"); // use this to create a cuid in insertaion ops
 require('svelte/ssr/register'); // for svelte server side rendering
 const Layout = require('./layout.html');
+const moment = require('../www/public/js/moment')
 const enLayout = require('./en_layout.html');
 const express = require('express')
 const passport = require('passport');
@@ -66,7 +67,7 @@ module.exports = ({app, db}) => {
                 title: reqpage,
                 metatags: row.tags,
                 tags: row.tags.split(","),
-                created: row.created_at,
+                created: moment(row.created_at).fromNow(),
                 id: row.id,
                 comment: row.comment,
                 content: row.content,
@@ -96,7 +97,7 @@ module.exports = ({app, db}) => {
                 id: row.id,
                 metatags: row.tags,
                 tags: row.tags.split(","),
-                created: row.created_at,
+                created: moment(row.created_at).fromNow(),
                 comment: row.comment,
                 cover: row.cover,
             });
@@ -468,10 +469,9 @@ module.exports = ({app, db}) => {
             }
 
             var page = {
-                cuid: cuid(),
                 cover,
                 tags: fields.tags,
-                route: fields.route ? parseInt(fields.route) : null,
+                route_id: fields.route ? parseInt(fields.route) : null,
                 title: fields.title,
                 en_title: fields.en_title,
                 content: fields.feditor,
@@ -484,6 +484,19 @@ module.exports = ({app, db}) => {
                 if (err) {
                     dev.report(err);
                     return res.status(500).end("ok is not defined");
+                }
+                if(fields.telegram === "true") {
+                    bot(
+                        `${process.env.URL}/imgsrc/${page.cover}`,
+                        `${process.env.URL}/content/${page.title.split(" ").join("-")}`,
+                        (err, response, body) => {
+                            if(err) {
+                                dev.report(err);
+                                return res.status(500).end("Internal Server Error !");
+                            }
+                            console.log(response, body);
+                        }
+                    )
                 }
                 return res.status(200).end("OK");
             });

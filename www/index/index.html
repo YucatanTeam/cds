@@ -16,13 +16,13 @@
     }).then(res => {
         var div = document.getElementById("mainDiv");
         var title = "";
-        var img = new Image();
 
 
         var i = res.body.length - 1;
         var j = 0;
 
         while (i >= 0 && j < 5) {
+            var img = new Image();
             j++;
             if (j >= 5) { break; }
             var div2 = document.createElement("div");

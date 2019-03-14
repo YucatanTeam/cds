@@ -7,39 +7,60 @@ document.addEventListener("DOMContentLoaded", e =>
         else{return res.json();} 
     }).then(res=>{
         var div = document.getElementById("posts");//posts
+        var cardeck = document.createElement("div") // main card-deck
+        cardeck.setAttribute("class","card-deck"); // card-deck
+        div.appendChild(cardeck)
         var body = res.body;
-        var img = new Image();
-        for(var i of body){
-            img.src = '/imgsrc/'+i.cover;
-            var div1 = document.createElement("div");//card body
-            var div0 = document.createElement("div");//card
-            var h5 = document.createElement("h5");
-            var a = document.createElement("a");
-            img.setAttribute("class","card-img-top");
-            div.appendChild(img);
-            div1.setAttribute("class","card-body");
-            h5.setAttribute("class","card-title");
-            a.setAttribute("href",`/content/${i.title.split(" ").join("-")}`);
-            div0.setAttribute("class","card");
-            div0.setAttribute("style","width: 18rem");
-            var p2 = document.createTextNode("ادامه مطلب");
-            var p = document.createTextNode(`${i.title}`);
-            a.appendChild(p2)
-            h5.appendChild(p);
-            a.setAttribute("class","btn btn-primary");
-            div1.appendChild(h5);
-            div1.appendChild(a);
-            div0.appendChild(img);
-            div0.appendChild(div1);
-            div.appendChild(div0);
+        var i = 0
+        var n = body.length
+        
+        while(i<=n){
+
+            var img = new Image();
+            img.src = '/imgsrc/'+body[i].cover;
+            
+                var cardbody = document.createElement("div");//card body
+                var card = document.createElement("div");//card
+                var h5 = document.createElement("h5");
+                var a = document.createElement("a");
+                img.setAttribute("class","card-img-top");
+                // div.appendChild(img);
+                cardbody.setAttribute("class","card-body");
+                h5.setAttribute("class","card-title");
+                a.setAttribute("href",`/content/${body[i].title.split(" ").join("-")}`);
+                card.setAttribute("class","card");
+                // card.setAttribute("style","width: 18rem");
+                var p2 = document.createTextNode("ادامه مطلب");
+                var p = document.createTextNode(`${body[i].title}`);
+                a.appendChild(p2)
+                h5.appendChild(p);
+                a.setAttribute("class","btn btn-primary");
+                
+                // cmnt.created_at = moment(cmnt.created_at).fromNow()
+                cardbody.appendChild(h5);
+                cardbody.appendChild(a);
+                card.appendChild(img);
+                card.appendChild(cardbody);
+            
+            if(cardeck.childElementCount == 3){
+                var cardeck = document.createElement("div")
+                cardeck.setAttribute("class","card-deck"); // card-deck
+                cardeck.appendChild(card);
+                div.appendChild(cardeck);
+            } else{
+                cardeck.appendChild(card);
+            }
+                
+        
             var br = document.createElement("br");
-            var divider = document.createElement("hr");
-            
+            // var divider = document.createElement("hr");
             div.appendChild(br);
-            div.appendChild(divider);
-            div.appendChild(br);
-            
+            // div.appendChild(divider);
+            // div.appendChild(br);
+        
+            i++
         }
+        
     })
 );
 </script>
@@ -204,7 +225,6 @@ document.addEventListener("DOMContentLoaded", e =>
 <script src="/public/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="/public/vendor/jquery-easing/jquery.easing.min.js"></script>
 <script src="/public/js/scrolling-nav.js"></script>
-
 
 </body>
 </html>

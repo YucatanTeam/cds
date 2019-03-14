@@ -148,6 +148,8 @@
     {#each tags as t}
         <span class="badge badge-pill badge-light"><a href="/content/{page}">{t}</a></span>
     {/each}
+    <br>
+    <small class="text-muted" dir="ltr">posted about {created}</small>
     {#if comment}
         <div id="dynamic" page="{id}"></div> <!-- target of main.js to render the dynamic.html content here : see main.js in ui/ssr folder  -->
         <div><script src="/ssr/bundle.js"></script></div> <!-- bundled js of dynamic.html main.js -->
