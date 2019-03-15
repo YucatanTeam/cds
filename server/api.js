@@ -65,6 +65,7 @@ module.exports = ({app, db}) => {
             const {head, html} = Layout.render({
                 page: reqpage,
                 title: reqpage,
+                en_title: row.en_title.split(" ").join("-"),
                 metatags: row.tags,
                 tags: row.tags.split(","),
                 created: moment(row.created_at).fromNow(),
@@ -93,6 +94,7 @@ module.exports = ({app, db}) => {
             const {head, html} = enLayout.render({
                 page: reqpage,
                 en_title: reqpage,
+                title: row.title.split(" ").join("-"),
                 en_content: row.en_content,
                 id: row.id,
                 metatags: row.tags,
@@ -801,7 +803,7 @@ module.exports = ({app, db}) => {
 
 
     // ----------------------
-    // Forms routes
+    // Form routes
     // ----------------------
 
     app.get('/form/all', (req, res) => {

@@ -302,11 +302,11 @@ const db = {
             },
         },
         /* --------------------
-            FORMS API
+            FORM API
         */
        form:{
             all(cb){
-                db.connection.query(`SELECT * FROM forms ORDER BY created_at DESC;`, [], (err, rows)=>{
+                db.connection.query(`SELECT * FROM form ORDER BY created_at DESC;`, [], (err, rows)=>{
                     if(rows){
                         return cb(err, rows);
                     } else {
@@ -315,7 +315,7 @@ const db = {
                 });
             },
             getById(id, cb){
-                db.connection.query(`SELECT * FROM forms WHERE id = ?`, [id], (err, rows)=>{
+                db.connection.query(`SELECT * FROM form WHERE id = ?`, [id], (err, rows)=>{
                     if(rows.length === 1){
                         return cb(err, rows);
                     } else{
@@ -324,26 +324,26 @@ const db = {
                 })
             },
             block(id, cb){
-                db.connection.query(`UPDATE forms SET status = 0 WHERE id = ?`, [id], cb ? cb : e=>e);
+                db.connection.query(`UPDATE form SET status = 0 WHERE id = ?`, [id], cb ? cb : e=>e);
             },
             unblock(id, cb){
-                db.connection.query(`UPDATE forms SET status = 1 WHERE id = ?`, [id], cb ? cb : e=>e);
+                db.connection.query(`UPDATE form SET status = 1 WHERE id = ?`, [id], cb ? cb : e=>e);
             },
             deleteById(id, cb){
-                db.connection.query(`DELETE FROM forms WHERE id = ?`, [id], cb ? cb : e=>e);
+                db.connection.query(`DELETE FROM form WHERE id = ?`, [id], cb ? cb : e=>e);
             },
             deleteByCuid(cuid, cb){
-                db.connection.query(`DELETE FROM forms WHERE cuid = ?`, [cuid], cb ? cb : e=>e);
+                db.connection.query(`DELETE FROM form WHERE cuid = ?`, [cuid], cb ? cb : e=>e);
             },
             deleteAll(cb){
-                db.connection.query(`TRUNCATE TABLE forms`, [], cb ? cb : e=>e);
+                db.connection.query(`TRUNCATE TABLE form`, [], cb ? cb : e=>e);
             },
             add(datum, cb){
-                db.connection.query(`INSERT INTO forms(name, iframe, cuid) 
+                db.connection.query(`INSERT INTO form(name, iframe, cuid) 
                                     VALUES(?, ?, ?)`, [datum.name, datum.iframe, datum.cuid], cb ? cb : e=>e)
             },
             update(datum, cb){
-                db.connection.query(`UPDATE forms SET name = ?, iframe = ? WHERE id = ?`, [datum.name, datum.iframe, datum.id], cb);
+                db.connection.query(`UPDATE form SET name = ?, iframe = ? WHERE id = ?`, [datum.name, datum.iframe, datum.id], cb);
             },
         },
         /* --------------------
