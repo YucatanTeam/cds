@@ -38,6 +38,8 @@ const PORT = process.env.PORT || process.argv[2] || 8080; // we'll use this in p
 const SECRET = process.env.SECRET || "force"; // we'll use this in production
 const TBOTURL = process.env.TBOTURL || 'https://api.telegram.org/bot740062919:AAFzZCd9oqNpwVr9X9jF1j8XTECYiEwF5Ck/sendPhoto';
 const URL = process.env.URL || "http://127.0.0.1";
+const CPANEL = process.env.CPANEL || false;
+
 module.exports = p => {
     console.log("plane B");
     if(p) {
