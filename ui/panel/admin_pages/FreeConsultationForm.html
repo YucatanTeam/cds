@@ -85,7 +85,14 @@ export default {
     },
     methods:{
         fireMe(){
-            // export all data table into pdf
+            utils.fetch(`/form/csv`, {}).then((res)=>{
+                    if(res.status!=200){
+                        utils.toast("something went wrong !")
+                    } else{
+                        utils.toast("CSV Done")
+                        utils.reload()
+                    }
+               }).catch(err => utils.toast("something went wrong !"));
         },
         open({obj, index}){
             const mob = this.get().mob.data

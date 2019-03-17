@@ -817,6 +817,19 @@ module.exports = ({app, db}) => {
         })
     });
 
+    app.get('/form/csv', access(5), (req, res)=>{
+        db.api.form.all((err, rows)=>{
+            
+            if(rows){
+                // generate csv from rows json ... and send for download
+            }
+            if(err) {
+                dev.report(err);
+                return res.status(404).end("Nothing Found !");
+            }
+        })
+    })
+
     app.post('/form/delete/:id', access(5), (req, res)=>{
         db.api.form.deleteById(req.params.id, (err, rows)=>{
 
