@@ -1,0 +1,125 @@
+                
+<!-- set actions and bind content  -->
+<div class="row">
+    {#await getform}
+        <Loading small/>
+    {:then infos}
+            <!-- ======== THIS MODAL WILL TRIGGER ON EACH ACTION ======== -->
+            <div id="modaldelete" class="modal">
+                <div class="modal-content">
+                    <h4>{crudindex===0 ? "Confirm Delete" : ""}</h4>
+                        
+                        {#if crudindex === 0}
+                            {#if objModal}
+                                <p>Do you really want to delete the info <strong>#{objModal.id}</strong> ?</p>
+                            {/if}
+                        {/if}
+                </div>
+                <div class="modal-footer">
+                    <button class="modal-close waves-effect waves-green btn-flat" on:click="action()">{crudindex===0 ? "Delete" : ""}</button>
+                </div>
+            </div> <!-- ======== END - MODAL ======== -->
+
+        <Table highlight rows={5}
+            on:modal="open(event)"
+            content={infos}
+            search={["lastname", "firstname", "id", "email"]}
+            actions={[
+                                            /* ------------------------------------------
+                                                list of all actions for form data table 
+                                            ------------------------------------------
+                                            */
+                    // ==============================================================================================
+                    // DELETE
+                    // ==============================================================================================
+                    {icon: "delete",tooltip: "delete", action(obj, component) {
+                            var index = 0
+                           component.fire("modal", {obj, index}) 
+                            
+                        }
+                    } 
+                ]}
+        />
+
+        <div class="fixed-action-btn">
+              <a class="btn-floating btn-large waves-effect waves-light red" on:click="fireMe()"><I>import_export</I></a>
+        </div>
+
+    {:catch err}
+        <p>Error {err.message}</p>
+    {/await}
+</div>
+
+<script>
+export default {
+    data(){
+        var mob = {data: null};
+        return {
+            objModal: null,
+            crudindex: 0,
+            datum_id: null,
+            mob,
+            getform: utils.fetch("/form/all")
+            .then(response => {
+                var mobs = response.body;
+                    mob.data = mobs;
+                    var rows = [];
+                    for(var mb of mobs) {
+                            var datum = {
+                                id : mb.id,
+                                firstname: mb.firstname,
+                                lastname: mb.lastname,
+                                email: mb.email
+                            }
+                            // [ DELETE ]
+                            datum.actions = [
+                                [5, 7].includes(cdsuser.access) // dev and admin can delete a form info
+                            ]
+                            
+                            rows.push(datum);
+                    }
+                    return rows
+                })
+                .catch(err => utils.toast("something went wrong !")),
+        }
+    },
+    methods:{
+        fireMe(){
+            // export all data table into pdf
+        },
+        open({obj, index}){
+            const mob = this.get().mob.data
+                for(var mb of mob){
+                    if(obj.id === mb.id) this.set({crudindex: index, objModal: mb, datum_id: obj.id})
+                }
+                var elems = document.querySelector('.modal');
+                var instances = M.Modal.init(elems, {});
+                instances.open();
+        },
+        action(){
+            
+            const {crudindex} = this.get()
+            const {datum_id} = this.get()
+
+            // get down the road with crudindex!!!
+            if(crudindex === 0){
+
+                utils.fetch(`/form/delete/${datum_id}`, {}).then((res)=>{
+                    if(res.status!=200){
+                        utils.toast("something went wrong !")
+                    } else{
+                        utils.toast("Done")
+                        utils.reload()
+                    }
+               }).catch(err => utils.toast("something went wrong !"));
+            }
+            
+        }
+    },
+    components: {
+        Loading: "../../tags/Loading.html",
+        Table: "../../tags/Table.html",
+        I: "../../tags/Icon.html"
+    }
+}
+</script>

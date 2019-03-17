@@ -323,28 +323,15 @@ const db = {
                     }
                 })
             },
-            block(id, cb){
-                db.connection.query(`UPDATE form SET status = 0 WHERE id = ?`, [id], cb ? cb : e=>e);
-            },
-            unblock(id, cb){
-                db.connection.query(`UPDATE form SET status = 1 WHERE id = ?`, [id], cb ? cb : e=>e);
-            },
             deleteById(id, cb){
                 db.connection.query(`DELETE FROM form WHERE id = ?`, [id], cb ? cb : e=>e);
-            },
-            deleteByCuid(cuid, cb){
-                db.connection.query(`DELETE FROM form WHERE cuid = ?`, [cuid], cb ? cb : e=>e);
             },
             deleteAll(cb){
                 db.connection.query(`TRUNCATE TABLE form`, [], cb ? cb : e=>e);
             },
-            add(datum, cb){
-                db.connection.query(`INSERT INTO form(name, iframe, cuid) 
-                                    VALUES(?, ?, ?)`, [datum.name, datum.iframe, datum.cuid], cb ? cb : e=>e)
-            },
-            update(datum, cb){
-                db.connection.query(`UPDATE form SET name = ?, iframe = ? WHERE id = ?`, [datum.name, datum.iframe, datum.id], cb);
-            },
+            add(form, cb){
+                db.connection.query(``, [], cb ? cb : e=>e)
+            }
         },
         /* --------------------
             FREETIME API

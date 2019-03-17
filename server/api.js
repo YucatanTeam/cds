@@ -817,26 +817,6 @@ module.exports = ({app, db}) => {
         })
     });
 
-    app.post('/form/block/:id', access(5), (req, res) =>{
-        db.api.form.block(req.params.id, (err, row)=>{
-            
-            if(err) {
-                dev.report(err);
-                return res.status(404).end("Nothing Found !");
-            } else return res.status(200).end("OK");
-        })
-    });
-    
-    app.post('/form/unblock/:id', access(5), (req, res)=>{
-        db.api.form.unblock(req.params.id, (err, row)=>{
-
-            if(err) {
-                dev.report(err);
-                return res.status(404).end("Nothing Found !");
-            } else return res.status(200).end("OK");
-        })
-    });
-
     app.post('/form/delete/:id', access(5), (req, res)=>{
         db.api.form.deleteById(req.params.id, (err, rows)=>{
 
@@ -846,34 +826,6 @@ module.exports = ({app, db}) => {
             } else return res.status(200).end("OK");
         })
     });
-
-    app.post('/form/edit', access(3), (req, res)=>{
-        for(var i in req.body) {
-            if(req.body[i] == null) delete req.body[i]
-        }
-        
-        db.api.form.getById(req.body.datum_id, (err, datum)=>{
-            if(err) {
-                dev.report(err);
-                return res.status(404).end("Nothing Found !");
-            }
-
-            var newdatum = {
-                id : req.body.datum_id ? req.body.datum_id : datum.id,
-                name : req.body.name ? req.body.name : datum.name,
-                iframe : req.body.iframe ? req.body.iframe : datum.iframe
-            }
-
-            db.api.form.update(newdatum, (err, row)=>{
-                if(err) {
-                    dev.report(err);
-                    return res.status(500).end("Internal Server Error !");
-                } else return res.status(200).end("OK");
-            })
-
-        })
-
-    })
 
     app.post('/form/add', access(5), (req, res)=>{
         for(var i in req.body){

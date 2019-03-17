@@ -161,20 +161,58 @@ connection.connect(err => {
     // ========================================= FORM INIT SETUP ===================================================================
     // form table
     //...
-    connection.query(`CREATE TABLE IF NOT EXISTS forms (
+    connection.query(`CREATE TABLE IF NOT EXISTS form (
         id int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-        name VARCHAR(255) NOT NULL,
-        iframe TEXT NOT NULL,
-        cuid VARCHAR(100) NOT NULL,
-        status TINYINT NOT NULL DEFAULT 0,
+        firstname TEXT DEFAULT NULL,
+        lastname TEXT DEFAULT NULL,
+        birthday_date TEXT DEFAULT NULL,
+        marrital_status TEXT DEFAULT NULL,
+        gender TEXT DEFAULT NULL,
+        nationality TEXT DEFAULT NULL,
+        country_of_residency TEXT DEFAULT NULL,
+        city_of_residency TEXT DEFAULT NULL,
+        address TEXT DEFAULT NULL,
+        postal_code TEXT DEFAULT NULL,
+        telephone_number TEXT DEFAULT NULL,
+        mobile_number TEXT DEFAULT NULL,
+        email TEXT DEFAULT NULL,
+        latest_academic_qualification TEXT DEFAULT NULL,
+        field_of_study TEXT DEFAULT NULL,
+        country TEXT DEFAULT NULL,
+        GPA TEXT DEFAULT NULL,
+        year_awarded TEXT DEFAULT NULL,
+        institution TEXT DEFAULT NULL,
+        language_certificate TEXT DEFAULT NULL,
+        IELTS_listening TEXT DEFAULT NULL,
+        IELTS_reading TEXT DEFAULT NULL,
+        IELTS_writing TEXT DEFAULT NULL,
+        IELTS_speaking TEXT DEFAULT NULL,
+        IELTS_overall_band TEXT DEFAULT NULL,
+        TOFEL_IBT_listening TEXT DEFAULT NULL,
+        TOFEL_IBT_reading TEXT DEFAULT NULL,
+        TOFEL_IBT_writing TEXT DEFAULT NULL,
+        TOFEL_IBT_speaking TEXT DEFAULT NULL,
+        TOFEL_IBT_overall_band TEXT DEFAULT NULL,
+        GMAT_test_date TEXT DEFAULT NULL,
+        GMAT_verbal TEXT DEFAULT NULL,
+        GMAT_quantitative TEXT DEFAULT NULL,
+        GMAT_total TEXT DEFAULT NULL,
+        GMAT_analytical_writing TEXT DEFAULT NULL, 
+        GRE_verbal_score TEXT DEFAULT NULL,
+        GRE_quantitative_score TEXT DEFAULT NULL,
+        GRE_analytical_scroe TEXT DEFAULT NULL,
+        other_language_info TEXT DEFAULT NULL,
+        oddinfo1 TEXT DEFAULT NULL,
+        oddinfo2 TEXT DEFAULT NULL,
+        oddinfo3 TEXT DEFAULT NULL,
+        oddinfo4 TEXT DEFAULT NULL,
+        oddinfo5 TEXT DEFAULT NULL,
+        oddinfo6 TEXT DEFAULT NULL,
+        details TEXT DEFAULT NULL,
+        document TEXT DEFAULT NULL, 
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)ENGINE=INNODB;` ,[] ,(err, rows)=>{
             errlog("form")(err, rows)
-            connection.query(`INSERT INTO forms(name, iframe, cuid) VALUES(
-                'cando form',
-                '<iframe src="https://docs.google.com/forms/d/e/1FAIpQLSc6sL9JIN2MfBJWyUinbzvVq4Nht1krsGFUzIDJK1_T0_bGmA/viewform?embedded=true" width="640" height="1112" frameborder="0" marginheight="0" marginwidth="0">Loading...</iframe>',
-                ?
-            );` ,[cuid()] ,errlog("first form"));
         });
     
     // ========================================= FORM INIT SETUP ===================================================================
