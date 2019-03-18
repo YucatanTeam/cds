@@ -5,5 +5,7 @@ avatar/*
 !avatar/.avatar
 images/*
 !images/.image
+doc/*
+!doc/.doc
 www/*/*.js
 www/*/*.css
