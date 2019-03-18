@@ -416,7 +416,7 @@ module.exports = ({app, db}) => {
             return res.json({body: rows, err:null});
         })
     })
-    app.post("/route/:route/item/add", access(3), (req, res) => {
+    app.post("/route/:route/item/add", access(5), (req, res) => {
         db.api.page.setRoute(req.body.page, req.params.route, (err, rows) => {
             if(err) {
                 dev.report(err);
@@ -434,7 +434,7 @@ module.exports = ({app, db}) => {
             res.json({body: row,err:null})
         });
     });
-    app.post("/page/:page/route/remove", access(3), (req, res) => {
+    app.post("/page/:page/route/remove", access(5), (req, res) => {
         db.api.page.removeRoute(req.params.page, (err, rows) => {
             if(err) {
                 dev.report(err);
@@ -452,7 +452,7 @@ module.exports = ({app, db}) => {
             return res.json({body: rows, err:null});
         })
     })
-    app.post('/page/edit',access(5),function(req,res){
+    app.post('/page/edit',access(3),function(req,res){
         var form = new formidable.IncomingForm();
         form.uploadDir = cwd + "/images/";
         form.keepExtensions = true;
@@ -505,7 +505,7 @@ module.exports = ({app, db}) => {
         });
     })
     
-    app.post("/page/add", access(3), (req, res) => {
+    app.post("/page/add", access(5), (req, res) => {
         var form = new formidable.IncomingForm();
         form.uploadDir = cwd + "/images/";
         form.keepExtensions = true;
@@ -806,7 +806,7 @@ module.exports = ({app, db}) => {
     // Form routes
     // ----------------------
 
-    app.get('/form/all', (req, res) => {
+    app.get('/form/all', access(5), (req, res) => {
         db.api.form.all((err, rows)=>{
             
             if(rows) return res.json({body: rows, err:null})
@@ -816,20 +816,6 @@ module.exports = ({app, db}) => {
             }
         })
     });
-
-    app.get('/form/csv', access(5), (req, res)=>{
-        db.api.form.all((err, rows)=>{
-            
-            if(rows){
-                // https://www.npmjs.com/package/json2csv
-                // generate csv from rows json ... and send for download
-            }
-            if(err) {
-                dev.report(err);
-                return res.status(404).end("Nothing Found !");
-            }
-        })
-    })
 
     app.post('/form/delete/:id', access(5), (req, res)=>{
         db.api.form.deleteById(req.params.id, (err, rows)=>{
@@ -841,27 +827,46 @@ module.exports = ({app, db}) => {
         })
     });
 
-    app.post('/form/add', access(5), (req, res)=>{
-        for(var i in req.body){
-            if(req.body[i] == null) {
-                delete req.body[i] 
-                return res.status(411).end("Length Required !");
-            } 
-        }
-
-        var newdatum = {
-            cuid: cuid(),
-            name : req.body.name,
-            iframe : req.body.iframe
-        }
+    app.post('/form/add', (req, res)=>{
         
-        db.api.form.add(newdatum, (err, row)=>{
+        var form = new formidable.IncomingForm();
+        form.uploadDir = cwd + "/doc/";
+        form.keepExtensions = true;
+        form.maxFieldsSize = 50 * 1024 * 1024; // 50 MB
+        form.parse(req, function (err, fields, files) {
+            
+            if(err) return res.status(400).end("Bad Request !");
+            
+            // TODO get multiple files in type of pdf , doc , png , jpg
+
+            var document;
+            if(files.document) {
+                document = files.document.path;
+                document = isWin ? document.split("\\") : document.split("/");
+                document = document[document.length - 1];
+            } else {
+                document = null;
+            }
+
+        
+            // TODO create new form object
+
+            var form = {
+                
+            }
+
+        
+        db.api.form.add(form, (err, row)=>{
             if(err) {
                 dev.report(err);
                 return res.status(500).end("Internal Server Error !");
-            } else return res.status(200).end("OK");
+            }
+                // TODO mail the form object to req.user.email
+            
+            return res.status(200).end("OK");
         })
-                 
+
+       });          
     });
 
     // -----------------------------
