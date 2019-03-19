@@ -836,35 +836,35 @@ module.exports = ({app, db}) => {
         form.parse(req, function (err, fields, files) {
             
             if(err) return res.status(400).end("Bad Request !");
-            
-            // TODO get multiple files in type of pdf , doc , png , jpg
+            console.log(files)
+            console.log(fields)
 
-            var document;
-            if(files.document) {
-                document = files.document.path;
-                document = isWin ? document.split("\\") : document.split("/");
-                document = document[document.length - 1];
-            } else {
-                document = null;
-            }
+            // var document;
+            // if(files.document) {
+            //     document = files.document.path;
+            //     document = isWin ? document.split("\\") : document.split("/");
+            //     document = document[document.length - 1];
+            // } else {
+            //     document = null;
+            // }
 
         
             // TODO create new form object
-
-            var form = {
-                
-            }
+            var form = {}
 
         
-        db.api.form.add(form, (err, row)=>{
-            if(err) {
-                dev.report(err);
-                return res.status(500).end("Internal Server Error !");
-            }
-                // TODO mail the form object to req.user.email
+        // db.api.form.add(form, (err, row)=>{
+        //     if(err) {
+        //         dev.report(err);
+        //         return res.status(500).end("Internal Server Error !");
+        //     } else{
+                
+        //         // TODO mail the form object to req.user.email
+        //         return res.status(200).end("OK");
             
-            return res.status(200).end("OK");
-        })
+        //     }
+            
+        // })
 
        });          
     });

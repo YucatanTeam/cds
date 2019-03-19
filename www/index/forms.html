@@ -1,15 +1,5 @@
 <!DOCTYPE html>
 <html>
-<script>
-
-function post(){
-    // use formdata to get the all value
-    // send the formdata using fetch
-}
-
-
-
-</script>
 
 
 <head>    
@@ -596,7 +586,7 @@ function post(){
     <br>
     <p style="margin-top: 1%;background-color:red  " class=" font-weight-bold text-center" >توضیحات تکمیلی </p>
 
-    <label style="margin-top: 1%"  for="exampleFormControlInput1">توضيحات تكميلي رادر اين كادر قيد نماييد.  </label>
+    <label style="margin-top: 1%"  for="details">توضيحات تكميلي رادر اين كادر قيد نماييد.  </label>
 
     <input id="details" style="width: 100%;height: auto;" class="form-control text-left" dir="ltr" type="text" placeholder="Please enter details (optional)">
 
@@ -605,9 +595,8 @@ function post(){
     <br>
     <p style="margin-top: 1%;background-color:#e83e8c  " class=" font-weight-bold text-center" >پیوست ها </p>
 
-    <label style="margin-top: 1%"  for="exampleFormControlInput1">در صورتی که مایل به ارسال فایل یا فایل هایی به همراه فرم خود هستید «اینجــا» کلیک کنید و در بخش توضیحات درج کنید که این فایلها حاوی چه اطلاعاتی هستند.</label>
-    <input id="documnet" style="width: 100%;height: auto;" type="file" class="form-control-file text-left" id="exampleFormControlFile1">
-
+    <label style="margin-top: 1%"  for="document">در صورتی که مایل به ارسال فایل یا فایل هایی به همراه فرم خود هستید «اینجــا» کلیک کنید و در بخش توضیحات درج کنید که این فایلها حاوی چه اطلاعاتی هستند.</label>
+    <input id="document" style="width: 100%;height: auto;" type="file" multiple accept="file_extension" class="form-control-file text-left">
     <br>
     <hr>
     <br>
@@ -673,7 +662,58 @@ function post(){
 <script src="/public/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 <script src="/public/vendor/jquery-easing/jquery.easing.min.js"></script>
 <script src="/public/js/scrolling-nav.js"></script>
+<script>
 
+function post(){
+    
+        var formdata = new FormData();
+        var fileInput = document.getElementById('document');
+        var fileList = [];
+        
+        fileInput.addEventListener('change', function (evnt) {
+            fileList = [];
+            for (var i = 0; i < fileInput.files.length; i++) {
+                fileList.push(fileInput.files[i]);
+            }
+        
+        });
+
+            if(fileList.length>0){
+              fileList.forEach(function (file) {
+                 formdata.append('docs', file);
+               });
+            }
+
+        // formdata.append("firstname",`${document.getElementById("firstname").value}`);
+        // formdata.append("lastname",`${document.getElementById("lastname").value}`);
+
+    if(document.getElementById("gridCheck").checked == true){        
+        fetch("/form/add", {
+                    method: "POST",
+                    mode: "same-origin",
+                    credentials: "same-origin",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    redirect: "follow",
+                    body: JSON.stringify(formdata)
+            }).then(res => {
+                    if(res.status != 200){
+                        alert("لطفا برای ثبت فرم دوباره تلاش کنید!")
+                    } else{
+                        alert("اطلاعات شما ثبت شد و در اسرع وقت با شما تماس گرفته خواهد شد!")
+                    }
+                })
+            .catch(err => alert("خطا در سرور!"))
+    } else{
+        alert("لطفا توان مالی تحصیلی و زندگی خود را تایید نمایید!")
+    }
+
+}
+
+
+
+</script>
 
 
 
