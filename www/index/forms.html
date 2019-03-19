@@ -596,7 +596,7 @@
     <p style="margin-top: 1%;background-color:#e83e8c  " class=" font-weight-bold text-center" >پیوست ها </p>
 
     <label style="margin-top: 1%"  for="document">در صورتی که مایل به ارسال فایل یا فایل هایی به همراه فرم خود هستید «اینجــا» کلیک کنید و در بخش توضیحات درج کنید که این فایلها حاوی چه اطلاعاتی هستند.</label>
-    <input id="document" style="width: 100%;height: auto;" type="file" multiple accept="file_extension" class="form-control-file text-left">
+    <input id="document" style="width: 100%;height: auto;" type="file" multiple name="docs[]" accept="file_extension" class="form-control-file text-left">
     <br>
     <hr>
     <br>
@@ -668,24 +668,60 @@ function post(){
     
         var formdata = new FormData();
         var fileInput = document.getElementById('document');
-        var fileList = [];
-        
-        fileInput.addEventListener('change', function (evnt) {
-            fileList = [];
-            for (var i = 0; i < fileInput.files.length; i++) {
-                fileList.push(fileInput.files[i]);
-            }
-        
-        });
+        var files = fileInput.files
+        var bday = document.getElementById("day")
+        var bmonth = document.getElementById("month")
+        var byear = document.getElementById("year")
+        var marrital_status = document.getElementById("marrital_status")
+        var gender = document.getElementById("gender")
+        var nationality = document.getElementById("nationality")
+        var country_of_residency = document.getElementById("country_of_residency")
 
-            if(fileList.length>0){
-              fileList.forEach(function (file) {
-                 formdata.append('docs', file);
-               });
+        for (var i = 0; i < files.length; i++) {
+            var file = files[i];
+            formdata.append('docs[]', file, file.name);
+        }
+        
+        function getSelectedOption(sel) {
+            var opt;
+            for ( var i = 0, len = sel.options.length; i < len; i++ ) {
+                opt = sel.options[i];
+                if ( opt.selected === true ) {
+                    break;
+                }
             }
+            return opt.text;
+        }
+        
 
-        // formdata.append("firstname",`${document.getElementById("firstname").value}`);
-        // formdata.append("lastname",`${document.getElementById("lastname").value}`);
+        const bdate = getSelectedOption(bday)+getSelectedOption(bmonth).split("-")[1]+", "+getSelectedOption(byear)
+        const firstname = document.getElementById("firstname").value
+        const lastname = document.getElementById("lastname").value
+        const marrital_status = getSelectedOption(marrital_status)
+        const gender = getSelectedOption(gender)
+        const nationality = getSelectedOption(nationality)
+        const country_of_residency = getSelectedOption(country_of_residency)
+        const city_of_residency = document.getElementById("city_of_residency").value
+        const address = document.getElementById("address").value
+        const postal_code = document.getElementById("postal_code").value
+        const telephone_number = document.getElementById("telephone_number").value
+        const mobile_number = document.getElementById("mobile_number").value
+        const email = document.getElementById("email").value
+
+
+        formdata.append("birthday_date",`${bdate=="Dayundefined, Year"?null:bdate}`);
+        formdata.append("firstname",`${firstname?firstname:null}`);
+        formdata.append("lastname",`${lastname?lastname:null}`);
+        formdata.append("marrital_status",`${marrital_status=="Marrital Status"?null:marrital_status}`);
+        formdata.append("gender",`${gender=="Gender"?null:gender}`);
+        formdata.append("nationality",`${nationality=="Nationality"?null:nationality}`);
+        formdata.append("country_of_residency",`${country_of_residency=="Country of Residency"?null:country_of_residency}`);
+        formdata.append("city_of_residency",`${city_of_residency?city_of_residency:null}`);
+        formdata.append("address",`${address?address:null}`);
+        formdata.append("postal_code",`${postal_code?postal_code:null}`);
+        formdata.append("telephone_number",`${telephone_number?telephone_number:null}`);
+        formdata.append("mobile_number",`${mobile_number?mobile_number:null}`);
+        formdata.append("email",`${email?email:null}`);
 
     if(document.getElementById("gridCheck").checked == true){        
         fetch("/form/add", {
