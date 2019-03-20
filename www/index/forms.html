@@ -314,7 +314,7 @@
     </select>
 
     <label style="margin-top: 1%" for="exampleFormControlInput1"> در رشته :  </label>
-    <select class="form-control text-left" id="field_of_study">
+    <select classcountry"form-control text-left" id="field_of_study">
         <option value="">Field Of Study</option><option value="Arts">Arts</option><option value="Biological Sciences">Biological Sciences</option><option value="Business and Management">Business and Management</option><option value="Education">Education</option><option value="Engineering (includes the School of Computing)">Engineering (includes the School of Computing)</option><option value="English Language Intensive Courses for Overseas Students">English Language Intensive Courses for Overseas Students</option><option value="Environment">Environment</option><option value="Foundation Studies">Foundation Studies</option><option value="Humanities">Humanities</option><option value="Information Technology">Information Technology</option><option value="Law">Law</option><option value="Mathematics and Physical Sciences">Mathematics and Physical Sciences</option><option value="Medicine and Health">Medicine and Health</option><option value="Not Applicable">Not Applicable</option><option value="Other faculty (not elsewhere classified)">Other faculty (not elsewhere classified)</option><option value="Performance, Visual Arts and Communications">Performance, Visual Arts and Communications</option><option value="Science">Science</option><option value="Social Sciences">Social Sciences</option><option value="other">Other - (Please Insert Details at the end of this form)</option>
     </select>
 
@@ -571,7 +571,7 @@
     </select>
     <label style="margin-top: 1%" for="exampleFormControlInput1">نوع ساپورت خود را مشخص کنید:</label>
     <select dir="ltr" class="form-control text-left" id="oddinfo4">
-        <option value="">Select Your Financial Support:</option><option value="Support From Home-Country" >ساپورت از داخل ایران</option><option value="Support From Intended Country Of Study" >ساپورت از کشور مورد نظر</option><option value="Support From Home-Country & Intended Country Of Study" >ساپورت از ایران و کشور مورد نظر</option>
+        <option value="">Select Your Financial Support</option><option value="Support From Home-Country" >ساپورت از داخل ایران</option><option value="Support From Intended Country Of Study" >ساپورت از کشور مورد نظر</option><option value="Support From Home-Country & Intended Country Of Study" >ساپورت از ایران و کشور مورد نظر</option>
     </select>
     <label style="margin-top: 1%" for="exampleFormControlInput1">لطفا میزان ساپورت سالیانه تحصیل زندگی و مسکن خود را انتخاب کنید:</label>
     <select dir="ltr" class="form-control text-left" id="oddinfo5">
@@ -676,6 +676,38 @@ function post(){
         var gender = document.getElementById("gender")
         var nationality = document.getElementById("nationality")
         var country_of_residency = document.getElementById("country_of_residency")
+        var latest _academic_qualification =  document.getElementById("latest _academic_qualification")
+        var field_of_study =  document.getElementById("field_of_study")
+        var country =  document.getElementById("country")
+        var language_certificate = document.getElementById("language_certificate")
+        var IELTS_listening = document.getElementById("IELTS_listening")
+        var IELTS_reading = document.getElementById("IELTS_reading")
+        var IELTS_writing = document.getElementById("IELTS_writing")
+        var IELTS_speaking = document.getElementById("IELTS_speaking")
+        var IELTS_overall_band = document.getElementById("IELTS_overall_band")
+        var TOFEL_IBT_listening = document.getElementById("TOFEL_IBT_listening")
+        var TOFEL_IBT_reading = document.getElementById("TOFEL_IBT_reading")
+        var TOFEL_IBT_writing = document.getElementById("TOFEL_IBT_writing")
+        var TOFEL_IBT_speaking = document.getElementById("TOFEL_IBT_speaking")
+        var TOFEL_IBT_overall_band = document.getElementById("TOFEL_IBT_overall_band")
+        var TOFEL_IBT_listening = document.getElementById("TOFEL_IBT_listening")
+        var gmat_day = document.getElementById("gmat_day")
+        var gmat_month = document.getElementById("gmat_month")
+        var gmat_year = document.getElementById("gmat_year")
+        var gmat_verbal = document.getElementById("gmat_verbal")
+        var gmat_quantitative = document.getElementById("gmat_quantitative")
+        var gmat_total = document.getElementById("gmat_total")
+        var gmat_analytical_writing = document.getElementById("gmat_analytical_writing")
+        var gre_verbal_score = document.getElementById("gre_verbal_score")
+        var gre_quantitative_score = document.getElementById("gre_verbal_score")
+        var gre_analytical_score = document.getElementById("gre_analytical_score")
+        var oddinfo1 = document.getElementById("oddinfo1")
+        var oddinfo2 = document.getElementById("oddinfo2")
+        var oddinfo3 = document.getElementById("oddinfo3")
+        var oddinfo4 = document.getElementById("oddinfo4")
+        var oddinfo5 = document.getElementById("oddinfo5")
+        var oddinfo6 = document.getElementById("oddinfo6")
+
 
         for (var i = 0; i < files.length; i++) {
             var file = files[i];
@@ -695,6 +727,7 @@ function post(){
         
 
         const bdate = getSelectedOption(bday)+getSelectedOption(bmonth).split("-")[1]+", "+getSelectedOption(byear)
+        const gmat_test_date = getSelectedOption(gmat_day)+getSelectedOption(gmat_month).split("-")[1]+", "+getSelectedOption(gmat_year)
         const firstname = document.getElementById("firstname").value
         const lastname = document.getElementById("lastname").value
         const marrital_status = getSelectedOption(marrital_status)
@@ -707,6 +740,39 @@ function post(){
         const telephone_number = document.getElementById("telephone_number").value
         const mobile_number = document.getElementById("mobile_number").value
         const email = document.getElementById("email").value
+        const latest _academic_qualification = getSelectedOption(latest _academic_qualification)
+        cosnt field_of_study = getSelectedOption(field_of_study)
+        cosnt country = getSelectedOption(country)
+        const gpa = document.getElementById("gpa").value
+        const year_awarded = document.getElementById("year_awarded").value
+        const institution = document.getElementById("institution").value
+        const language_certificate = document.getElementById("language_certificate")
+        const IELTS_listening = getSelectedOption(IELTS_listening)
+        const IELTS_reading = getSelectedOption(IELTS_reading)
+        const IELTS_writing = getSelectedOption(IELTS_writing)
+        const IELTS_speaking = getSelectedOption(IELTS_speaking)
+        const IELTS_overall_band = getSelectedOption(IELTS_overall_band)
+        const TOFEL_listening = getSelectedOption(TOFEL_listening)
+        const TOFEL_IBT_reading = getSelectedOption(TOFEL_IBT_reading)
+        const TOFEL_IBT_writing = getSelectedOption(TOFEL_IBT_writing)
+        const TOFEL_IBT_speaking = getSelectedOption(TOFEL_IBT_speaking)
+        const TOFEL_IBT_overall_band = getSelectedOption(TOFEL_IBT_overall_band)
+        const TOFEL_IBT_listening = getSelectedOption(TOFEL_IBT_listening)
+        const gmat_verbal = getSelectedOption(gmat_verbal)
+        const gmat_quantitative = getSelectedOption(gmat_quantitative)
+        const gmat_total = getSelectedOption(gmat_total)
+        const gmat_analytical_writing = getSelectedOption(gmat_analytical_writing)
+        const gre_verbal_score = getSelectedOption(gre_verbal_score)
+        const gre_quantitative_score = getSelectedOption(gre_verbal_score)
+        const gre_analytical_score = getSelectedOption(gre_analytical_score)
+        const other_language_info = document.getElementById("other_language_info").value
+        const oddinfo1 = getSelectedOption(oddinfo1)
+        const oddinfo2 = getSelectedOption(oddinfo2)
+        const oddinfo3 = getSelectedOption(oddinfo3)
+        const oddinfo4 = getSelectedOption(oddinfo4)
+        const oddinfo5 = getSelectedOption(oddinfo5)
+        const oddinfo6 = getSelectedOption(oddinfo6)
+        const details = document.getElementById("details").value
 
 
         formdata.append("birthday_date",`${bdate=="Dayundefined, Year"?null:bdate}`);
@@ -722,6 +788,40 @@ function post(){
         formdata.append("telephone_number",`${telephone_number?telephone_number:null}`);
         formdata.append("mobile_number",`${mobile_number?mobile_number:null}`);
         formdata.append("email",`${email?email:null}`);
+        formdata.append("latest _academic_qualification", `${latest _academic_qualification=="Latest Academic Qualification"?null:latest _academic_qualification}`)
+        formdata.append("field_of_study", `${field_of_study=="Field Of Study"?null:field_of_study}`)
+        formdata.append("country", `${country=="Country"?null:country}`)
+        formdata.append("gpa", `${gpa?gpa:null}`)
+        formdata.append("year_awarded", `${year_awarded?year_awarded:null}`)
+        formdata.append("institution", `${institution?institution:null}`)
+        formdata.append("language_certificate", `${language_certificate=="Language Certificate"?null:language_certificate}`)
+        formdata.append("IELTS_listening", `${IELTS_listening=="Listening"?null:IELTS_listening}`)
+        formdata.append("IELTS_reading", `${IELTS_reading=="Reading"?null:IELTS_reading}`)
+        formdata.append("IELTS_writing", `${IELTS_writing=="Writing"?null:IELTS_writing}`)
+        formdata.append("IELTS_speaking", `${IELTS_speaking=="Speaking"?null:IELTS_speaking}`)
+        formdata.append("IELTS_overall_band", `${IELTS_overall_band=="Overall Band"?null:IELTS_overall_band}`)
+        formdata.append("TOFEL_IBT_listening", `${TOFEL_IBT_listening=="Listening"?null:TOFEL_IBT_listening}`)
+        formdata.append("TOFEL_IBT_reading", `${TOFEL_IBT_reading=="Reading"?null:TOFEL_IBT_reading}`)
+        formdata.append("TOFEL_IBT_writing", `${TOFEL_IBT_writing=="Writing"?null:TOFEL_IBT_writing}`)
+        formdata.append("TOFEL_IBT_speaking", `${TOFEL_IBT_speaking=="Speaking"?null:TOFEL_IBT_speaking}`)
+        formdata.append("TOFEL_IBT_overall_band", `${TOFEL_IBT_overall_band=="Overall Band"?null:TOFEL_IBT_overall_band}`)
+        formdata.append("gmat_verbal", `${gmat_verbal=="Verbal"?null:gmat_verbal}`)
+        formdata.append("gmat_quantitative", `${gmat_quantitative=="Quantitative"?null:gmat_quantitative}`)
+        formdata.append("gmat_analytical_writing", `${gmat_analytical_writing=="Analytical Writing"?null:gmat_analytical_writing}`)
+        formdata.append("gmat_test_date", `${gmat_test_date=="Dayundefined, Year"?null:gmat_test_date}`)
+        formdata.append("gmat_total", `${gmat_total=="Total"?null:gmat_total}`)
+        formdata.append("gre_verbal_score", `${gre_verbal_score=="Verbal score"?null:gre_verbal_score}`)
+        formdata.append("gre_quantitative_score", `${gre_quantitative_score=="Quantitative score"?null:gre_quantitative_score}`)
+        formdata.append("gre_analytical_score", `${gre_analytical_score=="Analytical score"?null:gmat_analytical_writing}`)
+        formdata.append("other_langiage_info", `${other_langiage_info?other_langiage_info:null}`)
+        formdata.append("oddinfo1", `${oddinfo1=="Have You Ever Lodged A Visa Application At The Embassy?"?null:oddinfo1}`)
+        formdata.append("oddinfo2", `${oddinfo2=="Have You Ever been Granted A Visa To Enter A Country?"?null:oddinfo2}`)
+        formdata.append("oddinfo3", `${oddinfo3=="Who Will Fund Your Expenses?"?null:oddinfo3}`)
+        formdata.append("oddinfo4", `${oddinfo4=="Select Your Financial Support"?null:oddinfo4}`)
+        formdata.append("oddinfo5", `${oddinfo5=="How Much You Can Afford To Pay For Your Studies"?null:oddinfo5}`)
+        formdata.append("oddinfo6", `${oddinfo6=="How did you find about us"?null:oddinfo6}`)
+        formdata.append("details", `${details?details:null}`)
+
 
     if(document.getElementById("gridCheck").checked == true){        
         fetch("/form/add", {

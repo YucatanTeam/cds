@@ -837,6 +837,7 @@ module.exports = ({app, db}) => {
             
             if(err) return res.status(400).end("Bad Request !");
             console.log(files)
+            console.log(fields)
 
             // var document;
             // if(files.document) {
