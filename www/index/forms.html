@@ -672,41 +672,9 @@ function post(){
         var bday = document.getElementById("day")
         var bmonth = document.getElementById("month")
         var byear = document.getElementById("year")
-        var marrital_status = document.getElementById("marrital_status")
-        var gender = document.getElementById("gender")
-        var nationality = document.getElementById("nationality")
-        var country_of_residency = document.getElementById("country_of_residency")
-        var latest _academic_qualification =  document.getElementById("latest _academic_qualification")
-        var field_of_study =  document.getElementById("field_of_study")
-        var country =  document.getElementById("country")
-        var language_certificate = document.getElementById("language_certificate")
-        var IELTS_listening = document.getElementById("IELTS_listening")
-        var IELTS_reading = document.getElementById("IELTS_reading")
-        var IELTS_writing = document.getElementById("IELTS_writing")
-        var IELTS_speaking = document.getElementById("IELTS_speaking")
-        var IELTS_overall_band = document.getElementById("IELTS_overall_band")
-        var TOFEL_IBT_listening = document.getElementById("TOFEL_IBT_listening")
-        var TOFEL_IBT_reading = document.getElementById("TOFEL_IBT_reading")
-        var TOFEL_IBT_writing = document.getElementById("TOFEL_IBT_writing")
-        var TOFEL_IBT_speaking = document.getElementById("TOFEL_IBT_speaking")
-        var TOFEL_IBT_overall_band = document.getElementById("TOFEL_IBT_overall_band")
-        var TOFEL_IBT_listening = document.getElementById("TOFEL_IBT_listening")
         var gmat_day = document.getElementById("gmat_day")
         var gmat_month = document.getElementById("gmat_month")
         var gmat_year = document.getElementById("gmat_year")
-        var gmat_verbal = document.getElementById("gmat_verbal")
-        var gmat_quantitative = document.getElementById("gmat_quantitative")
-        var gmat_total = document.getElementById("gmat_total")
-        var gmat_analytical_writing = document.getElementById("gmat_analytical_writing")
-        var gre_verbal_score = document.getElementById("gre_verbal_score")
-        var gre_quantitative_score = document.getElementById("gre_verbal_score")
-        var gre_analytical_score = document.getElementById("gre_analytical_score")
-        var oddinfo1 = document.getElementById("oddinfo1")
-        var oddinfo2 = document.getElementById("oddinfo2")
-        var oddinfo3 = document.getElementById("oddinfo3")
-        var oddinfo4 = document.getElementById("oddinfo4")
-        var oddinfo5 = document.getElementById("oddinfo5")
-        var oddinfo6 = document.getElementById("oddinfo6")
 
 
         for (var i = 0; i < files.length; i++) {
@@ -726,53 +694,52 @@ function post(){
         }
         
 
-        const bdate = getSelectedOption(bday)+getSelectedOption(bmonth).split("-")[1]+", "+getSelectedOption(byear)
-        const gmat_test_date = getSelectedOption(gmat_day)+getSelectedOption(gmat_month).split("-")[1]+", "+getSelectedOption(gmat_year)
         const firstname = document.getElementById("firstname").value
         const lastname = document.getElementById("lastname").value
-        const marrital_status = getSelectedOption(marrital_status)
-        const gender = getSelectedOption(gender)
-        const nationality = getSelectedOption(nationality)
-        const country_of_residency = getSelectedOption(country_of_residency)
         const city_of_residency = document.getElementById("city_of_residency").value
         const address = document.getElementById("address").value
         const postal_code = document.getElementById("postal_code").value
         const telephone_number = document.getElementById("telephone_number").value
         const mobile_number = document.getElementById("mobile_number").value
         const email = document.getElementById("email").value
-        const latest _academic_qualification = getSelectedOption(latest _academic_qualification)
-        cosnt field_of_study = getSelectedOption(field_of_study)
-        cosnt country = getSelectedOption(country)
         const gpa = document.getElementById("gpa").value
         const year_awarded = document.getElementById("year_awarded").value
         const institution = document.getElementById("institution").value
-        const language_certificate = document.getElementById("language_certificate")
-        const IELTS_listening = getSelectedOption(IELTS_listening)
-        const IELTS_reading = getSelectedOption(IELTS_reading)
-        const IELTS_writing = getSelectedOption(IELTS_writing)
-        const IELTS_speaking = getSelectedOption(IELTS_speaking)
-        const IELTS_overall_band = getSelectedOption(IELTS_overall_band)
-        const TOFEL_listening = getSelectedOption(TOFEL_listening)
-        const TOFEL_IBT_reading = getSelectedOption(TOFEL_IBT_reading)
-        const TOFEL_IBT_writing = getSelectedOption(TOFEL_IBT_writing)
-        const TOFEL_IBT_speaking = getSelectedOption(TOFEL_IBT_speaking)
-        const TOFEL_IBT_overall_band = getSelectedOption(TOFEL_IBT_overall_band)
-        const TOFEL_IBT_listening = getSelectedOption(TOFEL_IBT_listening)
-        const gmat_verbal = getSelectedOption(gmat_verbal)
-        const gmat_quantitative = getSelectedOption(gmat_quantitative)
-        const gmat_total = getSelectedOption(gmat_total)
-        const gmat_analytical_writing = getSelectedOption(gmat_analytical_writing)
-        const gre_verbal_score = getSelectedOption(gre_verbal_score)
-        const gre_quantitative_score = getSelectedOption(gre_verbal_score)
-        const gre_analytical_score = getSelectedOption(gre_analytical_score)
         const other_language_info = document.getElementById("other_language_info").value
-        const oddinfo1 = getSelectedOption(oddinfo1)
-        const oddinfo2 = getSelectedOption(oddinfo2)
-        const oddinfo3 = getSelectedOption(oddinfo3)
-        const oddinfo4 = getSelectedOption(oddinfo4)
-        const oddinfo5 = getSelectedOption(oddinfo5)
-        const oddinfo6 = getSelectedOption(oddinfo6)
         const details = document.getElementById("details").value
+        const gmat_test_date = getSelectedOption(gmat_day)+getSelectedOption(gmat_month).split("-")[1]+", "+getSelectedOption(gmat_year)
+        const bdate = getSelectedOption(bday)+getSelectedOption(bmonth).split("-")[1]+", "+getSelectedOption(byear)
+        const marrital_status = getSelectedOption(document.getElementById("marrital_status"))
+        const gender = getSelectedOption(document.getElementById("gender"))
+        const nationality = getSelectedOption(document.getElementById("nationality"))
+        const country_of_residency = getSelectedOption(document.getElementById("country_of_residency"))
+        const latest_academic_qualification = getSelectedOption(document.getElementById("latest_academic_qualification"))
+        const field_of_study = getSelectedOption(document.getElementById("field_of_study"))
+        const country = getSelectedOption(document.getElementById("country"))
+        const language_certificate = getSelectedOption(document.getElementById("language_certificate"))
+        const IELTS_listening = getSelectedOption(document.getElementById("IELTS_listening"))
+        const IELTS_reading = getSelectedOption(document.getElementById("IELTS_reading"))
+        const IELTS_writing = getSelectedOption(document.getElementById("IELTS_writing"))
+        const IELTS_speaking = getSelectedOption(document.getElementById("IELTS_speaking"))
+        const IELTS_overall_band = getSelectedOption(document.getElementById("IELTS_overall_band"))
+        const TOFEL_IBT_listening = getSelectedOption(document.getElementById("TOFEL_IBT_listening"))
+        const TOFEL_IBT_reading = getSelectedOption(document.getElementById("TOFEL_IBT_reading"))
+        const TOFEL_IBT_writing = getSelectedOption(document.getElementById("TOFEL_IBT_writing"))
+        const TOFEL_IBT_speaking = getSelectedOption(document.getElementById("TOFEL_IBT_speaking"))
+        const TOFEL_IBT_overall_band = getSelectedOption(document.getElementById("TOFEL_IBT_overall_band"))
+        const gmat_verbal = getSelectedOption(document.getElementById("gmat_verbal"))
+        const gmat_quantitative = getSelectedOption(document.getElementById("gmat_quantitative"))
+        const gmat_total = getSelectedOption(document.getElementById("gmat_total"))
+        const gmat_analytical_writing = getSelectedOption(document.getElementById("gmat_analytical_writing"))
+        const gre_verbal_score = getSelectedOption(document.getElementById("gre_verbal_score"))
+        const gre_quantitative_score = getSelectedOption(document.getElementById("gre_quantitative_score"))
+        const gre_analytical_score = getSelectedOption(document.getElementById("gre_analytical_score"))
+        const oddinfo1 = getSelectedOption(document.getElementById("oddinfo1"))
+        const oddinfo2 = getSelectedOption(document.getElementById("oddinfo2"))
+        const oddinfo3 = getSelectedOption(document.getElementById("oddinfo3"))
+        const oddinfo4 = getSelectedOption(document.getElementById("oddinfo4"))
+        const oddinfo5 = getSelectedOption(document.getElementById("oddinfo5"))
+        const oddinfo6 = getSelectedOption(document.getElementById("oddinfo6"))
 
 
         formdata.append("birthday_date",`${bdate=="Dayundefined, Year"?null:bdate}`);
@@ -788,7 +755,7 @@ function post(){
         formdata.append("telephone_number",`${telephone_number?telephone_number:null}`);
         formdata.append("mobile_number",`${mobile_number?mobile_number:null}`);
         formdata.append("email",`${email?email:null}`);
-        formdata.append("latest _academic_qualification", `${latest _academic_qualification=="Latest Academic Qualification"?null:latest _academic_qualification}`)
+        formdata.append("latest_academic_qualification", `${latest_academic_qualification=="Latest Academic Qualification"?null:latest_academic_qualification}`)
         formdata.append("field_of_study", `${field_of_study=="Field Of Study"?null:field_of_study}`)
         formdata.append("country", `${country=="Country"?null:country}`)
         formdata.append("gpa", `${gpa?gpa:null}`)
