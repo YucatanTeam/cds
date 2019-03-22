@@ -834,7 +834,6 @@ module.exports = ({app, db}) => {
         form.keepExtensions = true;
         form.maxFieldsSize = 50 * 1024 * 1024; // 50 MB
         form.parse(req, function (err, fields, files) {
-            
             if(err) return res.status(400).end("Bad Request !");
             console.log(files)
             console.log(fields)
