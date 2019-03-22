@@ -25,18 +25,19 @@
                 width:100%;
                 height: 120px;
             }
+        }
             @media screen and (max-width: 750px) {
                 .mp{
                     width:100%;
                     height: 100px;
                 }
+            }
                 @media screen and (max-width: 520px) {
                     .mp{
                         width:100%;
                         height: 75px;
                     }
-
-
+                }
     </style>
 
 </head>
@@ -309,7 +310,7 @@
     <p style="margin-top: 3%"  class="text-center bg-success font-weight-bold">تحصیلات</p>
 
     <label style="margin-top: 1%" for="exampleFormControlInput1"> آخرین مدرک تحصیلی :  </label>
-    <select class="form-control text-left" id="latest _academic_qualification">
+    <select class="form-control text-left" id="latest_academic_qualification">
         <option value="">Latest Academic Qualification</option><option value="English Language Bridging (ELB)">English Language Bridging (ELB)</option><option value="ELICOS &#47; English for Academic Purposes (EAP)">ELICOS &#47; English for Academic Purposes (EAP)</option><option value="English Language">English Language</option><option value="Primary School">Primary School</option><option value="Secondary School">Secondary School</option><option value="High School Certificate">High School Certificate</option><option value="Foundation&#47;Pre-University&#47;College">Foundation&#47;Pre-University&#47;College</option><option value="A Level Course">A Level Course</option><option value="Diploma">Diploma</option><option value="Advanced Diploma">Advanced Diploma</option><option value="Associate Degree">Associate Degree</option><option value="Pilot Training ">Pilot Training </option><option value="Bachelor&#39;s Degree">Bachelor&#39;s Degree</option><option value="Graduate Certificate">Graduate Certificate</option><option value="Graduate Diploma">Graduate Diploma</option><option value="Pre-Master Program">Pre-Master Program</option><option value="Master&#39;s Degree">Master&#39;s Degree</option><option value="Master By Research">Master By Research</option><option value="Juris Doctor ( Law Graduate Entry)">Juris Doctor ( Law Graduate Entry)</option><option value="PhD Degree">PhD Degree</option><option value="Medicine">Medicine</option><option value="Dentistry">Dentistry</option><option value="Pharmacy">Pharmacy</option><option value="other">Other - (Please Insert Details at the end of this form)</option>
     </select>
 
@@ -551,7 +552,7 @@
     </select>
     <label style="margin-top: 1%;color:green  " class=" font-weight-bold" for="exampleFormControlInput1">OTHER  </label>
 
-    <input id="other_langiage_info" style="width: 100%;height: auto;" class="form-control text-left" dir="ltr" type="text" placeholder="OTHER">
+    <input id="other_language_info" style="width: 100%;height: auto;" class="form-control text-left" dir="ltr" type="text" placeholder="OTHER">
 
     <br>
     <hr>
@@ -665,17 +666,10 @@
 <script>
 
 function post(){
-    
+
         var formdata = new FormData();
         var fileInput = document.getElementById('document');
         var files = fileInput.files
-        var bday = document.getElementById("day")
-        var bmonth = document.getElementById("month")
-        var byear = document.getElementById("year")
-        var gmat_day = document.getElementById("gmat_day")
-        var gmat_month = document.getElementById("gmat_month")
-        var gmat_year = document.getElementById("gmat_year")
-
 
         for (var i = 0; i < files.length; i++) {
             var file = files[i];
@@ -707,8 +701,8 @@ function post(){
         const institution = document.getElementById("institution").value
         const other_language_info = document.getElementById("other_language_info").value
         const details = document.getElementById("details").value
-        const gmat_test_date = getSelectedOption(gmat_day)+getSelectedOption(gmat_month).split("-")[1]+", "+getSelectedOption(gmat_year)
-        const bdate = getSelectedOption(bday)+getSelectedOption(bmonth).split("-")[1]+", "+getSelectedOption(byear)
+        const gmat_test_date = getSelectedOption(document.getElementById("gmat_day"))+getSelectedOption(document.getElementById("gmat_month")).split("-")[1]+", "+getSelectedOption(document.getElementById("gmat_year"))
+        const bdate = getSelectedOption(document.getElementById("day"))+getSelectedOption(document.getElementById("month")).split("-")[1]+", "+getSelectedOption(document.getElementById("year"))
         const marrital_status = getSelectedOption(document.getElementById("marrital_status"))
         const gender = getSelectedOption(document.getElementById("gender"))
         const nationality = getSelectedOption(document.getElementById("nationality"))
@@ -780,17 +774,25 @@ function post(){
         formdata.append("gre_verbal_score", `${gre_verbal_score=="Verbal score"?null:gre_verbal_score}`)
         formdata.append("gre_quantitative_score", `${gre_quantitative_score=="Quantitative score"?null:gre_quantitative_score}`)
         formdata.append("gre_analytical_score", `${gre_analytical_score=="Analytical score"?null:gmat_analytical_writing}`)
-        formdata.append("other_langiage_info", `${other_langiage_info?other_langiage_info:null}`)
+        formdata.append("other_language_info", `${other_language_info?other_language_info:null}`)
         formdata.append("oddinfo1", `${oddinfo1=="Have You Ever Lodged A Visa Application At The Embassy?"?null:oddinfo1}`)
         formdata.append("oddinfo2", `${oddinfo2=="Have You Ever been Granted A Visa To Enter A Country?"?null:oddinfo2}`)
         formdata.append("oddinfo3", `${oddinfo3=="Who Will Fund Your Expenses?"?null:oddinfo3}`)
         formdata.append("oddinfo4", `${oddinfo4=="Select Your Financial Support"?null:oddinfo4}`)
-        formdata.append("oddinfo5", `${oddinfo5=="How Much You Can Afford To Pay For Your Studies"?null:oddinfo5}`)
-        formdata.append("oddinfo6", `${oddinfo6=="How did you find about us"?null:oddinfo6}`)
+        formdata.append("oddinfo5", `${oddinfo5=="How Much You Can Afford To Pay For Your Studies?"?null:oddinfo5}`)
+        formdata.append("oddinfo6", `${oddinfo6=="How did you find about us?"?null:oddinfo6}`)
         formdata.append("details", `${details?details:null}`)
 
+           
+    if(document.getElementById("gridCheck").checked == true){ 
 
-    if(document.getElementById("gridCheck").checked == true){        
+            for(var pair of formdata.entries()){
+                if(pair[1]=="null"){
+                    alert("لطفا فیلد های خالی را پرکنید!")
+                    break
+                }
+            }
+            
         fetch("/form/add", {
                     method: "POST",
                     mode: "same-origin",
@@ -813,9 +815,6 @@ function post(){
     }
 
 }
-
-
-
 </script>
 
 
