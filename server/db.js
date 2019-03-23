@@ -1,4 +1,14 @@
-
+function insert(obj, cb){
+    var qm = ''
+    var clm = ''
+    var val = ''
+    for(var key in obj){
+      clm+=key+', '
+      val+=obj[key]+', '
+      qm+='?, '
+    }
+  db.connection.query(`INSERT INTO form(${clm}) VALUES(${qm})`, [`${val}`], cb ? cb : e=>e)
+}
 const safe = require('./safe.js');
 const db = {
     connection: null,
@@ -330,7 +340,7 @@ const db = {
                 db.connection.query(`TRUNCATE TABLE form`, [], cb ? cb : e=>e);
             },
             add(form, cb){
-                db.connection.query(``, [], cb ? cb : e=>e)
+                insert(form, cb)
             }
         },
         /* --------------------

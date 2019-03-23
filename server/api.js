@@ -18,7 +18,6 @@ function sharp(file) {
     }}
 }
 const validate = require("./validate.js");
-const slug = require('limax')
 const cwd = process.cwd();
 
 
@@ -211,7 +210,7 @@ module.exports = ({app, db}) => {
         res.json({body: user, err:null})
     })
 
-    app.get('/user/all', access(5), (req, res) => {
+    app.get('/user/all', access(3), (req, res) => {
         db.api.user.all((err, users) => {
             if(err) {
                 dev.report(err);
@@ -834,9 +833,13 @@ module.exports = ({app, db}) => {
         form.keepExtensions = true;
         form.maxFieldsSize = 50 * 1024 * 1024; // 50 MB
         form.parse(req, function (err, fields, files) {
+            console.log(err)
             if(err) return res.status(400).end("Bad Request !");
+            console.log("areee") // TODO : doesn't log in console
             console.log(files)
             console.log(fields)
+
+            // TODO : work on document
 
             // var document;
             // if(files.document) {
@@ -847,23 +850,69 @@ module.exports = ({app, db}) => {
             //     document = null;
             // }
 
-        
-            // TODO create new form object
-            var form = {}
+            var form = {
+                document,
+                birthday_date: fields.birthday_date,
+                firstname: fields.birthday_date,
+                lastname: fields.lastname,
+                marrital_status: fields.marrital_status,
+                gender: fields.gender,
+                nationality: fields.nationality,
+                country_of_residency: fields.country_of_residency,
+                city_of_residency: fields.city_of_residency,
+                address: fields.address,
+                postal_code: fields.postal_code,
+                telephone_number: fields.telephone_number,
+                mobile_number: fields.mobile_number,
+                email: fields.email,
+                latest_academic_qualification: fields.latest_academic_qualification,
+                field_of_study: fields.field_of_study,
+                country: fields.country,
+                gpa: fields.gpa,
+                year_awarded: fields.year_awarded,
+                institution: fields.institution,
+                language_certificate: fields.language_certificate,
+                IELTS_listening: fields.IELTS_listening,
+                IELTS_reading: fields.IELTS_reading,
+                IELTS_writing: fields.IELTS_writing,
+                IELTS_speaking: fields.IELTS_speaking,
+                IELTS_overall_band: fields.IELTS_overall_band,
+                TOFEL_IBT_listening: fields.TOFEL_IBT_listening,
+                TOFEL_IBT_reading: fields.TOFEL_IBT_reading,
+                TOFEL_IBT_writing: fields.TOFEL_IBT_writing,
+                TOFEL_IBT_speaking: fields.TOFEL_IBT_speaking,
+                TOFEL_IBT_overall_band: fields.TOFEL_IBT_overall_band,
+                gmat_verbal: fields.gmat_verbal,
+                gmat_quantitative: fields.gmat_quantitative,
+                gmat_analytical_writing: gmat_analytical_writing,
+                gmat_test_date: fields.gmat_test_date,
+                gmat_total: fields.gmat_total,
+                gre_verbal_score: fields.gre_verbal_score,
+                gre_quantitative_score: fields.gre_analytical_score,
+                gre_analytical_score: fields.gre_analytical_score,
+                other_language_info: fields.other_language_info,
+                oddinfo1: fields.oddinfo1,
+                oddinfo2: fields.oddinfo2,
+                oddinfo3: fields.oddinfo3,
+                oddinfo4: fields.oddinfo4,
+                oddinfo5: fields.oddinfo5,
+                oddinfo6: fields.oddinfo6,
+                details: fields.details 
+            }
 
         
-        // db.api.form.add(form, (err, row)=>{
-        //     if(err) {
-        //         dev.report(err);
-        //         return res.status(500).end("Internal Server Error !");
-        //     } else{
+        db.api.form.add(form, (err, row)=>{
+            if(err) {
+                dev.report(err);
+                return res.status(500).end("Internal Server Error !");
+            } else{
                 
-        //         // TODO mail the form object to req.user.email
-        //         return res.status(200).end("OK");
+                // TODO mail the form object to req.user.email
+                return res.status(200).end("OK");
             
-        //     }
+            }
             
-        // })
+        })
 
        });          
     });
