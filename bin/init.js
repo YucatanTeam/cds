@@ -223,7 +223,7 @@ connection.connect(err => {
         paid INT NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)ENGINE=INNODB;` ,[] ,(err, rows)=>{
-            errlog("freetime")(err, rows)
+            errlog("transactions")(err, rows)
         });
 
     // ========================================= FORM INIT SETUP ===================================================================
@@ -250,7 +250,7 @@ connection.connect(err => {
         transaction_id INT NOT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)ENGINE=INNODB;` ,[] ,(err, rows)=>{
-            errlog("freetime")(err, rows)
+            errlog("reserve")(err, rows)
         });
 
     // ========================================= DEV INIT SETUP ===================================================================
