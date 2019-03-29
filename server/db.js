@@ -1,13 +1,14 @@
 function insert(obj, cb, table){
-    var qm = ''
-    var clm = ''
-    var val = ''
+    var qm = []
+    var clm = []
+    var val = []
     for(var key in obj){
-      clm+=key+', '
-      val+=obj[key]+', '
-      qm+='?, '
+      clm.push(key)
+      val.push(obj[key])
+      qm.push("?")
     }
-  db.connection.query(`INSERT INTO ${table} (${clm}) VALUES(${qm})`, [`${val}`], cb ? cb : e=>e)
+  db.connection.query(`INSERT INTO ${table} (${clm.join(",")}) 
+                       VALUES(${qm.join(",")})`, val, cb ? cb : e=>e)
 }
 const safe = require('./safe.js');
 const db = {

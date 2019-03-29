@@ -597,7 +597,7 @@
     <p style="margin-top: 1%;background-color:#e83e8c  " class=" font-weight-bold text-center" >پیوست ها </p>
 
     <label style="margin-top: 1%"  for="document">در صورتی که مایل به ارسال فایل یا فایل هایی به همراه فرم خود هستید «اینجــا» کلیک کنید و در بخش توضیحات درج کنید که این فایلها حاوی چه اطلاعاتی هستند.</label>
-    <input id="document" style="width: 100%;height: auto;" type="file" multiple name="docs[]" accept="file_extension" class="form-control-file text-left">
+    <input id="document" style="width: 100%;height: auto;" type="file" multiple name="docs" accept="file_extension" class="form-control-file text-left">
     <br>
     <hr>
     <br>
@@ -616,7 +616,6 @@
     <br>
     <br>
     <button style="width: 20%;height: auto;margin-right: 40%;w" type="submit" onclick="post()" class="btn btn-primary">ارسال</button>
-
 
 </div>
 
@@ -674,7 +673,7 @@ function post(){
         if(files.length != 0){    
             for (var i = 0; i < files.length; i++) {
                 var file = files[i];
-                formdata.append('docs[]', file, file.name);
+                formdata.append('docs', file, file.name);
             }
         }
         
@@ -754,7 +753,7 @@ function post(){
         formdata.append("latest_academic_qualification", `${latest_academic_qualification=="Latest Academic Qualification"?null:latest_academic_qualification}`)
         formdata.append("field_of_study", `${field_of_study=="Field Of Study"?null:field_of_study}`)
         formdata.append("country", `${country=="Country"?null:country}`)
-        formdata.append("gpa", `${gpa?gpa:null}`)
+        formdata.append("GPA", `${gpa?gpa:null}`)
         formdata.append("year_awarded", `${year_awarded?year_awarded:null}`)
         formdata.append("institution", `${institution?institution:null}`)
         formdata.append("language_certificate", `${language_certificate=="Language Certificate"?null:language_certificate}`)
@@ -768,14 +767,14 @@ function post(){
         formdata.append("TOFEL_IBT_writing", `${TOFEL_IBT_writing=="Writing"?null:TOFEL_IBT_writing}`)
         formdata.append("TOFEL_IBT_speaking", `${TOFEL_IBT_speaking=="Speaking"?null:TOFEL_IBT_speaking}`)
         formdata.append("TOFEL_IBT_overall_band", `${TOFEL_IBT_overall_band=="Overall Band"?null:TOFEL_IBT_overall_band}`)
-        formdata.append("gmat_verbal", `${gmat_verbal=="Verbal"?null:gmat_verbal}`)
-        formdata.append("gmat_quantitative", `${gmat_quantitative=="Quantitative"?null:gmat_quantitative}`)
-        formdata.append("gmat_analytical_writing", `${gmat_analytical_writing=="Analytical Writing"?null:gmat_analytical_writing}`)
-        formdata.append("gmat_test_date", `${gmat_test_date=="Dayundefined, Year"?null:gmat_test_date}`)
-        formdata.append("gmat_total", `${gmat_total=="Total"?null:gmat_total}`)
-        formdata.append("gre_verbal_score", `${gre_verbal_score=="Verbal score"?null:gre_verbal_score}`)
-        formdata.append("gre_quantitative_score", `${gre_quantitative_score=="Quantitative score"?null:gre_quantitative_score}`)
-        formdata.append("gre_analytical_score", `${gre_analytical_score=="Analytical score"?null:gmat_analytical_writing}`)
+        formdata.append("GMAT_verbal", `${gmat_verbal=="Verbal"?null:gmat_verbal}`)
+        formdata.append("GMAT_quantitative", `${gmat_quantitative=="Quantitative"?null:gmat_quantitative}`)
+        formdata.append("GMAT_analytical_writing", `${gmat_analytical_writing=="Analytical Writing"?null:gmat_analytical_writing}`)
+        formdata.append("GMAT_test_date", `${gmat_test_date=="Dayundefined, Year"?null:gmat_test_date}`)
+        formdata.append("GMAT_total", `${gmat_total=="Total"?null:gmat_total}`)
+        formdata.append("GRE_verbal_score", `${gre_verbal_score=="Verbal score"?null:gre_verbal_score}`)
+        formdata.append("GRE_quantitative_score", `${gre_quantitative_score=="Quantitative score"?null:gre_quantitative_score}`)
+        formdata.append("GRE_analytical_score", `${gre_analytical_score=="Analytical score"?null:gmat_analytical_writing}`)
         formdata.append("other_language_info", `${other_language_info?other_language_info:null}`)
         formdata.append("oddinfo1", `${oddinfo1=="Have You Ever Lodged A Visa Application At The Embassy?"?null:oddinfo1}`)
         formdata.append("oddinfo2", `${oddinfo2=="Have You Ever been Granted A Visa To Enter A Country?"?null:oddinfo2}`)
@@ -799,16 +798,14 @@ function post(){
                     method: "POST",
                     mode: "same-origin",
                     credentials: "same-origin",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
                     redirect: "follow",
                     body: formdata
             }).then(res => {
-                    if(res.status != 200){
-                        alert("لطفا برای ثبت فرم دوباره تلاش کنید!")
-                    } else{
+                    if(res.redirected){
                         alert("اطلاعات شما ثبت شد و در اسرع وقت با شما تماس گرفته خواهد شد!")
+                        window.location.href = res.url;
+                    } else{
+                        alert("لطفا برای ثبت فرم دوباره تلاش کنید!")
                     }
                 })
             .catch(err => alert("خطا در سرور!"))

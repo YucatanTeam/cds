@@ -23,7 +23,7 @@
         <Table highlight rows={5}
             on:modal="open(event)"
             content={infos}
-            search={["lastname", "firstname", "id", "email"]}
+            search={["lastname", "firstname", "id", "email", "mobile_number"]}
             actions={[
                                             /* ------------------------------------------
                                                 list of all actions for form data table 
@@ -65,7 +65,8 @@ export default {
                                 id : mb.id,
                                 firstname: mb.firstname,
                                 lastname: mb.lastname,
-                                email: mb.email
+                                email: mb.email,
+                                mobile_number: mb.mobile_number
                             }
                             // [ DELETE ]
                             datum.actions = [

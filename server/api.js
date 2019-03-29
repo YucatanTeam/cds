@@ -8,6 +8,7 @@ const express = require('express')
 const passport = require('passport');
 const formidable = require('formidable');
 const bot = require("./Tbot.js");
+const mail = require("./mail.js")
 const isWin = process.platform === "win32";
 // const sharp = require('sharp');
 function sharp(file) {
@@ -111,7 +112,6 @@ module.exports = ({app, db}) => {
     app.get('/imgsrc/:image', (req, res) => {
         res.sendFile(cwd + "/images/" + req.params.image);
     })
-    
 
     app.post("/ckeditor", access(3), (req, res) => {
         var form = new formidable.IncomingForm();
@@ -831,87 +831,115 @@ module.exports = ({app, db}) => {
         var form = new formidable.IncomingForm();
         form.uploadDir = cwd + "/doc/";
         form.keepExtensions = true;
-        form.maxFieldsSize = 20 * 1024 * 1024;
-        form.maxFileSize = 200 * 1024 * 1024;
+        form.maxFieldsSize = 2 * 1024 * 1024;
+        form.maxFileSize = 20 * 1024 * 1024;
+        form.multiples = true;
         form.parse(req, function (err, fields, files) {
 
             if(err) return res.status(400).end("Bad Request !");
 
-            // TODO : work on document
+            var document, farr = []
+            if(files.docs) {
+                if(files.docs.length>1){
+                    for(var file of files.docs){
+                        var fpath = file.path
+                        fpath = isWin ? fpath.split("\\") : fpath.split("/");
+                        fpath = fpath[fpath.length - 1];
+                        farr.push(fpath)
+                    }
+                    document = farr.join(',')
+                } else{
+                    var fpath = files.docs.path
+                    fpath = isWin ? fpath.split("\\") : fpath.split("/");
+                    fpath = fpath[fpath.length - 1];
+                    document = fpath
+                }
+              } else {
+                  document = null;
+             }
 
-            // var document;
-            // if(files.document) {
-            //     document = files.document.path;
-            //     document = isWin ? document.split("\\") : document.split("/");
-            //     document = document[document.length - 1];
-            // } else {
-            //     document = null;
-            // }
-
-            // var form = {
-            //     // document,
-            //     birthday_date: fields.birthday_date,
-            //     firstname: fields.birthday_date,
-            //     lastname: fields.lastname,
-            //     marrital_status: fields.marrital_status,
-            //     gender: fields.gender,
-            //     nationality: fields.nationality,
-            //     country_of_residency: fields.country_of_residency,
-            //     city_of_residency: fields.city_of_residency,
-            //     address: fields.address,
-            //     postal_code: fields.postal_code,
-            //     telephone_number: fields.telephone_number,
-            //     mobile_number: fields.mobile_number,
-            //     email: fields.email,
-            //     latest_academic_qualification: fields.latest_academic_qualification,
-            //     field_of_study: fields.field_of_study,
-            //     country: fields.country,
-            //     gpa: fields.gpa,
-            //     year_awarded: fields.year_awarded,
-            //     institution: fields.institution,
-            //     language_certificate: fields.language_certificate,
-            //     IELTS_listening: fields.IELTS_listening,
-            //     IELTS_reading: fields.IELTS_reading,
-            //     IELTS_writing: fields.IELTS_writing,
-            //     IELTS_speaking: fields.IELTS_speaking,
-            //     IELTS_overall_band: fields.IELTS_overall_band,
-            //     TOFEL_IBT_listening: fields.TOFEL_IBT_listening,
-            //     TOFEL_IBT_reading: fields.TOFEL_IBT_reading,
-            //     TOFEL_IBT_writing: fields.TOFEL_IBT_writing,
-            //     TOFEL_IBT_speaking: fields.TOFEL_IBT_speaking,
-            //     TOFEL_IBT_overall_band: fields.TOFEL_IBT_overall_band,
-            //     gmat_verbal: fields.gmat_verbal,
-            //     gmat_quantitative: fields.gmat_quantitative,
-            //     gmat_analytical_writing: fields.gmat_analytical_writing,
-            //     gmat_test_date: fields.gmat_test_date,
-            //     gmat_total: fields.gmat_total,
-            //     gre_verbal_score: fields.gre_verbal_score,
-            //     gre_quantitative_score: fields.gre_analytical_score,
-            //     gre_analytical_score: fields.gre_analytical_score,
-            //     other_language_info: fields.other_language_info,
-            //     oddinfo1: fields.oddinfo1,
-            //     oddinfo2: fields.oddinfo2,
-            //     oddinfo3: fields.oddinfo3,
-            //     oddinfo4: fields.oddinfo4,
-            //     oddinfo5: fields.oddinfo5,
-            //     oddinfo6: fields.oddinfo6,
-            //     details: fields.details 
-            // }
+            var form = {
+                document,
+                birthday_date: fields.birthday_date,
+                firstname: fields.firstname,
+                lastname: fields.lastname,
+                marrital_status: fields.marrital_status,
+                gender: fields.gender,
+                nationality: fields.nationality,
+                country_of_residency: fields.country_of_residency,
+                city_of_residency: fields.city_of_residency,
+                address: fields.address,
+                postal_code: fields.postal_code,
+                telephone_number: fields.telephone_number,
+                mobile_number: fields.mobile_number,
+                email: fields.email,
+                latest_academic_qualification: fields.latest_academic_qualification,
+                field_of_study: fields.field_of_study,
+                country: fields.country,
+                GPA: fields.gpa,
+                year_awarded: fields.year_awarded,
+                institution: fields.institution,
+                language_certificate: fields.language_certificate,
+                IELTS_listening: fields.IELTS_listening,
+                IELTS_reading: fields.IELTS_reading,
+                IELTS_writing: fields.IELTS_writing,
+                IELTS_speaking: fields.IELTS_speaking,
+                IELTS_overall_band: fields.IELTS_overall_band,
+                TOFEL_IBT_listening: fields.TOFEL_IBT_listening,
+                TOFEL_IBT_reading: fields.TOFEL_IBT_reading,
+                TOFEL_IBT_writing: fields.TOFEL_IBT_writing,
+                TOFEL_IBT_speaking: fields.TOFEL_IBT_speaking,
+                TOFEL_IBT_overall_band: fields.TOFEL_IBT_overall_band,
+                GMAT_verbal: fields.gmat_verbal,
+                GMAT_quantitative: fields.gmat_quantitative,
+                GMAT_analytical_writing: fields.gmat_analytical_writing,
+                GMAT_test_date: fields.gmat_test_date,
+                GMAT_total: fields.gmat_total,
+                GRE_verbal_score: fields.gre_verbal_score,
+                GRE_quantitative_score: fields.gre_analytical_score,
+                GRE_analytical_score: fields.gre_analytical_score,
+                other_language_info: fields.other_language_info,
+                oddinfo1: fields.oddinfo1,
+                oddinfo2: fields.oddinfo2,
+                oddinfo3: fields.oddinfo3,
+                oddinfo4: fields.oddinfo4,
+                oddinfo5: fields.oddinfo5,
+                oddinfo6: fields.oddinfo6,
+                details: fields.details 
+            }
         
-        // db.api.form.add(form, (err, row)=>{
-        //     if(err) {
-        //         dev.report(err);
-        //         return res.status(500).end("Internal Server Error !");
-        //     } else{
-                
-        //         // TODO mail the form object to req.user.email
-        //         // https://nodemailer.com
-        //         return res.status(200).end("OK");
-            
-        //     }
-            
-        // })
+            db.api.form.add(form, (err, row)=>{
+                if(err) {
+                    dev.report(err);
+                    return res.status(500).end("Internal Server Error !");
+                } else{
+                    var attachments = []
+                    if(farr.length!=0){
+                       for(var i = 0, flength = farr.length; i<flength; i++){
+                           attachments.push({path: cwd + "/doc/" + farr[i]})
 
+                        }
+                    } if(document!=null){
+                        attachments.push({path: cwd + "/doc/" + document})
+                    }
+                    mail(
+                        `${process.env.CDSMAIL}` || "abarmardeatashyne@gmail.com",
+                        "ea_pain@yahoo.com", // TODO : azizi mail
+                        "CDS FREE CONSULTATION FORM RESULTS",
+                        `<h3>info about${form.firstname}</h3><p>${form.birthday_date}!</p>`, // TODO
+                        attachments,
+                        (err, response, body) => {
+                            if(err) {
+                                dev.report(err);
+                                return res.status(500).end("Internal Server Error !");
+                            }
+                            console.log(response, body);
+                        }
+                    )
+                    return res.redirect("/");
+                    // return res.status(200).end("OK");
+                }  
+            })
        });          
     });
 
