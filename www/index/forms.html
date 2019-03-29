@@ -671,9 +671,11 @@ function post(){
         var fileInput = document.getElementById('document');
         var files = fileInput.files
 
-        for (var i = 0; i < files.length; i++) {
-            var file = files[i];
-            formdata.append('docs[]', file, file.name);
+        if(files.length != 0){    
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                formdata.append('docs[]', file, file.name);
+            }
         }
         
         function getSelectedOption(sel) {
@@ -687,9 +689,9 @@ function post(){
             return opt.text;
         }
         
-
-        const firstname = document.getElementById("firstname").value
-        const lastname = document.getElementById("lastname").value
+        const ttlBdate = getSelectedOption(document.getElementById("day"))+getSelectedOption(document.getElementById("month")).split("-")[1]+", "+getSelectedOption(document.getElementById("year"))
+        const firstname = document.getElementById("firstname").value ? document.getElementById("firstname").value: null 
+        const lastname = document.getElementById("lastname").value ? document.getElementById("lastname").value: null
         const city_of_residency = document.getElementById("city_of_residency").value
         const address = document.getElementById("address").value
         const postal_code = document.getElementById("postal_code").value
@@ -702,7 +704,7 @@ function post(){
         const other_language_info = document.getElementById("other_language_info").value
         const details = document.getElementById("details").value
         const gmat_test_date = getSelectedOption(document.getElementById("gmat_day"))+getSelectedOption(document.getElementById("gmat_month")).split("-")[1]+", "+getSelectedOption(document.getElementById("gmat_year"))
-        const bdate = getSelectedOption(document.getElementById("day"))+getSelectedOption(document.getElementById("month")).split("-")[1]+", "+getSelectedOption(document.getElementById("year"))
+        const bdate = ttlBdate == "Dayundefined, Year" ? null : ttlBdate
         const marrital_status = getSelectedOption(document.getElementById("marrital_status"))
         const gender = getSelectedOption(document.getElementById("gender"))
         const nationality = getSelectedOption(document.getElementById("nationality"))
@@ -736,9 +738,9 @@ function post(){
         const oddinfo6 = getSelectedOption(document.getElementById("oddinfo6"))
 
 
-        formdata.append("birthday_date",`${bdate=="Dayundefined, Year"?null:bdate}`);
-        formdata.append("firstname",`${firstname?firstname:null}`);
-        formdata.append("lastname",`${lastname?lastname:null}`);
+        formdata.append("birthday_date",`${bdate}`);
+        formdata.append("firstname",`${firstname}`);
+        formdata.append("lastname",`${lastname}`);
         formdata.append("marrital_status",`${marrital_status=="Marrital Status"?null:marrital_status}`);
         formdata.append("gender",`${gender=="Gender"?null:gender}`);
         formdata.append("nationality",`${nationality=="Nationality"?null:nationality}`);
@@ -786,12 +788,12 @@ function post(){
            
     if(document.getElementById("gridCheck").checked == true){ 
 
-            for(var pair of formdata.entries()){
-                if(pair[1]=="null"){
-                    alert("لطفا تمامی فیلد های را پرکنید!")
-                    break
-                }
-            }
+            // for(var pair of formdata.entries()){
+            //     if(pair[1]=="null"){
+            //         alert("لطفا تمامی فیلد های را پرکنید!")
+            //         break
+            //     }
+            // }
             
         fetch("/form/add", {
                     method: "POST",
@@ -801,7 +803,7 @@ function post(){
                         "Content-Type": "application/json"
                     },
                     redirect: "follow",
-                    body: JSON.stringify(formdata)
+                    body: formdata
             }).then(res => {
                     if(res.status != 200){
                         alert("لطفا برای ثبت فرم دوباره تلاش کنید!")
