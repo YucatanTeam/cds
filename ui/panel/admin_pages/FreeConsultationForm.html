@@ -22,6 +22,7 @@
 
         <Table highlight rows={5}
             on:modal="open(event)"
+            on:download="download(event)"
             content={infos}
             search={["lastname", "firstname", "id", "email", "mobile_number"]}
             actions={[
@@ -36,6 +37,11 @@
                             var index = 0
                            component.fire("modal", {obj, index}) 
                             
+                        }
+                    },
+                    {icon: "file_download",tooltip: "download csv", action(obj, component) {
+                            var id = obj.id
+                            component.fire("download", {id})
                         }
                     } 
                 ]}
@@ -70,7 +76,8 @@ export default {
                             }
                             // [ DELETE ]
                             datum.actions = [
-                                [5, 7].includes(cdsuser.access) // dev and admin can delete a form info
+                                [5, 7].includes(cdsuser.access), // dev and admin can delete a form info
+                                [5, 7].includes(cdsuser.access) // dev and admin can dwn a form csv
                             ]
                             
                             rows.push(datum);
@@ -81,6 +88,23 @@ export default {
         }
     },
     methods:{
+        download(obj){
+            fetch(`/csv/${obj.id}`, {
+                method: "GET",
+                mode: "same-origin",
+                credentials: "same-origin"
+            })
+            .then(res=> res.status!=200 ? utils.toast("No file exists!") : res.blob())
+            .then(blob=>{
+                    var url = window.URL.createObjectURL(blob);
+                    var a = document.createElement('a');
+                    a.href = url;
+                    a.download = `${obj.id}.csv`;
+                    document.body.appendChild(a);
+                    a.click();    
+                    a.remove();
+            })
+        },
         open({obj, index}){
             const mob = this.get().mob.data
                 for(var mb of mob){

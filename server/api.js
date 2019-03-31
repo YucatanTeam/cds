@@ -2,9 +2,12 @@ const fs = require("fs");
 const cuid = require("cuid"); // use this to create a cuid in insertaion ops
 require('svelte/ssr/register'); // for svelte server side rendering
 const Layout = require('./layout.html');
+const path = require("path")
+const ObjectsToCsv = require('objects-to-csv');
 const moment = require('../www/public/js/moment')
 const enLayout = require('./en_layout.html');
 const express = require('express')
+const mime = require("mime")
 const passport = require('passport');
 const formidable = require('formidable');
 const bot = require("./Tbot.js");
@@ -111,6 +114,10 @@ module.exports = ({app, db}) => {
 
     app.get('/imgsrc/:image', (req, res) => {
         res.sendFile(cwd + "/images/" + req.params.image);
+    })
+
+    app.get('/csv/:csv', access(5), (req, res) => {
+        res.download(`${cwd}/csv/${req.params.csv}.csv`);
     })
 
     app.post("/ckeditor", access(3), (req, res) => {
@@ -913,20 +920,22 @@ module.exports = ({app, db}) => {
                     dev.report(err);
                     return res.status(500).end("Internal Server Error !");
                 } else{
+                    delete form.document
+                    new ObjectsToCsv([form]).toDisk(cwd + "/csv/" + `${row.insertId}.csv`);
                     var attachments = []
+                    attachments.push({path: cwd + "/csv/" + `${row.insertId}.csv`})
                     if(farr.length!=0){
                        for(var i = 0, flength = farr.length; i<flength; i++){
                            attachments.push({path: cwd + "/doc/" + farr[i]})
-
                         }
-                    } if(document!=null){
+                    } if(!document.includes(",")){
                         attachments.push({path: cwd + "/doc/" + document})
                     }
                     mail(
                         `${process.env.CDSMAIL}` || "abarmardeatashyne@gmail.com",
                         "ea_pain@yahoo.com", // TODO : azizi mail
                         "CDS FREE CONSULTATION FORM RESULTS",
-                        `<h3>info about${form.firstname}</h3><p>${form.birthday_date}!</p>`, // TODO
+                        `<h5>#${row.insertId} : Download <small><i>csv - docs</i></small></h5>`,
                         attachments,
                         (err, response, body) => {
                             if(err) {
