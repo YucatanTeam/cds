@@ -790,29 +790,33 @@ function post(){
         var canPost = true
 
             for(var pair of formdata.entries()){
-                if((pair[0]!="language_certificate" || 
-                   pair[0]!="IELTS_listening" ||
-                   pair[0]!="IELTS_reading" ||
-                   pair[0]!="IELTS_writing" ||
-                   pair[0]!="IELTS_speaking" ||
-                   pair[0]!="IELTS_overall_band" ||
-                   pair[0]!="TOFEL_IBT_listening" ||
-                   pair[0]!="TOFEL_IBT_reading" ||
-                   pair[0]!="TOFEL_IBT_writing" ||
-                   pair[0]!="TOFEL_IBT_speaking" ||
-                   pair[0]!="TOFEL_IBT_overall_band" ||
-                   pair[0]!="GMAT_verbal" ||
-                   pair[0]!="GMAT_quantitative" ||
-                   pair[0]!="GMAT_analytical_writing" ||
-                   pair[0]!="GMAT_test_date" ||
-                   pair[0]!="GMAT_total" ||
-                   pair[0]!="GRE_verbal_score" ||
-                   pair[0]!="GRE_quantitative_score" ||
-                   pair[0]!="GRE_analytical_writing_score")
-                   && pair[1]=="null"){
-                    alert("لطفا فیلدهای لازم را پرکنید!")
-                    canPost = false
-                    break
+                if(["language_certificate", 
+                    "IELTS_listening",
+                    "IELTS_reading",
+                    "IELTS_writing",
+                    "IELTS_speaking",
+                    "IELTS_overall_band",
+                    "TOFEL_IBT_listening",
+                    "TOFEL_IBT_reading",
+                    "TOFEL_IBT_writing",
+                    "TOFEL_IBT_speaking",
+                    "TOFEL_IBT_overall_band",
+                    "GMAT_verbal",
+                    "GMAT_quantitative",
+                    "GMAT_analytical_writing",
+                    "GMAT_test_date",
+                    "GMAT_total",
+                    "GRE_verbal_score",
+                    "GRE_quantitative_score",
+                    "GRE_analytical_writing_score"
+                ].includes(pair[0])) continue;
+                else{
+                    if(pair[1]=="null"){
+                        alert("لطفا فیلدهای لازم را پرکنید!")
+                        canPost = false
+                        break
+                    }
+                   
                 }
             }
             
