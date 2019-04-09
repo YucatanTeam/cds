@@ -808,12 +808,13 @@ function post(){
                     "GMAT_total",
                     "GRE_verbal_score",
                     "GRE_quantitative_score",
-                    "GRE_analytical_writing_score"
+                    "GRE_analytical_score",
+                    "other_language_info"
                 ].includes(pair[0])) continue;
                 else{
                     if(pair[1]=="null"){
-                        alert("لطفا فیلدهای لازم را پرکنید!")
                         canPost = false
+                        alert("لطفا فیلدهای لازم را پرکنید!")
                         break
                     }
                    

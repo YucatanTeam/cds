@@ -928,7 +928,7 @@ module.exports = ({app, db}) => {
                        for(var i = 0, flength = farr.length; i<flength; i++){
                            attachments.push({path: cwd + "/doc/" + farr[i]})
                         }
-                    } if(!document.includes(",")){
+                    } if(document && !document.includes(",")){
                         attachments.push({path: cwd + "/doc/" + document})
                     }
                     mail(
