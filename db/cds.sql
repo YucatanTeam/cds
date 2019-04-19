@@ -44,6 +44,8 @@ CREATE TABLE `comment` (
   CONSTRAINT `comment_ibfk_1` FOREIGN KEY (`page_id`) REFERENCES `page` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_persian_ci;
 
+INSERT INTO `comment` (`id`, `page_id`, `content`, `name`, `email`, `status`, `cuid`, `created_at`, `updated_at`) VALUES
+(1,	1,	'این پست عالی است!',	'wilonion',	'ea_pain@yahoo.com',	0,	'cjtrim4l30002w6btcl7g3fw1',	'2019-03-27 18:00:57',	'2019-03-27 18:00:57');
 
 DROP TABLE IF EXISTS `error`;
 CREATE TABLE `error` (
@@ -53,6 +55,13 @@ CREATE TABLE `error` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_persian_ci;
 
+INSERT INTO `error` (`id`, `msg`, `status`) VALUES
+(1,	'ER_PARSE_ERROR: You have an error in your SQL syntax; check the manual that corresponds to your MariaDB server version for the right syntax to use near \'?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,\' at line 2',	1),
+(2,	'ER_BAD_FIELD_ERROR: Unknown column \'gre_analytical_score\' in \'field list\'',	1),
+(3,	'ER_BAD_FIELD_ERROR: Unknown column \'GRE_analytical_score\' in \'field list\'',	1),
+(4,	'ENOENT: no such file or directory, open \'/root/Desktop/cds/doc/upload_e88c8e21b9de57cb137cdfd166e01768.png,upload_272d09c8f2abf8e6da9d0cc4121b2269.png,upload_728493128eabc4a7c976087efae0f0bd.png\'',	1),
+(5,	'read EINVAL',	1),
+(6,	'Timeout',	1);
 
 DROP TABLE IF EXISTS `form`;
 CREATE TABLE `form` (
@@ -142,6 +151,8 @@ CREATE TABLE `page` (
   UNIQUE KEY `title_key` (`title`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_persian_ci;
 
+INSERT INTO `page` (`id`, `route_id`, `tags`, `title`, `en_title`, `cover`, `content`, `en_content`, `status`, `comment`, `cuid`, `created_at`, `updated_at`) VALUES
+(1,	1,	'govah,cando,certificate',	'گواه فارسی',	'english govah',	NULL,	'govah e khoshgel',	'nice govah',	0,	0,	'cjtrilz100000w6bt6zkrbick',	'2019-03-27 18:00:56',	'2019-03-27 18:00:56');
 
 DROP TABLE IF EXISTS `reserve`;
 CREATE TABLE `reserve` (
@@ -165,6 +176,12 @@ CREATE TABLE `route` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_persian_ci;
 
+INSERT INTO `route` (`id`, `access`, `title`, `en_title`, `status`) VALUES
+(1,	3,	'اعزام به کانادا',	'study in canada',	1),
+(2,	3,	'اعزام به استرالیا',	'study in australia',	1),
+(3,	3,	'اعزام به نیوزلند',	'study in newzealand',	1),
+(4,	3,	'مجله خبری cds',	'cds newsletter',	1),
+(5,	3,	'main',	'main',	1);
 
 DROP TABLE IF EXISTS `transactions`;
 CREATE TABLE `transactions` (
@@ -188,5 +205,8 @@ CREATE TABLE `user` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_persian_ci;
 
+INSERT INTO `user` (`id`, `firstname`, `lastname`, `email`, `password`, `access`, `avatar`) VALUES
+(1,	'dev',	'eloper',	'dev@cds.org.ir',	'958e2438cc45417e4c892f685a1c33d8��4��H\n�97~YL��Ҹ	hF���ۡ�\Z�\0A}%\nH�X��1��� k����u�\"_�?�z�3',	7,	NULL),
+(2,	'wild',	'onion',	'wild_onion@yhaoo.com',	'0fa38801b632fe32a1ea81f426e640b1\0���y�	Ndc��\n�*]������\Z̷{2�w/s��X��3��\'�\\H��R��E�YYa=�8F��',	2,	NULL);
 
--- 2019-04-18 19:40:01
+-- 2019-04-19 14:23:29
