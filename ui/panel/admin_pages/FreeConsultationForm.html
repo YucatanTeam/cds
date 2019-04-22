@@ -92,6 +92,9 @@ export default {
             fetch(`/csv/${obj.id}`, {
                 method: "GET",
                 mode: "same-origin",
+                headers:{
+                    "X-LiteSpeed-Purge": "*"
+                },
                 credentials: "same-origin"
             })
             .then(res=> res.status!=200 ? utils.toast("No file exists!") : res.blob())

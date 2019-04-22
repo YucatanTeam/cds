@@ -2,7 +2,11 @@
 <html>
 <script>
 document.addEventListener("DOMContentLoaded", e =>
-    fetch("/route/4/pages").then(res=>{
+    fetch("/route/4/pages",{
+        headers:{
+            "X-LiteSpeed-Purge": "*"
+        }
+    }).then(res=>{
         if(res.status != 200){throw "err";}
         else{return res.json();} 
     }).then(res=>{

@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html lang="fa" oncontextmenu="return false;">
 <script>
-    fetch("/route/4/pages").then(res => {
+    fetch("/route/4/pages", {
+        headers:{
+            "X-LiteSpeed-Purge": "*"
+        }
+    }).then(res => {
         return res.json();
     }).then(res => {
         var div = document.getElementById("mainDiv");

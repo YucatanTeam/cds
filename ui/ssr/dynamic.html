@@ -52,7 +52,11 @@ export default {
     data() {
         return {
             getcomments:
-                fetch(`/comment/getAllRelToAPage/${getPage()}`)
+                fetch(`/comment/getAllRelToAPage/${getPage()}`,{
+                    headers:{
+                        "X-LiteSpeed-Purge": "*"
+                    }
+                })
                     .then(response => {
                             return response.json()
                         })

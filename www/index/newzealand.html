@@ -2,7 +2,11 @@
 <html>
 <script>
     document.addEventListener("DOMContentLoaded", e =>
-        fetch("/route/3/pages").then(res => {
+        fetch("/route/3/pages",{
+            headers:{
+                "X-LiteSpeed-Purge": "*"
+            }
+        }).then(res => {
             if (res.status != 200) {
                 throw "ok is not define";
             }
