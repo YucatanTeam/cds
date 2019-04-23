@@ -7,5 +7,5 @@ images/*
 !images/.image
 doc/*
 !doc/.doc
-www/*/*.js
-www/*/*.css
+#www/*/*.js
+#www/*/*.css
