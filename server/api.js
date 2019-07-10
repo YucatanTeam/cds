@@ -933,7 +933,7 @@ module.exports = ({app, db}) => {
                     }
                     mail(
                         `${process.env.CDSMAIL}` || "abarmardeatashyne@gmail.com",
-                        "ea_pain@yahoo.com", // TODO : azizi mail
+                        "ea_pain@yahoo.com", // TODO : azizi gmail
                         "CDS FREE CONSULTATION FORM RESULTS",
                         `<h5>#${row.insertId} : Download <small><i>csv - docs</i></small></h5>`,
                         attachments,
